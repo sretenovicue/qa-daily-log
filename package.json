@@ -1,0 +1,12 @@
+{
+  "name": "qa-daily-log",
+  "version": "1.0.0",
+  "description": "QA Daily Log — full-stack app",
+  "scripts": {
+    "dev":   "concurrently --names \"API,UI\" --prefix-colors \"cyan,magenta\" \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\"",
+    "start": "concurrently --names \"API,UI\" --prefix-colors \"cyan,magenta\" \"npm start --prefix backend\" \"npm run dev --prefix frontend\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

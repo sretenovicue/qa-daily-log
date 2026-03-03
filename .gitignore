@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Environment variables (contain secrets!)
+.env
+.env.local
+.env.production
+
+# Build output
+frontend/dist/
+frontend/.vite/
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# SQLite (local dev only)
+backend/*.sqlite
+backend/backups/
+
+# Editor
+.vscode/
+.idea/

@@ -1,0 +1,15 @@
+services:
+  - type: web
+    name: qa-log-backend
+    runtime: node
+    buildCommand: npm install
+    startCommand: node server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        sync: false        # unesi ručno iz Neon dashboarda
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ALLOWED_ORIGIN
+        sync: false        # unesi Netlify URL nakon deploya

@@ -1,0 +1,34 @@
+# Fly.io configuration
+# Promeniti "app" naziv u nešto unique (npr. qa-log-bosko)
+app = 'qa-log-bosko'
+primary_region = 'ams'
+
+[build]
+
+[env]
+  PORT = "3001"
+  NODE_ENV = "production"
+  DATABASE_PATH = "/data/database.sqlite"
+
+[mounts]
+  source = "qa_data"
+  destination = "/data"
+
+[[services]]
+  protocol = "tcp"
+  internal_port = 3001
+
+  [[services.ports]]
+    port = 80
+    handlers = ["http"]
+
+  [[services.ports]]
+    port = 443
+    handlers = ["tls", "http"]
+
+  [services.http_checks]
+    [[services.http_checks.checks]]
+      interval = "30s"
+      timeout = "5s"
+      method = "GET"
+      path = "/api/health"

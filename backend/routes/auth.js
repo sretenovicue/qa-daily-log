@@ -53,7 +53,10 @@ router.post('/login', wrap(async (req, res) => {
     return res.status(400).json({ error: 'Email i lozinka su obavezni' });
   }
 
-  const { rows } = await pool.query('SELECT * FROM users WHERE email = $1', [email.toLowerCase()]);
+  const { rows } = await pool.query(
+    'SELECT * FROM users WHERE email = $1 OR username = $1',
+    [email.toLowerCase()]
+  );
   const row = rows[0];
   if (!row) {
     return res.status(401).json({ error: 'Pogrešan email ili lozinka' });

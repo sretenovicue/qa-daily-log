@@ -5,8 +5,7 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 function validateLogin(email, password) {
   const errors = {};
-  if (!email.trim()) errors.email = 'Email je obavezan';
-  else if (!EMAIL_RE.test(email)) errors.email = 'Email format nije validan';
+  if (!email.trim()) errors.email = 'Email ili korisničko ime je obavezno';
   if (!password) errors.password = 'Lozinka je obavezna';
   return errors;
 }
@@ -95,13 +94,13 @@ export default function AuthPage() {
 
         <form onSubmit={handleSubmit} noValidate>
           <div className="form-group">
-            <label htmlFor="auth-email">Email</label>
+            <label htmlFor="auth-email">{mode === 'login' ? 'Email ili korisničko ime' : 'Email'}</label>
             <input
               id="auth-email"
-              type="email"
+              type={mode === 'login' ? 'text' : 'email'}
               value={email}
               onChange={e => setEmail(e.target.value)}
-              placeholder="vas@email.com"
+              placeholder={mode === 'login' ? 'Email ili korisničko ime' : 'vas@email.com'}
               autoComplete="email"
             />
             {errors.email && <span className="field-error">{errors.email}</span>}

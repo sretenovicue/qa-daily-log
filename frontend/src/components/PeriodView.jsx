@@ -23,6 +23,7 @@ export default function PeriodView() {
   const [confirmId, setConfirmId] = useState(null);
 
   const { editEntry, removeEntry, currentUser } = useStore();
+  const isGuest = currentUser?.role === 'guest';
   const isManager = currentUser?.role === 'manager';
 
   const fetchEntries = useCallback(async () => {
@@ -225,8 +226,8 @@ export default function PeriodView() {
                     <td className="duration-cell">{e.duration ? `⏱ ${secondsToHuman(e.duration)}` : '—'}</td>
                     <td>
                       <div className="action-cell">
-                        <button className="btn btn-sm btn-edit" onClick={() => setEditing(e)}>✏️</button>
-                        <button className="btn btn-sm btn-danger" onClick={() => handleDelete(e.id)}>🗑</button>
+                        {!isGuest && <button className="btn btn-sm btn-edit" onClick={() => setEditing(e)}>✏️</button>}
+                        {!isGuest && <button className="btn btn-sm btn-danger" onClick={() => handleDelete(e.id)}>🗑</button>}
                       </div>
                     </td>
                   </tr>

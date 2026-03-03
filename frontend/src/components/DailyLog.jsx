@@ -15,6 +15,7 @@ export default function DailyLog() {
     currentUser,
   } = useStore();
   const isManager = currentUser?.role === 'manager';
+  const isGuest   = currentUser?.role === 'guest';
 
   const [editing,   setEditing]   = useState(null);
   const [confirmId, setConfirmId] = useState(null);
@@ -186,8 +187,8 @@ export default function DailyLog() {
                     <td className="time-cell">{e.time}</td>
                     <td>
                       <div className="action-cell">
-                        <button className="btn btn-sm btn-edit" onClick={() => setEditing(e)} title="Izmeni">✏️</button>
-                        <button className="btn btn-sm btn-danger" onClick={() => handleDelete(e.id)} title="Obriši">🗑</button>
+                        {!isGuest && <button className="btn btn-sm btn-edit" onClick={() => setEditing(e)} title="Izmeni">✏️</button>}
+                        {!isGuest && <button className="btn btn-sm btn-danger" onClick={() => handleDelete(e.id)} title="Obriši">🗑</button>}
                       </div>
                     </td>
                   </tr>

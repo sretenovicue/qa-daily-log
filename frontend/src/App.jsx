@@ -45,6 +45,7 @@ export default function App() {
   const { activeTab, setActiveTab, currentUser, authToken, fetchMe, logout } = useStore();
   const headerDate = useHeaderDate();
   const isManager  = currentUser?.role === 'manager';
+  const isGuest    = currentUser?.role === 'guest';
 
   useEffect(() => {
     if (authToken) fetchMe();
@@ -72,9 +73,11 @@ export default function App() {
       </header>
 
       <div className="container">
-        <div>
-          <AddEntry />
-        </div>
+        {!isGuest && (
+          <div>
+            <AddEntry />
+          </div>
+        )}
 
         <div>
           <div className="tabs">

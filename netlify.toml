@@ -1,0 +1,17 @@
+[build]
+  base    = "frontend"
+  command = "npm run build"
+  publish = "frontend/dist"
+
+# Proxy /api/* ka Render.com backendu
+[[redirects]]
+  from   = "/api/*"
+  to     = "https://qa-daily-log.onrender.com/api/:splat"
+  status = 200
+  force  = true
+
+# SPA fallback — sve ostale rute idu na index.html
+[[redirects]]
+  from   = "/*"
+  to     = "/index.html"
+  status = 200

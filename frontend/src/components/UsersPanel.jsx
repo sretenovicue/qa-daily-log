@@ -8,6 +8,7 @@ export default function UsersPanel() {
     users, usersLoading, usersError, fetchUsers, createUser, toggleUser, approveUser,
     currentUser, addToast,
   } = useStore();
+  const isGuest = currentUser?.role === 'guest';
 
   const [form, setForm] = useState({ email: '', username: '', password: '', role: 'user' });
   const [formError,   setFormError]   = useState('');
@@ -108,7 +109,7 @@ export default function UsersPanel() {
                     </span>
                   </td>
                   <td style={{ display: 'flex', gap: 6 }}>
-                    {u.approved === false && (
+                    {!isGuest && u.approved === false && (
                       <button
                         className="btn btn-sm btn-primary"
                         onClick={() => handleApprove(u)}
@@ -117,7 +118,7 @@ export default function UsersPanel() {
                         Odobri
                       </button>
                     )}
-                    {u.id !== currentUser?.id && (
+                    {!isGuest && u.id !== currentUser?.id && (
                       <button
                         className={`btn btn-sm ${u.active !== false ? 'btn-danger' : 'btn-edit'}`}
                         onClick={() => handleToggle(u)}
@@ -135,6 +136,8 @@ export default function UsersPanel() {
       )}
 
       {/* ── Add user form ── */}
+      {!isGuest && (
+      <>
       <h3 style={{ marginBottom: 12, fontSize: 14, color: 'var(--text2)', fontWeight: 600 }}>Dodaj korisnika</h3>
       <form onSubmit={handleCreate} style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end' }}>
         <div className="form-group" style={{ marginBottom: 0, minWidth: 180 }}>
@@ -181,6 +184,8 @@ export default function UsersPanel() {
       </form>
       {formError && (
         <div style={{ marginTop: 8, fontSize: 13, color: 'var(--red)' }}>✕ {formError}</div>
+      )}
+      </>
       )}
     </div>
   );

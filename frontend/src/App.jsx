@@ -53,7 +53,7 @@ export default function App() {
 
   if (!currentUser) return <><AuthPage /><Toast /></>;
 
-  const tabs = isManager ? [...BASE_TABS, ...MANAGER_TABS] : BASE_TABS;
+  const tabs = (isManager || isGuest) ? [...BASE_TABS, ...MANAGER_TABS] : BASE_TABS;
 
   return (
     <ErrorBoundary>
@@ -118,7 +118,7 @@ export default function App() {
           <div style={{ display: activeTab === 'period'   ? 'block' : 'none' }}><PeriodView /></div>
           <div style={{ display: activeTab === 'projects' ? 'block' : 'none' }}><ProjectsView /></div>
           <div style={{ display: activeTab === 'stats'    ? 'block' : 'none' }}><Statistics /></div>
-          {isManager && (
+          {(isManager || isGuest) && (
             <>
               <div style={{ display: activeTab === 'team'  ? 'block' : 'none' }}><TeamReport /></div>
               <div style={{ display: activeTab === 'users' ? 'block' : 'none' }}><UsersPanel /></div>

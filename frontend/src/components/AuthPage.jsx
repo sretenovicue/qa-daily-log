@@ -203,6 +203,51 @@ export default function AuthPage() {
             {loading ? 'Učitavanje…' : mode === 'login' ? 'Prijavi se' : 'Registruj se'}
           </button>
         </form>
+
+        {mode === 'login' && (
+          <>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '18px 0 14px' }}>
+              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }} />
+              <span style={{ fontSize: 11, color: 'var(--text2)', opacity: 0.5, letterSpacing: '0.05em' }}>ILI</span>
+              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }} />
+            </div>
+
+            <button
+              type="button"
+              disabled={loading}
+              onClick={async () => {
+                setLoading(true);
+                try { await login('guest', 'guest'); }
+                catch (err) {
+                  let msg = err.message;
+                  try { msg = JSON.parse(msg).error || msg; } catch (_) {}
+                  setApiError(msg);
+                } finally { setLoading(false); }
+              }}
+              style={{
+                width: '100%',
+                padding: '11px 16px',
+                borderRadius: 10,
+                border: '1px dashed rgba(124,111,247,0.4)',
+                background: 'rgba(124,111,247,0.06)',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: 12,
+                transition: 'all 0.18s',
+              }}
+              onMouseEnter={e => e.currentTarget.style.background = 'rgba(124,111,247,0.13)'}
+              onMouseLeave={e => e.currentTarget.style.background = 'rgba(124,111,247,0.06)'}
+            >
+              <span style={{ fontSize: 20 }}>👀</span>
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)' }}>Pogledaj demo</div>
+                <div style={{ fontSize: 11, color: 'var(--text2)', marginTop: 1 }}>Bez registracije — samo pregled</div>
+              </div>
+              <span style={{ marginLeft: 'auto', fontSize: 16, color: 'var(--accent)', opacity: 0.6 }}>→</span>
+            </button>
+          </>
+        )}
       </div>
     </div>
   );

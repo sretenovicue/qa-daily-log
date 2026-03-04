@@ -239,8 +239,8 @@ export default function PeriodView() {
       )}
 
       <div className="export-section">
-        <button className="btn btn-ghost btn-sm" onClick={exportXLSX}>⬇ Excel (.xlsx)</button>
-        <button className="btn btn-ghost btn-sm" onClick={copyPeriod}>📋 Kopiraj period</button>
+        <button className="btn btn-ghost btn-sm" onClick={exportXLSX} disabled={isGuest}>⬇ Excel (.xlsx)</button>
+        <button className="btn btn-ghost btn-sm" onClick={copyPeriod} disabled={isGuest}>📋 Kopiraj period</button>
       </div>
 
       {editing && <EditModal entry={editing} onSave={handleSave} onClose={() => setEditing(null)} />}

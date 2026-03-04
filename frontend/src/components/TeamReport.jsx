@@ -13,14 +13,15 @@ function firstOfMonth() {
 
 export default function TeamReport() {
   const {
-    teamStats, teamStatsLoading, teamStatsError, fetchTeamStats,
+    teamStats, teamStatsLoading, teamStatsError, fetchTeamStats, currentUser,
   } = useStore();
+  const isGuest = currentUser?.role === 'guest';
 
   const from = teamStats?.from || firstOfMonth();
   const to   = teamStats?.to   || nowYMD();
 
   useEffect(() => {
-    fetchTeamStats({ from: firstOfMonth(), to: nowYMD() });
+    if (!isGuest) fetchTeamStats({ from: firstOfMonth(), to: nowYMD() });
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleRange = useCallback((e) => {
@@ -75,8 +76,8 @@ export default function TeamReport() {
           <label>Do datuma</label>
           <input type="date" name="to" defaultValue={nowYMD()} />
         </div>
-        <button type="submit" className="btn btn-primary btn-sm">Prikaži</button>
-        {teamStats && (
+        <button type="submit" className="btn btn-primary btn-sm" disabled={isGuest}>Prikaži</button>
+        {teamStats && !isGuest && (
           <button type="button" className="btn btn-ghost btn-sm" onClick={exportXLSX} style={{ marginLeft: 'auto' }}>
             ⬇ Excel (.xlsx)
           </button>

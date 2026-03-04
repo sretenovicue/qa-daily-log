@@ -200,8 +200,8 @@ export default function DailyLog() {
       )}
 
       <div className="export-section">
-        <button className="btn btn-ghost btn-sm" onClick={exportXLSX}>⬇ Excel (.xlsx)</button>
-        <button className="btn btn-ghost btn-sm" onClick={copyDay}>📋 Kopiraj dan</button>
+        <button className="btn btn-ghost btn-sm" onClick={exportXLSX} disabled={isGuest}>⬇ Excel (.xlsx)</button>
+        <button className="btn btn-ghost btn-sm" onClick={copyDay} disabled={isGuest}>📋 Kopiraj dan</button>
       </div>
 
       {editing && (

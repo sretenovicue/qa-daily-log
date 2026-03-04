@@ -14,7 +14,7 @@ export default function UsersPanel() {
   const [formError,   setFormError]   = useState('');
   const [formLoading, setFormLoading] = useState('');
 
-  useEffect(() => { fetchUsers(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  useEffect(() => { if (!isGuest) fetchUsers(); }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   async function handleToggle(user) {
     try {

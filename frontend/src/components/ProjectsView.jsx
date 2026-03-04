@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
 import { getStats, getEntries } from '../api';
+import { useStore } from '../store';
 import { CATEGORIES, PROJECTS, secondsToHuman } from '../constants';
 
 const MONTHS = [
@@ -23,6 +24,8 @@ export default function ProjectsView({ refresh }) {
   const [month, setMonth] = useState(now.getMonth()); // 0-indexed
   const [data,  setData]  = useState([]);
   const [loading, setLoading] = useState(false);
+  const { currentUser } = useStore();
+  const isGuest = currentUser?.role === 'guest';
 
   useEffect(() => { fetchData(); }, [year, month, refresh]);
 
@@ -199,7 +202,7 @@ export default function ProjectsView({ refresh }) {
       )}
 
       <div className="export-section">
-        <button className="btn btn-ghost btn-sm" onClick={exportXLSX}>⬇ Excel (.xlsx) — {monthLabel}</button>
+        <button className="btn btn-ghost btn-sm" onClick={exportXLSX} disabled={isGuest}>⬇ Excel (.xlsx) — {monthLabel}</button>
       </div>
     </div>
   );

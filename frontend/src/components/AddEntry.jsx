@@ -8,9 +8,9 @@ const ACTION_KEYS   = Object.keys(ACTIONS);
 const STATUS_KEYS   = Object.keys(STATUSES);
 
 const INITIAL_FORM = {
-  category:    'manual',
-  action:      'executed',
-  status:      'in-progress',
+  category:    '',
+  action:      '',
+  status:      '',
   project:     '',
   description: '',
   manualTime:  '',
@@ -65,6 +65,7 @@ export default function AddEntry() {
         <div className="form-group">
           <label>Kategorija</label>
           <select value={form.category} onChange={e => set('category', e.target.value)}>
+            <option value="">— Odaberi —</option>
             {CATEGORY_KEYS.map(k => (
               <option key={k} value={k}>{CATEGORIES[k].emoji} {CATEGORIES[k].label}</option>
             ))}
@@ -74,6 +75,7 @@ export default function AddEntry() {
         <div className="form-group">
           <label>Akcija</label>
           <select value={form.action} onChange={e => set('action', e.target.value)}>
+            <option value="">— Odaberi —</option>
             {ACTION_KEYS.map(k => (
               <option key={k} value={k}>{ACTIONS[k]}</option>
             ))}
@@ -83,6 +85,7 @@ export default function AddEntry() {
         <div className="form-group">
           <label>Status</label>
           <select value={form.status} onChange={e => set('status', e.target.value)}>
+            <option value="">— Odaberi —</option>
             {STATUS_KEYS.map(k => (
               <option key={k} value={k}>{STATUSES[k].emoji} {STATUSES[k].label}</option>
             ))}

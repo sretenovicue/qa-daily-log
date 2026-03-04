@@ -33,16 +33,12 @@ router.post('/register', wrap(async (req, res) => {
   }
 
   const password_hash = await bcrypt.hash(password, 10);
-  const result = await pool.query(
-    'INSERT INTO users (email, username, password_hash) VALUES ($1, $2, $3) RETURNING id, role, active',
+  await pool.query(
+    'INSERT INTO users (email, username, password_hash, approved) VALUES ($1, $2, $3, false)',
     [email.toLowerCase(), username.trim(), password_hash]
   );
 
-  const row   = result.rows[0];
-  const user  = { id: row.id, email: email.toLowerCase(), username: username.trim(), role: row.role, active: row.active };
-  const token = signToken(user.id, user.role);
-
-  res.status(201).json({ token, user });
+  res.status(201).json({ pending: true });
 }));
 
 // ── POST /api/auth/login ──────────────────────────────────────────────
@@ -60,6 +56,10 @@ router.post('/login', wrap(async (req, res) => {
   const row = rows[0];
   if (!row) {
     return res.status(401).json({ error: 'Pogrešan email ili lozinka' });
+  }
+
+  if (row.approved === false) {
+    return res.status(403).json({ error: 'Nalog čeka odobrenje menadžera.' });
   }
 
   if (row.active === false) {

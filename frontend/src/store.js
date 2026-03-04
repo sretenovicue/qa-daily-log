@@ -26,9 +26,10 @@ export const useStore = create((set, get) => ({
   },
 
   register: async (email, username, password) => {
-    const { token, user } = await api.authRegister(email, username, password);
-    localStorage.setItem('token', token);
-    set({ authToken: token, currentUser: user });
+    const data = await api.authRegister(email, username, password);
+    if (data.pending) return { pending: true };
+    localStorage.setItem('token', data.token);
+    set({ authToken: data.token, currentUser: data.user });
   },
 
   logout: () => {
@@ -193,6 +194,12 @@ export const useStore = create((set, get) => ({
 
   toggleUser: async (id) => {
     const updated = await api.toggleUser(id);
+    set(s => ({ users: s.users.map(u => u.id === id ? updated : u) }));
+    return updated;
+  },
+
+  approveUser: async (id) => {
+    const updated = await api.approveUser(id);
     set(s => ({ users: s.users.map(u => u.id === id ? updated : u) }));
     return updated;
   },

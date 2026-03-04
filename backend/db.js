@@ -1,5 +1,6 @@
 require('dotenv').config();
 const { Pool } = require('pg');
+const bcrypt = require('bcryptjs');
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL,
@@ -40,9 +41,21 @@ async function initDb() {
 
   // Safe migrations — add columns only if they don't exist yet
   await pool.query(`
-    ALTER TABLE users ADD COLUMN IF NOT EXISTS role   TEXT    DEFAULT 'user';
-    ALTER TABLE users ADD COLUMN IF NOT EXISTS active BOOLEAN DEFAULT true;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS role     TEXT    DEFAULT 'user';
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS active   BOOLEAN DEFAULT true;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS approved BOOLEAN DEFAULT true;
   `);
+
+  // Seed admin user if it doesn't exist
+  const existing = await pool.query("SELECT id FROM users WHERE username = 'admin'");
+  if (!existing.rows[0]) {
+    const hash = await bcrypt.hash('admin', 10);
+    await pool.query(
+      "INSERT INTO users (email, username, password_hash, role, active, approved) VALUES ('admin@admin.com', 'admin', $1, 'manager', true, true)",
+      [hash]
+    );
+    console.log('Admin user created (username: admin, password: admin)');
+  }
 }
 
 initDb().catch(err => {

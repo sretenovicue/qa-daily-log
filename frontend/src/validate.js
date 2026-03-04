@@ -15,7 +15,15 @@ export function validateEntry(form) {
   if (!form.action) {
     errors.push('Akcija je obavezna');
   }
-  if (form.manualTime && !isValidDuration(form.manualTime.trim())) {
+  if (!form.status) {
+    errors.push('Status je obavezan');
+  }
+  if (!form.description || !form.description.trim()) {
+    errors.push('Opis je obavezan');
+  }
+  if (!form.manualTime || !form.manualTime.trim()) {
+    errors.push('Trajanje je obavezno');
+  } else if (!isValidDuration(form.manualTime.trim())) {
     errors.push('Trajanje mora biti u formatu h:mm (npr. 1:30 ili 0:45)');
   }
 

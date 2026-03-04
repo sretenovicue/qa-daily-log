@@ -33,11 +33,13 @@ export default function AuthPage() {
   const [errors,  setErrors]  = useState({});
   const [apiError, setApiError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [pendingApproval, setPendingApproval] = useState(false);
 
   function switchMode(m) {
     setMode(m);
     setErrors({});
     setApiError('');
+    setPendingApproval(false);
   }
 
   async function handleSubmit(e) {
@@ -56,7 +58,11 @@ export default function AuthPage() {
       if (mode === 'login') {
         await login(email, password);
       } else {
-        await register(email, username, password);
+        const result = await register(email, username, password);
+        if (result?.pending) {
+          setPendingApproval(true);
+          return;
+        }
       }
     } catch (err) {
       let msg = err.message;
@@ -69,11 +75,53 @@ export default function AuthPage() {
 
   return (
     <div className="auth-page">
-      <div className="auth-card">
+      <div className="auth-card" style={{ position: 'relative' }}>
+        <div style={{
+          position: 'absolute',
+          top: 12,
+          right: 14,
+          fontSize: 8,
+          fontWeight: 600,
+          letterSpacing: '0.06em',
+          color: 'transparent',
+          background: 'linear-gradient(90deg, var(--accent, #7c6ff7), #a78bfa)',
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          opacity: 0.75,
+          textTransform: 'uppercase',
+          pointerEvents: 'none',
+          userSelect: 'none',
+        }}>
+          vibecoded by Bosko
+        </div>
         <div className="auth-logo">
           <div className="logo-icon">🧪</div>
           <h1>QA <span>Daily</span> Log</h1>
         </div>
+
+        {pendingApproval && (
+          <div style={{
+            background: 'rgba(72,199,142,0.12)',
+            border: '1px solid rgba(72,199,142,0.35)',
+            borderRadius: 10,
+            padding: '14px 16px',
+            marginBottom: 16,
+            textAlign: 'center',
+          }}>
+            <div style={{ fontSize: 22, marginBottom: 6 }}>✅</div>
+            <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--green)' }}>Registracija uspješna!</div>
+            <div style={{ fontSize: 13, color: 'var(--text2)', marginTop: 4 }}>
+              Nalog čeka odobrenje menadžera. Bićete obaviješteni kada se nalog aktivira.
+            </div>
+            <button
+              type="button"
+              style={{ marginTop: 12, fontSize: 12, background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer', textDecoration: 'underline' }}
+              onClick={() => { setPendingApproval(false); switchMode('login'); }}
+            >
+              Idi na prijavu
+            </button>
+          </div>
+        )}
 
         <div className="auth-tabs">
           <button

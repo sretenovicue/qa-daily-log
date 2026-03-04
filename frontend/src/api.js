@@ -112,3 +112,11 @@ export async function toggleUser(id) {
   });
   return handleResponse(res);
 }
+
+export async function approveUser(id) {
+  const res = await fetch(`${BASE}/users/${id}/approve`, {
+    method: 'POST',
+    headers: authHeaders(),
+  });
+  return handleResponse(res);
+}

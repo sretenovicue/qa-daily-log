@@ -5,7 +5,7 @@ const ROLE_LABELS = { manager: 'Manager', user: 'Korisnik' };
 
 export default function UsersPanel() {
   const {
-    users, usersLoading, usersError, fetchUsers, createUser, toggleUser,
+    users, usersLoading, usersError, fetchUsers, createUser, toggleUser, approveUser,
     currentUser, addToast,
   } = useStore();
 
@@ -19,6 +19,15 @@ export default function UsersPanel() {
     try {
       const updated = await toggleUser(user.id);
       addToast(`${updated.username} ${updated.active ? 'aktiviran' : 'deaktiviran'}`, 'info');
+    } catch (err) {
+      addToast(parseError(err), 'error');
+    }
+  }
+
+  async function handleApprove(user) {
+    try {
+      const updated = await approveUser(user.id);
+      addToast(`${updated.username} odobren ✓`, 'success');
     } catch (err) {
       addToast(parseError(err), 'error');
     }
@@ -64,6 +73,7 @@ export default function UsersPanel() {
                 <th>Email</th>
                 <th>Ime</th>
                 <th>Uloga</th>
+                <th>Odobrenje</th>
                 <th>Status</th>
                 <th></th>
               </tr>
@@ -83,13 +93,30 @@ export default function UsersPanel() {
                   </td>
                   <td>
                     <span className="badge" style={{
+                      background: u.approved !== false ? 'rgba(72,199,142,0.15)' : 'rgba(255,193,7,0.15)',
+                      color:      u.approved !== false ? 'var(--green)' : '#f0a500',
+                    }}>
+                      {u.approved !== false ? 'Odobren' : 'Na čekanju'}
+                    </span>
+                  </td>
+                  <td>
+                    <span className="badge" style={{
                       background: u.active !== false ? 'rgba(72,199,142,0.15)' : 'rgba(240,108,108,0.15)',
                       color:      u.active !== false ? 'var(--green)' : 'var(--red)',
                     }}>
                       {u.active !== false ? 'Aktivan' : 'Neaktivan'}
                     </span>
                   </td>
-                  <td>
+                  <td style={{ display: 'flex', gap: 6 }}>
+                    {u.approved === false && (
+                      <button
+                        className="btn btn-sm btn-primary"
+                        onClick={() => handleApprove(u)}
+                        title="Odobri korisnika"
+                      >
+                        Odobri
+                      </button>
+                    )}
                     {u.id !== currentUser?.id && (
                       <button
                         className={`btn btn-sm ${u.active !== false ? 'btn-danger' : 'btn-edit'}`}

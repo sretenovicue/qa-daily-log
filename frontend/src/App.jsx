@@ -107,7 +107,7 @@ export default function App() {
       </div>
 
       <footer style={{ position: 'fixed', bottom: 12, left: 16, fontSize: 13, color: '#fff', opacity: 0.45, pointerEvents: 'none', userSelect: 'none' }}>
-        Vibecoded by Bosko Sretenovic
+        Vibecoded by Bosko
       </footer>
 
       <Toast />

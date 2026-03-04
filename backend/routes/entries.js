@@ -116,7 +116,7 @@ router.post('/', wrap(async (req, res) => {
 
 // ── PATCH /api/entries/:id ───────────────────────────────────────────
 router.patch('/:id', wrap(async (req, res) => {
-  if (req.userRole === 'guest') return res.status(403).json({ error: 'Gosti ne mogu mijenjati unose' });
+  if (req.userRole === 'guest') return res.status(403).json({ error: 'Gosti ne mogu menjati unose' });
   const id = parseId(req.params.id);
   if (!id) return res.status(400).json({ error: 'ID mora biti pozitivan ceo broj' });
 

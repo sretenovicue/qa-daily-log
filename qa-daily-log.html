@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QA Daily Log</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0f1117;
+      --surface: #1a1d27;
+      --surface2: #252836;
+      --border: #2e3147;
+      --accent: #6c63ff;
+      --green: #43e97b;
+      --yellow: #f9ca24;
+      --red: #ff6b6b;
+      --blue: #4fc3f7;
+      --orange: #ffa726;
+      --text: #e0e0e0;
+      --text2: #8b8fa8;
+      --radius: 10px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+    header {
+      background: var(--surface); border-bottom: 1px solid var(--border);
+      padding: 16px 24px; display: flex; align-items: center; justify-content: space-between;
+      position: sticky; top: 0; z-index: 100;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; }
+    .logo-icon { width:36px; height:36px; background:var(--accent); border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+    .logo h1 { font-size: 18px; font-weight: 700; }
+    .logo span { color: var(--accent); }
+    .header-date { color: var(--text2); font-size: 14px; }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 24px; display: grid; grid-template-columns: 320px 1fr; gap: 24px; }
+
+    .card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; }
+    .card-title { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; color: var(--text2); margin-bottom: 16px; }
+
+    .form-group { margin-bottom: 12px; }
+    label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 5px; font-weight: 500; }
+    input, select, textarea {
+      width: 100%; background: var(--surface2); border: 1px solid var(--border);
+      border-radius: 8px; color: var(--text); padding: 9px 12px; font-size: 13px;
+      font-family: inherit; outline: none; transition: border-color 0.2s;
+    }
+    input:focus, select:focus, textarea:focus { border-color: var(--accent); }
+    textarea { resize: vertical; min-height: 60px; }
+    select option { background: var(--surface2); }
+
+    .btn { padding: 9px 16px; border: none; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: opacity 0.2s, transform 0.1s; }
+    .btn:hover { opacity: 0.85; }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary { background: var(--accent); color: #fff; width: 100%; }
+    .btn-sm { padding: 5px 10px; font-size: 11px; }
+    .btn-danger { background: var(--red); color: #fff; }
+    .btn-ghost { background: var(--surface2); color: var(--text2); border: 1px solid var(--border); }
+    .btn-green { background: var(--green); color: #000; }
+    .btn-yellow { background: var(--yellow); color: #000; }
+
+    .timer-box { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
+    .timer-display { font-size: 22px; font-weight: 700; font-family: 'Courier New', monospace; color: var(--accent); flex: 1; }
+    .timer-running .timer-display { color: var(--green); }
+    .timer-btns { display: flex; gap: 6px; }
+
+    .tabs { display: flex; gap: 4px; margin-bottom: 20px; background: var(--surface2); border-radius: 8px; padding: 4px; }
+    .tab { flex: 1; padding: 8px 4px; text-align: center; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; color: var(--text2); transition: all 0.2s; border: none; background: transparent; }
+    .tab.active { background: var(--accent); color: #fff; }
+
+    .date-nav { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .date-nav .date-label { font-weight: 600; font-size: 15px; }
+
+    /* SORT BAR */
+    .sort-bar { display: flex; gap: 8px; margin-bottom: 14px; align-items: center; flex-wrap: wrap; }
+    .sort-bar label { margin: 0; white-space: nowrap; }
+    .sort-bar select { width: auto; padding: 6px 10px; font-size: 12px; }
+
+    .entry { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 12px 14px; margin-bottom: 8px; display: flex; gap: 12px; align-items: flex-start; }
+    .entry-dot { width: 9px; height: 9px; border-radius: 50%; margin-top: 5px; flex-shrink: 0; }
+    .entry-body { flex: 1; }
+    .entry-top { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; flex-wrap: wrap; }
+    .badge { font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.4px; }
+    .entry-action { font-size: 12px; color: var(--text2); }
+    .entry-time { font-size: 11px; color: var(--text2); margin-left: auto; }
+    .entry-desc { font-size: 13px; color: var(--text); margin-top: 4px; line-height: 1.5; }
+    .entry-duration { font-size: 11px; color: var(--accent); margin-top: 4px; font-weight: 700; }
+    .entry-actions { display: flex; gap: 6px; margin-top: 8px; }
+    .empty-state { text-align: center; color: var(--text2); padding: 40px 20px; font-size: 14px; }
+    .empty-state .emoji { font-size: 32px; display: block; margin-bottom: 8px; }
+
+    /* STATS */
+    .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+    .stat-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 14px; text-align: center; }
+    .stat-number { font-size: 26px; font-weight: 700; }
+    .stat-label { font-size: 10px; color: var(--text2); margin-top: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    .charts-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+    .chart-card { background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; padding: 16px; }
+    .chart-card canvas { max-height: 200px; }
+
+    /* PERIOD */
+    .period-controls { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap; align-items: flex-end; }
+    .period-controls .form-group { margin: 0; flex: 1; min-width: 120px; }
+    .period-entry-date { font-size: 11px; color: var(--accent); font-weight: 700; margin-bottom: 6px; }
+
+    .cat-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; font-size: 12px; }
+    .cat-bar-wrap { flex: 1; background: var(--surface); border-radius: 4px; height: 6px; overflow: hidden; }
+    .cat-bar { height: 100%; border-radius: 4px; transition: width 0.4s; }
+    .cat-count { font-size: 11px; color: var(--text2); min-width: 24px; text-align: right; }
+
+    .export-section { margin-top: 14px; display: flex; gap: 8px; flex-wrap: wrap; }
+    .section-sep { margin: 16px 0 12px; border: none; border-top: 1px solid var(--border); }
+
+    @media (max-width: 900px) {
+      .container { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: 1fr 1fr; }
+      .charts-row { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <div class="logo-icon">🧪</div>
+    <h1>QA <span>Daily</span> Log</h1>
+  </div>
+  <div class="header-date" id="headerDate"></div>
+</header>
+
+<div class="container">
+  <!-- LEFT PANEL -->
+  <div>
+    <div class="card">
+      <div class="card-title">Novi unos</div>
+
+      <div class="timer-box" id="timerBox">
+        <div>
+          <div style="font-size:10px;color:var(--text2);margin-bottom:2px">TAJMER</div>
+          <div class="timer-display" id="timerDisplay">00:00:00</div>
+        </div>
+        <div class="timer-btns">
+          <button class="btn btn-sm btn-green" id="timerStartBtn" onclick="startTimer()">▶ Start</button>
+          <button class="btn btn-sm btn-yellow" id="timerStopBtn" onclick="stopTimer()" style="display:none">⏸ Stop</button>
+          <button class="btn btn-sm btn-ghost" onclick="resetTimer()">↺</button>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Kategorija</label>
+        <select id="category">
+          <option value="manual">🖐 Manuelno testiranje</option>
+          <option value="auto">🤖 Auto testovi</option>
+          <option value="postman">📮 Postman / API testovi</option>
+          <option value="qa-release">🚀 QA Release</option>
+          <option value="prod-release">🏁 Prod Release</option>
+          <option value="regression">🔁 Regresija</option>
+          <option value="bug">🐛 Bug prijava / praćenje</option>
+          <option value="review">👁 Code / Test review</option>
+          <option value="docs">📝 Dokumentacija</option>
+          <option value="meeting">💬 Sastanak</option>
+          <option value="other">📌 Ostalo</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Akcija</label>
+        <select id="action">
+          <option value="executed">Izvršen</option>
+          <option value="added">Dodat novi</option>
+          <option value="updated">Ažuriran postojeći</option>
+          <option value="fixed">Ispravljen</option>
+          <option value="reviewed">Pregledan</option>
+          <option value="reported">Prijavljen</option>
+          <option value="released">Releazovan</option>
+          <option value="investigated">Istraživano</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Opis</label>
+        <textarea id="description" placeholder="Npr: Test slučaj za login, bug #123..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Ručno vreme (h:mm) — ako ne koristiš tajmer</label>
+        <input type="text" id="manualTime" placeholder="npr. 1:30" />
+      </div>
+
+      <button class="btn btn-primary" onclick="addEntry()">+ Dodaj unos</button>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div>
+    <div class="tabs">
+      <button class="tab active" onclick="switchTab('log', this)">📋 Dnevni log</button>
+      <button class="tab" onclick="switchTab('period', this)">📅 Period</button>
+      <button class="tab" onclick="switchTab('stats', this)">📊 Statistike</button>
+    </div>
+
+    <!-- LOG TAB -->
+    <div id="tabLog">
+      <div class="date-nav">
+        <button class="btn btn-ghost btn-sm" onclick="changeDay(-1)">← Prethodni</button>
+        <div class="date-label" id="viewDateLabel"></div>
+        <button class="btn btn-ghost btn-sm" onclick="changeDay(1)">Sledeći →</button>
+      </div>
+
+      <div class="sort-bar">
+        <label>Sortiraj:</label>
+        <select id="sortField" onchange="renderLog()">
+          <option value="time">Vreme (najnoviji)</option>
+          <option value="time-asc">Vreme (najstariji)</option>
+          <option value="category">Kategorija</option>
+          <option value="duration">Trajanje</option>
+        </select>
+      </div>
+
+      <div id="entriesList"></div>
+
+      <div class="export-section">
+        <button class="btn btn-ghost btn-sm" onclick="exportDay()">⬇ Izvezi dan (txt)</button>
+        <button class="btn btn-ghost btn-sm" onclick="copyDay()">📋 Kopiraj dan</button>
+      </div>
+    </div>
+
+    <!-- PERIOD TAB -->
+    <div id="tabPeriod" style="display:none">
+      <div class="period-controls">
+        <div class="form-group">
+          <label>Od datuma</label>
+          <input type="date" id="periodFrom" />
+        </div>
+        <div class="form-group">
+          <label>Do datuma</label>
+          <input type="date" id="periodTo" />
+        </div>
+        <div class="form-group" style="min-width:auto">
+          <label>Filter kategorija</label>
+          <select id="periodCat">
+            <option value="all">Sve kategorije</option>
+            <option value="manual">Manuelno</option>
+            <option value="auto">Auto testovi</option>
+            <option value="postman">Postman</option>
+            <option value="qa-release">QA Release</option>
+            <option value="prod-release">Prod Release</option>
+            <option value="regression">Regresija</option>
+            <option value="bug">Bug</option>
+            <option value="review">Review</option>
+            <option value="docs">Docs</option>
+            <option value="meeting">Sastanak</option>
+            <option value="other">Ostalo</option>
+          </select>
+        </div>
+        <div class="form-group" style="min-width:auto">
+          <label>Sortiraj</label>
+          <select id="periodSort">
+            <option value="date-desc">Datum (najnoviji)</option>
+            <option value="date-asc">Datum (najstariji)</option>
+            <option value="category">Kategorija</option>
+            <option value="duration">Trajanje</option>
+          </select>
+        </div>
+        <button class="btn btn-ghost btn-sm" style="height:36px" onclick="renderPeriod()">🔍 Prikaži</button>
+      </div>
+      <div style="display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap">
+        <button class="btn btn-ghost btn-sm" onclick="setPeriodQuick(7)">Posednjih 7 dana</button>
+        <button class="btn btn-ghost btn-sm" onclick="setPeriodQuick(30)">Prethodnih 30 dana</button>
+        <button class="btn btn-ghost btn-sm" onclick="setPeriodThisMonth()">Ovaj mesec</button>
+      </div>
+      <div id="periodStats" style="margin-bottom:16px"></div>
+      <div id="periodList"></div>
+      <div class="export-section">
+        <button class="btn btn-ghost btn-sm" onclick="exportPeriod()">⬇ Izvezi period (txt)</button>
+        <button class="btn btn-ghost btn-sm" onclick="copyPeriod()">📋 Kopiraj period</button>
+      </div>
+    </div>
+
+    <!-- STATS TAB -->
+    <div id="tabStats" style="display:none">
+      <div id="statsContent"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const KEY = 'qa_log_v1';
+  let data = JSON.parse(localStorage.getItem(KEY) || '{}');
+  let viewDate = todayStr();
+  let timerInterval = null;
+  let timerSeconds = 0;
+  let timerRunning = false;
+  let charts = {};
+
+  function todayStr() { return new Date().toISOString().slice(0, 10); }
+  function save() { localStorage.setItem(KEY, JSON.stringify(data)); }
+
+  // ─── TIMER ───────────────────────────────────────────────────────
+  function startTimer() {
+    timerRunning = true;
+    document.getElementById('timerStartBtn').style.display = 'none';
+    document.getElementById('timerStopBtn').style.display = '';
+    document.getElementById('timerBox').classList.add('timer-running');
+    timerInterval = setInterval(() => { timerSeconds++; updateTimerDisplay(); }, 1000);
+  }
+  function stopTimer() {
+    timerRunning = false;
+    clearInterval(timerInterval);
+    document.getElementById('timerStartBtn').style.display = '';
+    document.getElementById('timerStopBtn').style.display = 'none';
+    document.getElementById('timerBox').classList.remove('timer-running');
+  }
+  function resetTimer() { stopTimer(); timerSeconds = 0; updateTimerDisplay(); }
+  function updateTimerDisplay() {
+    const h = Math.floor(timerSeconds / 3600), m = Math.floor((timerSeconds % 3600) / 60), s = timerSeconds % 60;
+    document.getElementById('timerDisplay').textContent = `${pad(h)}:${pad(m)}:${pad(s)}`;
+  }
+  function pad(n) { return String(n).padStart(2, '0'); }
+  function secondsToHuman(s) {
+    if (!s) return null;
+    const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60);
+    return h > 0 ? `${h}h ${m}m` : `${m}m`;
+  }
+  function parseManualTime(str) {
+    if (!str) return 0;
+    const parts = str.split(':');
+    if (parts.length === 2) return parseInt(parts[0]) * 3600 + parseInt(parts[1]) * 60;
+    return parseFloat(parts[0]) * 3600;
+  }
+
+  // ─── CATEGORIES ──────────────────────────────────────────────────
+  const CATEGORIES = {
+    manual:        { label: 'Manuelno',   color: '#4fc3f7', emoji: '🖐' },
+    auto:          { label: 'Auto',       color: '#43e97b', emoji: '🤖' },
+    postman:       { label: 'Postman',    color: '#ffa726', emoji: '📮' },
+    'qa-release':  { label: 'QA Release', color: '#6c63ff', emoji: '🚀' },
+    'prod-release':{ label: 'Prod',       color: '#ff6b6b', emoji: '🏁' },
+    regression:    { label: 'Regresija',  color: '#f9ca24', emoji: '🔁' },
+    bug:           { label: 'Bug',        color: '#ff6584', emoji: '🐛' },
+    review:        { label: 'Review',     color: '#00bcd4', emoji: '👁' },
+    docs:          { label: 'Docs',       color: '#9c88ff', emoji: '📝' },
+    meeting:       { label: 'Sastanak',   color: '#78909c', emoji: '💬' },
+    other:         { label: 'Ostalo',     color: '#90a4ae', emoji: '📌' },
+  };
+  const ACTIONS = {
+    executed:'Izvršen', added:'Dodat novi', updated:'Ažuriran', fixed:'Ispravljen',
+    reviewed:'Pregledan', reported:'Prijavljen', released:'Releazovan', investigated:'Istraživano'
+  };
+
+  // ─── ADD ENTRY ───────────────────────────────────────────────────
+  function addEntry() {
+    const cat = document.getElementById('category').value;
+    const action = document.getElementById('action').value;
+    const desc = document.getElementById('description').value.trim();
+    const manual = document.getElementById('manualTime').value.trim();
+    const dur = timerSeconds > 0 ? timerSeconds : parseManualTime(manual);
+    const today = todayStr();
+    const entry = { id: Date.now(), category: cat, action, description: desc, duration: dur,
+      time: new Date().toLocaleTimeString('sr', { hour: '2-digit', minute: '2-digit' }), date: today };
+    if (!data[today]) data[today] = [];
+    data[today].unshift(entry);
+    save();
+    document.getElementById('description').value = '';
+    document.getElementById('manualTime').value = '';
+    resetTimer();
+    if (viewDate !== today) viewDate = today;
+    renderLog();
+  }
+
+  function deleteEntry(date, id) {
+    data[date] = data[date].filter(e => e.id !== id);
+    if (!data[date].length) delete data[date];
+    save();
+    renderLog();
+    renderPeriod();
+    renderStats();
+  }
+
+  // ─── SORTING ─────────────────────────────────────────────────────
+  function sortEntries(entries, field) {
+    const copy = [...entries];
+    switch (field) {
+      case 'time': return copy.sort((a, b) => b.id - a.id);
+      case 'time-asc': return copy.sort((a, b) => a.id - b.id);
+      case 'category': return copy.sort((a, b) => a.category.localeCompare(b.category));
+      case 'duration': return copy.sort((a, b) => (b.duration || 0) - (a.duration || 0));
+      default: return copy;
+    }
+  }
+
+  // ─── RENDER LOG ──────────────────────────────────────────────────
+  function renderLog() {
+    const sortField = document.getElementById('sortField').value;
+    const raw = data[viewDate] || [];
+    const entries = sortEntries(raw, sortField);
+    const list = document.getElementById('entriesList');
+    const label = document.getElementById('viewDateLabel');
+    const isToday = viewDate === todayStr();
+    const d = new Date(viewDate + 'T12:00:00');
+    label.textContent = (isToday ? 'Danas — ' : '') +
+      d.toLocaleDateString('sr-Latn', { weekday: 'long', day: 'numeric', month: 'long' });
+    list.innerHTML = entries.length ? entries.map(e => entryHTML(e)).join('') :
+      `<div class="empty-state"><span class="emoji">📋</span>Nema unosa za ovaj dan</div>`;
+  }
+
+  function entryHTML(e, showDate) {
+    const cat = CATEGORIES[e.category] || CATEGORIES.other;
+    const dur = e.duration ? `⏱ ${secondsToHuman(e.duration)}` : '';
+    return `<div class="entry">
+      <div class="entry-dot" style="background:${cat.color}"></div>
+      <div class="entry-body">
+        ${showDate ? `<div class="period-entry-date">${e.date} · ${e.time}</div>` : ''}
+        <div class="entry-top">
+          <span class="badge" style="background:${cat.color}22;color:${cat.color}">${cat.emoji} ${cat.label}</span>
+          <span class="entry-action">${ACTIONS[e.action] || e.action}</span>
+          ${!showDate ? `<span class="entry-time">${e.time}</span>` : ''}
+        </div>
+        ${e.description ? `<div class="entry-desc">${escHtml(e.description)}</div>` : ''}
+        ${dur ? `<div class="entry-duration">${dur}</div>` : ''}
+        <div class="entry-actions">
+          <button class="btn btn-sm btn-danger" onclick="deleteEntry('${e.date}', ${e.id})">🗑 Obriši</button>
+        </div>
+      </div>
+    </div>`;
+  }
+
+  // ─── PERIOD ──────────────────────────────────────────────────────
+  function setPeriodQuick(days) {
+    const to = new Date(); const from = new Date();
+    from.setDate(from.getDate() - days + 1);
+    document.getElementById('periodFrom').value = from.toISOString().slice(0,10);
+    document.getElementById('periodTo').value = to.toISOString().slice(0,10);
+    renderPeriod();
+  }
+  function setPeriodThisMonth() {
+    const now = new Date();
+    const from = new Date(now.getFullYear(), now.getMonth(), 1);
+    document.getElementById('periodFrom').value = from.toISOString().slice(0,10);
+    document.getElementById('periodTo').value = now.toISOString().slice(0,10);
+    renderPeriod();
+  }
+
+  function renderPeriod() {
+    const from = document.getElementById('periodFrom').value;
+    const to = document.getElementById('periodTo').value;
+    const catFilter = document.getElementById('periodCat').value;
+    const sortVal = document.getElementById('periodSort').value;
+    if (!from || !to) { document.getElementById('periodList').innerHTML = '<div class="empty-state"><span class="emoji">📅</span>Izaberi period</div>'; return; }
+
+    let allEntries = [];
+    Object.keys(data).filter(d => d >= from && d <= to).sort().forEach(d =>
+      data[d].forEach(e => allEntries.push(e)));
+    if (catFilter !== 'all') allEntries = allEntries.filter(e => e.category === catFilter);
+
+    // sort
+    switch (sortVal) {
+      case 'date-desc': allEntries.sort((a,b) => b.date.localeCompare(a.date) || b.id - a.id); break;
+      case 'date-asc':  allEntries.sort((a,b) => a.date.localeCompare(b.date) || a.id - b.id); break;
+      case 'category':  allEntries.sort((a,b) => a.category.localeCompare(b.category)); break;
+      case 'duration':  allEntries.sort((a,b) => (b.duration||0) - (a.duration||0)); break;
+    }
+
+    const totalDur = allEntries.reduce((s,e) => s+(e.duration||0),0);
+    const days = new Set(allEntries.map(e => e.date)).size;
+    const catCount = {};
+    allEntries.forEach(e => catCount[e.category] = (catCount[e.category]||0)+1);
+
+    document.getElementById('periodStats').innerHTML = `
+      <div class="stats-grid" style="grid-template-columns:repeat(3,1fr);margin-bottom:14px">
+        <div class="stat-card"><div class="stat-number" style="color:var(--accent)">${allEntries.length}</div><div class="stat-label">Unosa</div></div>
+        <div class="stat-card"><div class="stat-number" style="color:var(--green)">${days}</div><div class="stat-label">Dana</div></div>
+        <div class="stat-card"><div class="stat-number" style="color:var(--yellow)">${totalDur ? secondsToHuman(totalDur) : '—'}</div><div class="stat-label">Ukupno vreme</div></div>
+      </div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px">
+        ${Object.entries(catCount).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([cat,cnt]) => {
+          const c = CATEGORIES[cat]||CATEGORIES.other;
+          return `<span class="badge" style="background:${c.color}22;color:${c.color};padding:4px 10px">${c.emoji} ${c.label}: ${cnt}</span>`;
+        }).join('')}
+      </div>
+    `;
+
+    document.getElementById('periodList').innerHTML = allEntries.length
+      ? allEntries.map(e => entryHTML(e, true)).join('')
+      : `<div class="empty-state"><span class="emoji">📋</span>Nema unosa za izabrani period</div>`;
+  }
+
+  // ─── STATS & CHARTS ──────────────────────────────────────────────
+  function renderStats() {
+    const allDates = Object.keys(data).sort().reverse();
+    const allEntries = allDates.flatMap(d => data[d]);
+    const totalDur = allEntries.reduce((s,e) => s+(e.duration||0), 0);
+    const todayEntries = (data[todayStr()]||[]).length;
+    const todayDur = (data[todayStr()]||[]).reduce((s,e) => s+(e.duration||0), 0);
+
+    const catCount = {};
+    allEntries.forEach(e => catCount[e.category] = (catCount[e.category]||0)+1);
+
+    // last 14 days for trend
+    const last14 = [];
+    for (let i = 13; i >= 0; i--) {
+      const d = new Date(); d.setDate(d.getDate() - i);
+      const ds = d.toISOString().slice(0,10);
+      last14.push({ date: ds, count: (data[ds]||[]).length, dur: (data[ds]||[]).reduce((s,e)=>s+(e.duration||0),0) });
+    }
+
+    document.getElementById('statsContent').innerHTML = `
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number" style="color:var(--accent)">${todayEntries}</div><div class="stat-label">Danas</div></div>
+        <div class="stat-card"><div class="stat-number" style="color:var(--green)">${todayDur ? secondsToHuman(todayDur) : '—'}</div><div class="stat-label">Vreme danas</div></div>
+        <div class="stat-card"><div class="stat-number" style="color:var(--yellow)">${allEntries.length}</div><div class="stat-label">Ukupno unosa</div></div>
+        <div class="stat-card"><div class="stat-number" style="color:var(--orange)">${totalDur ? secondsToHuman(totalDur) : '—'}</div><div class="stat-label">Ukupno vreme</div></div>
+      </div>
+
+      <div class="charts-row">
+        <div class="chart-card">
+          <div class="card-title">Aktivnost — poslednjih 14 dana</div>
+          <canvas id="chartActivity"></canvas>
+        </div>
+        <div class="chart-card">
+          <div class="card-title">Kategorije (svi dani)</div>
+          <canvas id="chartCat"></canvas>
+        </div>
+      </div>
+
+      <div class="card-title">Raspodela po kategorijama</div>
+      ${Object.entries(catCount).sort((a,b)=>b[1]-a[1]).map(([cat,cnt]) => {
+        const c = CATEGORIES[cat]||CATEGORIES.other, max = Math.max(...Object.values(catCount),1);
+        return `<div class="cat-row">
+          <span style="min-width:110px">${c.emoji} ${c.label}</span>
+          <div class="cat-bar-wrap"><div class="cat-bar" style="width:${Math.round(cnt/max*100)}%;background:${c.color}"></div></div>
+          <span class="cat-count">${cnt}</span>
+        </div>`;
+      }).join('')}
+    `;
+
+    // Chart.js - Activity
+    destroyChart('chartActivity');
+    const actCtx = document.getElementById('chartActivity').getContext('2d');
+    charts['chartActivity'] = new Chart(actCtx, {
+      type: 'bar',
+      data: {
+        labels: last14.map(d => d.date.slice(5)),
+        datasets: [{
+          label: 'Unosa',
+          data: last14.map(d => d.count),
+          backgroundColor: 'rgba(108,99,255,0.7)',
+          borderRadius: 4,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: { legend: { display: false } },
+        scales: {
+          x: { ticks: { color: '#8b8fa8', font: { size: 10 } }, grid: { color: '#2e3147' } },
+          y: { ticks: { color: '#8b8fa8', font: { size: 10 }, stepSize: 1 }, grid: { color: '#2e3147' }, beginAtZero: true }
+        }
+      }
+    });
+
+    // Chart.js - Categories donut
+    const catKeys = Object.keys(catCount);
+    destroyChart('chartCat');
+    const catCtx = document.getElementById('chartCat').getContext('2d');
+    charts['chartCat'] = new Chart(catCtx, {
+      type: 'doughnut',
+      data: {
+        labels: catKeys.map(k => `${CATEGORIES[k]?.emoji||''} ${CATEGORIES[k]?.label||k}`),
+        datasets: [{
+          data: catKeys.map(k => catCount[k]),
+          backgroundColor: catKeys.map(k => CATEGORIES[k]?.color || '#90a4ae'),
+          borderWidth: 2,
+          borderColor: '#252836',
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'right', labels: { color: '#e0e0e0', font: { size: 11 }, boxWidth: 12, padding: 8 } }
+        }
+      }
+    });
+  }
+
+  function destroyChart(id) { if (charts[id]) { charts[id].destroy(); delete charts[id]; } }
+
+  // ─── TABS ────────────────────────────────────────────────────────
+  function switchTab(tab, el) {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.getElementById('tabLog').style.display = tab === 'log' ? '' : 'none';
+    document.getElementById('tabPeriod').style.display = tab === 'period' ? '' : 'none';
+    document.getElementById('tabStats').style.display = tab === 'stats' ? '' : 'none';
+    if (tab === 'stats') renderStats();
+    if (tab === 'log') renderLog();
+    if (tab === 'period') renderPeriod();
+  }
+
+  function changeDay(dir) {
+    const d = new Date(viewDate + 'T12:00:00');
+    d.setDate(d.getDate() + dir);
+    viewDate = d.toISOString().slice(0,10);
+    renderLog();
+  }
+
+  // ─── EXPORT ──────────────────────────────────────────────────────
+  function dayText() {
+    const entries = data[viewDate] || [];
+    const d = new Date(viewDate + 'T12:00:00');
+    let txt = `QA LOG — ${d.toLocaleDateString('sr-Latn', { weekday:'long',year:'numeric',month:'long',day:'numeric' })}\n`;
+    txt += '='.repeat(60) + '\n\n';
+    entries.forEach((e,i) => {
+      const cat = CATEGORIES[e.category]||CATEGORIES.other;
+      txt += `${i+1}. [${cat.emoji} ${cat.label}] ${ACTIONS[e.action]||e.action}\n`;
+      if (e.description) txt += `   ${e.description}\n`;
+      txt += `   Vreme: ${e.time}${e.duration ? ' | Trajanje: '+secondsToHuman(e.duration) : ''}\n\n`;
+    });
+    return txt || 'Nema unosa.';
+  }
+
+  function periodText() {
+    const from = document.getElementById('periodFrom').value;
+    const to = document.getElementById('periodTo').value;
+    let txt = `QA LOG — Period: ${from} — ${to}\n` + '='.repeat(60) + '\n\n';
+    let prev = '';
+    let allEntries = Object.keys(data).filter(d=>d>=from&&d<=to).sort()
+      .flatMap(d=>data[d].map(e=>({...e,date:d})));
+    allEntries.forEach((e,i) => {
+      if (e.date !== prev) { if (prev) txt+='\n'; txt += `--- ${e.date} ---\n`; prev = e.date; }
+      const cat = CATEGORIES[e.category]||CATEGORIES.other;
+      txt += `  ${i+1}. [${cat.emoji} ${cat.label}] ${ACTIONS[e.action]||e.action}`;
+      if (e.description) txt += ` — ${e.description}`;
+      if (e.duration) txt += ` (${secondsToHuman(e.duration)})`;
+      txt += '\n';
+    });
+    return txt;
+  }
+
+  function exportDay() {
+    dl(dayText(), `qa-log-${viewDate}.txt`);
+  }
+  function copyDay() { navigator.clipboard.writeText(dayText()).then(() => alert('Kopirano!')); }
+  function exportPeriod() {
+    const from = document.getElementById('periodFrom').value||'?';
+    const to = document.getElementById('periodTo').value||'?';
+    dl(periodText(), `qa-log-${from}-${to}.txt`);
+  }
+  function copyPeriod() { navigator.clipboard.writeText(periodText()).then(() => alert('Kopirano!')); }
+  function dl(text, name) {
+    const a = document.createElement('a');
+    a.href = 'data:text/plain;charset=utf-8,' + encodeURIComponent(text);
+    a.download = name; a.click();
+  }
+
+  function escHtml(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+  // ─── INIT ────────────────────────────────────────────────────────
+  document.getElementById('headerDate').textContent =
+    new Date().toLocaleDateString('sr-Latn', { weekday:'long',year:'numeric',month:'long',day:'numeric' });
+
+  // default period = this month
+  const now = new Date();
+  const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+  document.getElementById('periodFrom').value = firstDay.toISOString().slice(0,10);
+  document.getElementById('periodTo').value = now.toISOString().slice(0,10);
+
+  renderLog();
+</script>
+</body>
+</html>

@@ -39,7 +39,7 @@ export default function AddEntry() {
       if (err instanceof ValidationError) {
         setErrors(err.errors);
       } else {
-        setErrors(['Greška pri dodavanju. Provjeri konekciju sa serverom.']);
+        setErrors(['Greška pri dodavanju. Proveri konekciju sa serverom.']);
         console.error(err);
       }
     } finally {

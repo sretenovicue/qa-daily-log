@@ -109,9 +109,9 @@ export default function AuthPage() {
             textAlign: 'center',
           }}>
             <div style={{ fontSize: 22, marginBottom: 6 }}>✅</div>
-            <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--green)' }}>Registracija uspješna!</div>
+            <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--green)' }}>Registracija uspešna!</div>
             <div style={{ fontSize: 13, color: 'var(--text2)', marginTop: 4 }}>
-              Nalog čeka odobrenje menadžera. Bićete obaviješteni kada se nalog aktivira.
+              Nalog čeka odobrenje menadžera. Bićete obavešteni kada se nalog aktivira.
             </div>
             <button
               type="button"
@@ -154,7 +154,7 @@ export default function AuthPage() {
             }}>
               <span style={{ fontSize: 16, marginTop: 1 }}>ℹ️</span>
               <span style={{ fontSize: 12, color: 'var(--text2)', lineHeight: 1.5 }}>
-                Nakon registracije, manager mora odobriti vaš nalog prije prve prijave.
+                Nakon registracije, manager mora odobriti vaš nalog pre prve prijave.
               </span>
             </div>
           )}

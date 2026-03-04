@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<title>QA Daily Log — DevOps Dokumentacija</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 13px;
+    color: #1a1a2e;
+    background: #fff;
+    padding: 40px 50px;
+    line-height: 1.6;
+  }
+
+  /* HEADER */
+  .doc-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #7c6ff7 100%);
+    color: #fff;
+    padding: 32px 36px;
+    border-radius: 10px;
+    margin-bottom: 32px;
+    page-break-inside: avoid;
+  }
+  .doc-header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+  .doc-header h1 span { color: #a89ef8; }
+  .doc-header .subtitle { margin-top: 6px; opacity: 0.75; font-size: 13px; }
+  .doc-header .meta { margin-top: 14px; display: flex; gap: 24px; font-size: 12px; opacity: 0.85; }
+  .doc-header .meta span { background: rgba(255,255,255,0.12); padding: 4px 10px; border-radius: 20px; }
+
+  /* SECTION */
+  .section {
+    margin-bottom: 28px;
+    page-break-inside: avoid;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a2e;
+    border-left: 4px solid #7c6ff7;
+    padding-left: 12px;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  /* TABLES */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+    margin-bottom: 8px;
+  }
+  th {
+    background: #f0effe;
+    color: #3d3580;
+    text-align: left;
+    padding: 8px 12px;
+    font-weight: 600;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  td {
+    padding: 7px 12px;
+    border-bottom: 1px solid #f0f0f0;
+    vertical-align: top;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafafe; }
+  td:first-child { font-weight: 500; color: #444; white-space: nowrap; }
+  td code, th code {
+    background: #f0effe;
+    color: #5c52c7;
+    padding: 1px 5px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px;
+  }
+
+  /* DIAGRAM */
+  .diagram {
+    background: #1a1a2e;
+    color: #a89ef8;
+    padding: 20px 24px;
+    border-radius: 8px;
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    line-height: 1.8;
+    margin-bottom: 8px;
+  }
+  .diagram .comment { color: #4e9a6e; }
+  .diagram .highlight { color: #7c6ff7; font-weight: bold; }
+  .diagram .arrow { color: #f0c060; }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: #f8f8ff;
+    border: 1px solid #e0dcff;
+    border-left: 3px solid #7c6ff7;
+    padding: 14px 16px;
+    border-radius: 0 6px 6px 0;
+    font-family: 'Courier New', monospace;
+    font-size: 11.5px;
+    color: #2a2a4a;
+    line-height: 1.7;
+    margin-bottom: 8px;
+    white-space: pre;
+  }
+
+  /* CARDS */
+  .cards { display: flex; gap: 14px; margin-bottom: 8px; }
+  .card {
+    flex: 1;
+    border: 1px solid #e8e4ff;
+    border-radius: 8px;
+    padding: 14px 16px;
+    background: #fdfcff;
+  }
+  .card h4 { font-size: 12px; font-weight: 700; color: #5c52c7; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .card p, .card li { font-size: 12px; color: #444; margin-bottom: 4px; }
+  .card ul { padding-left: 14px; }
+
+  /* WARNING BOX */
+  .warning {
+    background: #fff8e6;
+    border-left: 4px solid #f0c060;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    font-size: 12px;
+    color: #6b5000;
+    margin-bottom: 8px;
+  }
+  .warning strong { color: #8b6800; }
+
+  /* INFO BOX */
+  .info {
+    background: #f0effe;
+    border-left: 4px solid #7c6ff7;
+    padding: 10px 14px;
+    border-radius: 0 6px 6px 0;
+    font-size: 12px;
+    color: #3d3580;
+    margin-bottom: 8px;
+  }
+
+  /* BADGE */
+  .badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-size: 10.5px;
+    font-weight: 600;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+  .badge-green  { background: #e6f9ee; color: #1a7a3e; }
+  .badge-orange { background: #fff0e0; color: #b35a00; }
+  .badge-purple { background: #f0effe; color: #5c52c7; }
+
+  /* ROLE TABLE */
+  .role-user    { color: #1a7a3e; font-weight: 600; }
+  .role-manager { color: #5c52c7; font-weight: 600; }
+  .role-guest   { color: #b35a00; font-weight: 600; }
+
+  /* URL highlight */
+  .url { color: #5c52c7; font-family: 'Courier New', monospace; font-size: 12px; }
+
+  /* PAGE BREAK */
+  .page-break { page-break-before: always; }
+
+  /* FOOTER */
+  .doc-footer {
+    margin-top: 40px;
+    padding-top: 14px;
+    border-top: 1px solid #e8e4ff;
+    font-size: 11px;
+    color: #999;
+    display: flex;
+    justify-content: space-between;
+  }
+
+  /* PIPELINE */
+  .pipeline {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    margin: 10px 0;
+    flex-wrap: wrap;
+  }
+  .pipe-step {
+    background: #1a1a2e;
+    color: #a89ef8;
+    padding: 8px 14px;
+    font-size: 11.5px;
+    font-family: 'Courier New', monospace;
+    border-radius: 4px;
+  }
+  .pipe-arrow {
+    color: #7c6ff7;
+    font-size: 16px;
+    padding: 0 6px;
+    font-weight: bold;
+  }
+
+  @media print {
+    body { padding: 20px 30px; }
+    .section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="doc-header">
+  <h1>🧪 QA Daily Log — <span>DevOps Dokumentacija</span></h1>
+  <div class="subtitle">Kompletan pregled arhitekture, deploymenta i upravljanja sistemom</div>
+  <div style="margin-top:14px; font-size:11.5px; opacity:0.55; letter-spacing:0.3px;">Vibecoded by Bosko</div>
+  <div class="meta">
+    <span>📅 Mart 2026</span>
+    <span>👤 Bosko Sretenovic</span>
+    <span>🔖 v1.0</span>
+  </div>
+</div>
+
+<!-- 1. URLS -->
+<div class="section">
+  <div class="section-title">1. URLs i pristup</div>
+  <table>
+    <tr><th>Servis</th><th>URL</th><th>Napomena</th></tr>
+    <tr><td>App (korisnici)</td><td><span class="url">https://qa-daily-log.netlify.app</span></td><td>Javni URL za pristup</td></tr>
+    <tr><td>Backend API</td><td><span class="url">https://qa-daily-log.onrender.com</span></td><td>Node.js REST API</td></tr>
+    <tr><td>Health check</td><td><span class="url">https://qa-daily-log.onrender.com/api/health</span></td><td>Vraća <code>{ ok: true }</code></td></tr>
+    <tr><td>GitHub repo</td><td><span class="url">https://github.com/sretenovicue/qa-daily-log</span></td><td>Izvorni kod</td></tr>
+    <tr><td>Neon DB konzola</td><td><span class="url">https://console.neon.tech</span></td><td>PostgreSQL dashboard</td></tr>
+    <tr><td>Netlify konzola</td><td><span class="url">https://app.netlify.com/projects/qa-daily-log</span></td><td>Frontend deploy</td></tr>
+    <tr><td>Render konzola</td><td><span class="url">https://dashboard.render.com</span></td><td>Backend deploy</td></tr>
+  </table>
+</div>
+
+<!-- 2. ARHITEKTURA -->
+<div class="section">
+  <div class="section-title">2. Arhitektura sistema</div>
+  <div class="diagram">
+<span class="comment">┌─────────────────────────────────────────────────────────────────┐</span>
+<span class="comment">│                         BROWSER                                  │</span>
+<span class="comment">└─────────────────────┬───────────────────────────────────────────┘</span>
+                      <span class="arrow">│  HTTPS</span>
+                      <span class="arrow">▼</span>
+<span class="highlight">┌─────────────────────────────────────┐</span>
+<span class="highlight">│        NETLIFY CDN (frontend)        │</span>
+<span class="highlight">│   React SPA — qa-daily-log.netlify   │</span>
+<span class="highlight">└──────────┬──────────────────────────┘</span>
+           <span class="arrow">│  /api/*  →  proxy redirect (netlify.toml)</span>
+           <span class="arrow">▼</span>
+<span class="highlight">┌─────────────────────────────────────┐</span>
+<span class="highlight">│      RENDER.COM (backend)            │</span>
+<span class="highlight">│   Node.js + Express — port auto      │</span>
+<span class="highlight">└──────────┬──────────────────────────┘</span>
+           <span class="arrow">│  PostgreSQL (SSL, rejectUnauthorized)</span>
+           <span class="arrow">▼</span>
+<span class="highlight">┌─────────────────────────────────────┐</span>
+<span class="highlight">│  NEON POSTGRESQL (cloud DB)          │</span>
+<span class="highlight">│  Frankfurt — serverless Postgres     │</span>
+<span class="highlight">└─────────────────────────────────────┘</span></div>
+  <div class="info">
+    <strong>Ključna napomena:</strong> Browser nikad ne komunicira direktno sa backendom. Sve <code>/api/*</code> rute prolaze kroz Netlify proxy — backend URL ostaje skriven, CORS je centralizovan.
+  </div>
+</div>
+
+<!-- 3. FRONTEND -->
+<div class="section">
+  <div class="section-title">3. Frontend — Netlify</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Build konfiguracija</h4>
+      <table>
+        <tr><td>Servis</td><td>Netlify (free tier)</td></tr>
+        <tr><td>Branch</td><td><code>main</code></td></tr>
+        <tr><td>Base dir</td><td><code>frontend/</code></td></tr>
+        <tr><td>Build komanda</td><td><code>npm run build</code></td></tr>
+        <tr><td>Publish dir</td><td><code>dist/</code> (rel. od base)</td></tr>
+        <tr><td>Konfig fajl</td><td><code>netlify.toml</code> (root)</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h4>Stack</h4>
+      <ul>
+        <li>React 18 + Vite 5</li>
+        <li>Zustand (state management)</li>
+        <li>Chart.js (statistike)</li>
+        <li>SheetJS / xlsx (Excel export)</li>
+        <li>Vitest (unit testovi)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Pipeline — svaki push na main:</div>
+  <div class="pipeline">
+    <div class="pipe-step">git push</div><div class="pipe-arrow">→</div>
+    <div class="pipe-step">GitHub webhook</div><div class="pipe-arrow">→</div>
+    <div class="pipe-step">Netlify build (~1-2 min)</div><div class="pipe-arrow">→</div>
+    <div class="pipe-step">npm run build</div><div class="pipe-arrow">→</div>
+    <div class="pipe-step">Deploy na CDN ✓</div>
+  </div>
+</div>
+
+<!-- 4. BACKEND -->
+<div class="section page-break">
+  <div class="section-title">4. Backend — Render.com</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Konfiguracija servisa</h4>
+      <table>
+        <tr><td>Servis</td><td>Render Web Service (free)</td></tr>
+        <tr><td>Root dir</td><td><code>backend/</code></td></tr>
+        <tr><td>Build</td><td><code>npm install</code></td></tr>
+        <tr><td>Start</td><td><code>node server.js</code></td></tr>
+        <tr><td>Port</td><td><code>process.env.PORT</code> (auto)</td></tr>
+        <tr><td>Runtime</td><td>Node.js</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h4>Environment varijable</h4>
+      <table>
+        <tr><td><code>DATABASE_URL</code></td><td>Neon connection string</td></tr>
+        <tr><td><code>JWT_SECRET</code></td><td>Random tajni ključ</td></tr>
+        <tr><td><code>JWT_EXPIRY</code></td><td><code>7d</code></td></tr>
+        <tr><td><code>NODE_ENV</code></td><td><code>production</code></td></tr>
+        <tr><td><code>ALLOWED_ORIGIN</code></td><td>Netlify URL</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="warning">
+    <strong>⚠️ Free tier upozorenje:</strong> Render gasi servis nakon 15 min neaktivnosti. Prvi request (cold start) može trajati 30-60 sekundi. Ako je app u redovnoj upotrebi, ostaje aktivan.
+  </div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Pipeline — svaki push na main:</div>
+  <div class="pipeline">
+    <div class="pipe-step">git push</div><div class="pipe-arrow">→</div>
+    <div class="pipe-step">GitHub webhook</div><div class="pipe-arrow">→</div>
+    <div class="pipe-step">Render build (~2-3 min)</div><div class="pipe-arrow">→</div>
+    <div class="pipe-step">npm install</div><div class="pipe-arrow">→</div>
+    <div class="pipe-step">node server.js restart ✓</div>
+  </div>
+</div>
+
+<!-- 5. BAZA -->
+<div class="section">
+  <div class="section-title">5. Baza — Neon PostgreSQL</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Detalji</h4>
+      <table>
+        <tr><td>Servis</td><td>Neon.tech (free, serverless)</td></tr>
+        <tr><td>Region</td><td>Frankfurt (Azure Germany)</td></tr>
+        <tr><td>Projekt</td><td><code>qatrackapp</code></td></tr>
+        <tr><td>Branch</td><td><code>production</code></td></tr>
+        <tr><td>Database</td><td><code>neondb</code></td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h4>Šema tabela</h4>
+      <div class="code-block" style="font-size:10.5px; padding:10px 12px;">users
+  id, email, username, password_hash
+  role: 'user' | 'manager' | 'guest'
+  active: boolean
+  created_at
+
+entries
+  id, task_number, category, action
+  status, description, duration
+  project, date, time, created_at
+  user_id → users(id) CASCADE</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Korisni SQL upiti:</div>
+  <div class="code-block">-- Postavi manager rolu
+UPDATE users SET role = 'manager' WHERE email = 'email@domen.com';
+
+-- Deaktiviraj korisnika (ne može da se loguje)
+UPDATE users SET active = false WHERE username = 'korisnik';
+
+-- Reaktiviraj korisnika
+UPDATE users SET active = true WHERE username = 'korisnik';
+
+-- Pregled svih korisnika
+SELECT id, email, username, role, active FROM users;</div>
+</div>
+
+<!-- 6. API RUTE -->
+<div class="section">
+  <div class="section-title">6. Backend API rute</div>
+  <table>
+    <tr><th>Metoda + putanja</th><th>Pristup</th><th>Opis</th></tr>
+    <tr><td><code>POST /api/auth/register</code></td><td><span class="badge badge-green">javna</span></td><td>Kreiranje korisnika</td></tr>
+    <tr><td><code>POST /api/auth/login</code></td><td><span class="badge badge-green">javna</span></td><td>Login (email ili username)</td></tr>
+    <tr><td><code>GET /api/auth/me</code></td><td><span class="badge badge-purple">JWT</span></td><td>Podaci o prijavljenom korisniku</td></tr>
+    <tr><td><code>GET /api/entries</code></td><td><span class="badge badge-purple">JWT</span></td><td>Lista unosa (korisnik = samo svoje)</td></tr>
+    <tr><td><code>POST /api/entries</code></td><td><span class="badge badge-purple">JWT</span></td><td>Novi unos (nije dostupno guest-u)</td></tr>
+    <tr><td><code>PATCH /api/entries/:id</code></td><td><span class="badge badge-purple">JWT</span></td><td>Izmjena unosa (nije dostupno guest-u)</td></tr>
+    <tr><td><code>DELETE /api/entries/:id</code></td><td><span class="badge badge-purple">JWT</span></td><td>Brisanje unosa (nije dostupno guest-u)</td></tr>
+    <tr><td><code>GET /api/stats</code></td><td><span class="badge badge-purple">JWT</span></td><td>Statistike za korisnika</td></tr>
+    <tr><td><code>GET /api/stats/team</code></td><td><span class="badge badge-orange">manager</span></td><td>Tim izvještaj (svi korisnici)</td></tr>
+    <tr><td><code>GET /api/users</code></td><td><span class="badge badge-orange">manager</span></td><td>Lista svih korisnika</td></tr>
+    <tr><td><code>POST /api/users</code></td><td><span class="badge badge-orange">manager</span></td><td>Kreiranje korisnika</td></tr>
+    <tr><td><code>PATCH /api/users/:id</code></td><td><span class="badge badge-orange">manager</span></td><td>Aktivacija / deaktivacija</td></tr>
+    <tr><td><code>GET /api/health</code></td><td><span class="badge badge-green">javna</span></td><td>Status servera</td></tr>
+  </table>
+</div>
+
+<!-- 7. ULOGE -->
+<div class="section">
+  <div class="section-title">7. Uloge korisnika</div>
+  <table>
+    <tr><th>Uloga</th><th>Login</th><th>Čitanje</th><th>Dodavanje unosa</th><th>Tim izvještaj</th><th>Upravljanje korisnicima</th></tr>
+    <tr>
+      <td><span class="role-guest">guest</span></td>
+      <td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
+    </tr>
+    <tr>
+      <td><span class="role-user">user</span></td>
+      <td>✅</td><td>✅ (samo svoje)</td><td>✅</td><td>❌</td><td>❌</td>
+    </tr>
+    <tr>
+      <td><span class="role-manager">manager</span></td>
+      <td>✅</td><td>✅ (svi)</td><td>✅</td><td>✅</td><td>✅</td>
+    </tr>
+  </table>
+  <div class="info" style="margin-top:10px;">
+    <strong>Manager rola</strong> se dodjeljuje isključivo direktno u bazi podataka. <strong>Guest i user</strong> se mogu upravljati iz Korisnici taba u aplikaciji.
+  </div>
+</div>
+
+<!-- 8. SIGURNOST -->
+<div class="section">
+  <div class="section-title">8. Sigurnost</div>
+  <table>
+    <tr><th>Mjera</th><th>Implementacija</th></tr>
+    <tr><td>HTTP security headers</td><td><code>helmet.js</code> — CSP, HSTS, X-Frame-Options, X-Content-Type-Options...</td></tr>
+    <tr><td>Brute force zaštita</td><td><code>express-rate-limit</code> — max 10 pokušaja / 15 min / IP na login i register</td></tr>
+    <tr><td>Hashovanje lozinki</td><td><code>bcryptjs</code> — salt rounds: 10</td></tr>
+    <tr><td>Autentifikacija</td><td>JWT token (7 dana), payload: <code>{ userId, role }</code></td></tr>
+    <tr><td>CORS</td><td>Samo <code>ALLOWED_ORIGIN</code> domen (Netlify URL)</td></tr>
+    <tr><td>Payload limit</td><td>50 KB maksimalni request body</td></tr>
+    <tr><td>SSL prema DB</td><td><code>rejectUnauthorized: true</code> u produkciji</td></tr>
+    <tr><td>Tajni podaci</td><td><code>.env</code> u <code>.gitignore</code> — nikad u GitHub-u</td></tr>
+  </table>
+</div>
+
+<!-- 9. LOKALNI RAZVOJ -->
+<div class="section page-break">
+  <div class="section-title">9. Lokalni razvoj</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Pokretanje</h4>
+      <div class="code-block" style="font-size:11px; padding:10px 12px;"># Oba servera odjednom (iz root-a):
+npm run dev
+
+# Ili posebno:
+cd backend && npm start    # port 3001
+cd frontend && npm run dev # port 5173</div>
+    </div>
+    <div class="card">
+      <h4>backend/.env (lokalno)</h4>
+      <div class="code-block" style="font-size:11px; padding:10px 12px;">DATABASE_URL=postgres://...neon.tech/...
+JWT_SECRET=tajni_kljuc
+JWT_EXPIRY=7d
+NODE_ENV=development
+ALLOWED_ORIGIN=http://localhost:5173
+PORT=3001</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Struktura repozitorijuma:</div>
+  <div class="code-block">qa-daily-log/
+├── backend/
+│   ├── server.js          ← Express entry point
+│   ├── db.js              ← PostgreSQL pool + migracije
+│   ├── middleware/
+│   │   └── auth.js        ← JWT middleware + requireManager
+│   └── routes/
+│       ├── auth.js        ← /api/auth/*
+│       ├── entries.js     ← /api/entries/*
+│       ├── stats.js       ← /api/stats/*
+│       └── users.js       ← /api/users/* (manager only)
+├── frontend/
+│   └── src/
+│       ├── App.jsx         ← Root komponenta, tabovi
+│       ├── store.js        ← Zustand state management
+│       ├── api.js          ← Fetch wrapper
+│       ├── constants.js    ← Kategorije, akcije, projekti
+│       └── components/
+│           ├── AuthPage.jsx
+│           ├── AddEntry.jsx
+│           ├── DailyLog.jsx
+│           ├── PeriodView.jsx
+│           ├── Statistics.jsx
+│           ├── ProjectsView.jsx
+│           ├── TeamReport.jsx   ← manager only
+│           └── UsersPanel.jsx   ← manager only
+└── netlify.toml           ← Build config + proxy pravila</div>
+</div>
+
+<!-- FOOTER -->
+<div class="doc-footer">
+  <span>QA Daily Log — DevOps Dokumentacija</span>
+  <span>Bosko Sretenovic © 2026</span>
+</div>
+
+</body>
+</html>

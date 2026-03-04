@@ -141,6 +141,23 @@ export default function AuthPage() {
         </div>
 
         <form onSubmit={handleSubmit} noValidate>
+          {mode === 'register' && (
+            <div style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: 10,
+              background: 'rgba(124,111,247,0.08)',
+              border: '1px solid rgba(124,111,247,0.25)',
+              borderRadius: 8,
+              padding: '10px 12px',
+              marginBottom: 14,
+            }}>
+              <span style={{ fontSize: 16, marginTop: 1 }}>ℹ️</span>
+              <span style={{ fontSize: 12, color: 'var(--text2)', lineHeight: 1.5 }}>
+                Nakon registracije, manager mora odobriti vaš nalog prije prve prijave.
+              </span>
+            </div>
+          )}
           <div className="form-group">
             <label htmlFor="auth-email">{mode === 'login' ? 'Email ili korisničko ime' : 'Email'}</label>
             <input

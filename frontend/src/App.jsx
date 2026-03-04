@@ -73,6 +73,27 @@ export default function App() {
       </header>
 
       <div className="container">
+        {isGuest && (
+          <div style={{
+            background: 'linear-gradient(135deg, rgba(124,111,247,0.15), rgba(167,139,250,0.08))',
+            border: '1px solid rgba(124,111,247,0.35)',
+            borderRadius: 12,
+            padding: '14px 18px',
+            marginBottom: 8,
+            display: 'flex',
+            alignItems: 'center',
+            gap: 12,
+          }}>
+            <span style={{ fontSize: 22 }}>👀</span>
+            <div>
+              <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--accent)' }}>Demo mod — samo pregled</div>
+              <div style={{ fontSize: 12, color: 'var(--text2)', marginTop: 2 }}>
+                Prijavljeni ste kao gost. Možete pregledati aplikaciju, ali ne možete dodavati unose.
+              </div>
+            </div>
+          </div>
+        )}
+
         {!isGuest && (
           <div>
             <AddEntry />

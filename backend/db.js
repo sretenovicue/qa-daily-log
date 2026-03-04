@@ -56,6 +56,17 @@ async function initDb() {
     );
     console.log('Admin user created (username: admin, password: admin)');
   }
+
+  // Seed guest user if it doesn't exist
+  const existingGuest = await pool.query("SELECT id FROM users WHERE username = 'guest'");
+  if (!existingGuest.rows[0]) {
+    const hash = await bcrypt.hash('guest', 10);
+    await pool.query(
+      "INSERT INTO users (email, username, password_hash, role, active, approved) VALUES ('guest@guest.com', 'guest', $1, 'guest', true, true)",
+      [hash]
+    );
+    console.log('Guest user created (username: guest, password: guest)');
+  }
 }
 
 initDb().catch(err => {

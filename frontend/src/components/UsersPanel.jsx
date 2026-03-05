@@ -133,11 +133,11 @@ export default function UsersPanel() {
               {users.map(u => (
                 <tr key={u.id}>
                   <td style={{ width: 40 }}><Avatar username={u.username} avatarData={u.avatar_data} size={30} /></td>
-                  <td style={{ fontSize: 12 }}>{u.email}</td>
-                  <td>
-                    <div style={{ fontWeight: 600, lineHeight: 1.2 }}>{u.username}</div>
+                  <td style={{ fontSize: 12 }}>
+                    <div>{u.email}</div>
                     <TitleCell user={u} isGuest={isGuest} />
                   </td>
+                  <td style={{ fontWeight: 600 }}>{u.username}</td>
                   <td>
                     <span className="badge" style={{
                       background: u.role === 'manager' ? 'rgba(124,111,247,0.2)' : 'rgba(255,255,255,0.06)',

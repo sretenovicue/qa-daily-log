@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useStore } from './store';
+import { SOPRANOS_QUOTES } from './sopranos-quotes';
+import { STRANGER_THINGS_QUOTES } from './stranger-things-quotes';
+import { TAXIDRIVER_QUOTES } from './taxidriver-quotes';
+import QuoteToast from './components/QuoteToast';
 import AddEntry from './components/AddEntry';
 import DailyLog from './components/DailyLog';
 import PeriodView from './components/PeriodView';
@@ -11,6 +15,8 @@ import Toast from './components/Toast';
 import ErrorBoundary from './components/ErrorBoundary';
 import AuthPage from './components/AuthPage';
 import Avatar from './components/Avatar';
+import DjokovicWink from './components/DjokovicWink';
+import FishAnimation from './components/FishAnimation';
 
 const BASE_TABS = [
   { id: 'log',      label: '📋 Dnevni log' },
@@ -83,6 +89,7 @@ function resizeToBase64(file, maxSize = 200) {
 
 export default function App() {
   const { activeTab, setActiveTab, currentUser, authToken, fetchMe, logout, pendingUsersCount, fetchPendingCount, uploadAvatar, addToast } = useStore();
+  const email = currentUser?.email;
   const [avatarUploading, setAvatarUploading] = useState(false);
   const headerDate = useHeaderDate();
   const isManager  = currentUser?.role === 'manager';
@@ -98,6 +105,7 @@ export default function App() {
     const interval = setInterval(fetchPendingCount, 60_000);
     return () => clearInterval(interval);
   }, [isManager]); // eslint-disable-line react-hooks/exhaustive-deps
+
 
   if (!currentUser) return <><AuthPage /><Toast /></>;
 
@@ -211,6 +219,11 @@ export default function App() {
         Vibecoded by Bosko
       </footer>
 
+      <QuoteToast quotes={SOPRANOS_QUOTES}        icon="🎭" active={email === 'misakisic@yahoo.com'} />
+      <QuoteToast quotes={STRANGER_THINGS_QUOTES} icon="🔦" active={email === 'milosnesic777@gmail.com'} />
+      <QuoteToast quotes={TAXIDRIVER_QUOTES}        icon="🚕" active={email === 'boskobsk@gmail.com'} />
+      <DjokovicWink active={email === 'vesna@gmail.com'} />
+      <FishAnimation active={/stanko/i.test(currentUser?.username || '') || /stanko/i.test(email || '')} />
       <Toast />
     </ErrorBoundary>
   );

@@ -45,6 +45,7 @@ async function initDb() {
     ALTER TABLE users ADD COLUMN IF NOT EXISTS active      BOOLEAN DEFAULT true;
     ALTER TABLE users ADD COLUMN IF NOT EXISTS approved    BOOLEAN DEFAULT true;
     ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_data TEXT    DEFAULT NULL;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS title      TEXT    DEFAULT NULL;
   `);
 
   // Seed admin user if it doesn't exist

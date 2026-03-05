@@ -1,9 +1,56 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '../store';
 import Avatar from './Avatar';
-import { getTitle } from '../userProfiles';
 
 const ROLE_LABELS = { manager: 'Manager', user: 'Korisnik' };
+
+function TitleCell({ user, isGuest }) {
+  const { setUserTitle, addToast } = useStore();
+  const [editing, setEditing] = useState(false);
+  const [value, setValue] = useState(user.title || '');
+
+  async function save() {
+    setEditing(false);
+    const newTitle = value.trim();
+    if (newTitle === (user.title || '')) return;
+    try {
+      await setUserTitle(user.id, newTitle);
+    } catch {
+      addToast('Greška pri čuvanju titule', 'error');
+      setValue(user.title || '');
+    }
+  }
+
+  if (isGuest) {
+    return <div style={{ fontSize: 11, color: 'var(--text2)', opacity: 0.7 }}>{user.title || ''}</div>;
+  }
+
+  if (editing) {
+    return (
+      <input
+        autoFocus
+        value={value}
+        onChange={e => setValue(e.target.value)}
+        onBlur={save}
+        onKeyDown={e => { if (e.key === 'Enter') save(); if (e.key === 'Escape') { setEditing(false); setValue(user.title || ''); } }}
+        style={{
+          fontSize: 11, background: 'var(--surface2)', border: '1px solid var(--accent)',
+          borderRadius: 4, padding: '2px 6px', color: 'var(--text)', outline: 'none', width: 140,
+        }}
+      />
+    );
+  }
+
+  return (
+    <div
+      onClick={() => setEditing(true)}
+      title="Klikni da izmeniš titulu"
+      style={{ fontSize: 11, color: 'var(--text2)', opacity: 0.7, cursor: 'pointer', minHeight: 14 }}
+    >
+      {user.title || <span style={{ opacity: 0.35, fontStyle: 'italic' }}>+ titula</span>}
+    </div>
+  );
+}
 
 export default function UsersPanel() {
   const {
@@ -89,9 +136,7 @@ export default function UsersPanel() {
                   <td style={{ fontSize: 12 }}>{u.email}</td>
                   <td>
                     <div style={{ fontWeight: 600, lineHeight: 1.2 }}>{u.username}</div>
-                    {getTitle(u.username) && (
-                      <div style={{ fontSize: 11, color: 'var(--text2)', opacity: 0.7 }}>{getTitle(u.username)}</div>
-                    )}
+                    <TitleCell user={u} isGuest={isGuest} />
                   </td>
                   <td>
                     <span className="badge" style={{

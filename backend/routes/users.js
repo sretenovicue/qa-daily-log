@@ -28,7 +28,7 @@ router.get('/pending-count', wrap(async (req, res) => {
 // ── GET /api/users ────────────────────────────────────────────────────
 router.get('/', wrap(async (req, res) => {
   const { rows } = await pool.query(
-    'SELECT id, email, username, role, active, approved, avatar_data, created_at FROM users ORDER BY created_at ASC'
+    'SELECT id, email, username, role, active, approved, avatar_data, title, created_at FROM users ORDER BY created_at ASC'
   );
   res.json(rows);
 }));
@@ -77,6 +77,21 @@ router.post('/:id/approve', wrap(async (req, res) => {
     [id]
   );
   res.json(updated.rows[0]);
+}));
+
+// ── PATCH /api/users/:id/title — set title ───────────────────────────
+router.patch('/:id/title', wrap(async (req, res) => {
+  const id = parseId(req.params.id);
+  if (!id) return res.status(400).json({ error: 'ID mora biti pozitivan ceo broj' });
+
+  const title = req.body.title ?? null;
+
+  const { rows } = await pool.query(
+    'UPDATE users SET title = $1 WHERE id = $2 RETURNING id, email, username, role, active, approved, avatar_data, title, created_at',
+    [title || null, id]
+  );
+  if (!rows[0]) return res.status(404).json({ error: 'Korisnik nije pronađen' });
+  res.json(rows[0]);
 }));
 
 // ── PATCH /api/users/:id — toggle active ─────────────────────────────

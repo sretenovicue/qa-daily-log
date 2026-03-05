@@ -11,7 +11,6 @@ import Toast from './components/Toast';
 import ErrorBoundary from './components/ErrorBoundary';
 import AuthPage from './components/AuthPage';
 import Avatar from './components/Avatar';
-import { getTitle } from './userProfiles';
 
 const BASE_TABS = [
   { id: 'log',      label: '📋 Dnevni log' },
@@ -143,8 +142,8 @@ export default function App() {
             </label>
             <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
               <span className="header-username">{currentUser.username}</span>
-              {getTitle(currentUser.username) && (
-                <span style={{ fontSize: 10, color: 'var(--text2)', opacity: 0.7 }}>{getTitle(currentUser.username)}</span>
+              {currentUser.title && (
+                <span style={{ fontSize: 10, color: 'var(--text2)', opacity: 0.7 }}>{currentUser.title}</span>
               )}
             </div>
             <button className="logout-btn" onClick={logout} title="Odjavi se">Odjava</button>

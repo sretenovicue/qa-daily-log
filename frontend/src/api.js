@@ -105,6 +105,15 @@ export async function createUser(data) {
   return handleResponse(res);
 }
 
+export async function setUserTitle(id, title) {
+  const res = await fetch(`${BASE}/users/${id}/title`, {
+    method: 'PATCH',
+    headers: authHeaders(),
+    body: JSON.stringify({ title }),
+  });
+  return handleResponse(res);
+}
+
 export async function toggleUser(id) {
   const res = await fetch(`${BASE}/users/${id}`, {
     method: 'PATCH',

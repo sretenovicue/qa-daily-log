@@ -71,7 +71,7 @@ router.post('/login', wrap(async (req, res) => {
     return res.status(401).json({ error: 'Pogrešan email ili lozinka' });
   }
 
-  const user  = { id: row.id, email: row.email, username: row.username, role: row.role || 'user', active: row.active, avatar_data: row.avatar_data || null };
+  const user  = { id: row.id, email: row.email, username: row.username, role: row.role || 'user', active: row.active, avatar_data: row.avatar_data || null, title: row.title || null };
   const token = signToken(user.id, user.role);
 
   res.json({ token, user });
@@ -80,7 +80,7 @@ router.post('/login', wrap(async (req, res) => {
 // ── GET /api/auth/me ──────────────────────────────────────────────────
 router.get('/me', authMiddleware, wrap(async (req, res) => {
   const { rows } = await pool.query(
-    'SELECT id, email, username, role, active, avatar_data, created_at FROM users WHERE id = $1',
+    'SELECT id, email, username, role, active, avatar_data, title, created_at FROM users WHERE id = $1',
     [req.userId]
   );
   if (!rows[0]) return res.status(404).json({ error: 'Korisnik nije pronađen' });

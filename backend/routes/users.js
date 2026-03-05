@@ -17,6 +17,14 @@ function parseId(param) {
 // All routes require manager role
 router.use(requireManager);
 
+// ── GET /api/users/pending-count ──────────────────────────────────────
+router.get('/pending-count', wrap(async (req, res) => {
+  const { rows } = await pool.query(
+    "SELECT COUNT(*) FROM users WHERE approved = false"
+  );
+  res.json({ count: parseInt(rows[0].count, 10) });
+}));
+
 // ── GET /api/users ────────────────────────────────────────────────────
 router.get('/', wrap(async (req, res) => {
   const { rows } = await pool.query(

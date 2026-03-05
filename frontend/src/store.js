@@ -172,9 +172,17 @@ export const useStore = create((set, get) => ({
   },
 
   // ── Users management (manager) ────────────────────────────────────
-  users:        [],
-  usersLoading: false,
-  usersError:   null,
+  users:             [],
+  usersLoading:      false,
+  usersError:        null,
+  pendingUsersCount: 0,
+
+  fetchPendingCount: async () => {
+    try {
+      const { count } = await api.getPendingCount();
+      set({ pendingUsersCount: count });
+    } catch (_) {}
+  },
 
   fetchUsers: async () => {
     set({ usersLoading: true, usersError: null });
@@ -200,7 +208,10 @@ export const useStore = create((set, get) => ({
 
   approveUser: async (id) => {
     const updated = await api.approveUser(id);
-    set(s => ({ users: s.users.map(u => u.id === id ? updated : u) }));
+    set(s => ({
+      users: s.users.map(u => u.id === id ? updated : u),
+      pendingUsersCount: Math.max(0, s.pendingUsersCount - 1),
+    }));
     return updated;
   },
 

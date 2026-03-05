@@ -23,6 +23,27 @@ const MANAGER_TABS = [
   { id: 'users', label: '⚙️ Korisnici' },
 ];
 
+function PendingBadge({ count }) {
+  if (!count) return null;
+  return (
+    <span style={{
+      display: 'inline-flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      background: '#ef4444',
+      color: '#fff',
+      borderRadius: 999,
+      fontSize: 10,
+      fontWeight: 700,
+      minWidth: 16,
+      height: 16,
+      padding: '0 4px',
+      marginLeft: 5,
+      lineHeight: 1,
+    }}>{count}</span>
+  );
+}
+
 function useHeaderDate() {
   const [date, setDate] = useState(formatDate());
 
@@ -42,7 +63,7 @@ function formatDate() {
 }
 
 export default function App() {
-  const { activeTab, setActiveTab, currentUser, authToken, fetchMe, logout } = useStore();
+  const { activeTab, setActiveTab, currentUser, authToken, fetchMe, logout, pendingUsersCount, fetchPendingCount } = useStore();
   const headerDate = useHeaderDate();
   const isManager  = currentUser?.role === 'manager';
   const isGuest    = currentUser?.role === 'guest';
@@ -50,6 +71,13 @@ export default function App() {
   useEffect(() => {
     if (authToken) fetchMe();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    if (!isManager) return;
+    fetchPendingCount();
+    const interval = setInterval(fetchPendingCount, 60_000);
+    return () => clearInterval(interval);
+  }, [isManager]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!currentUser) return <><AuthPage /><Toast /></>;
 
@@ -109,6 +137,7 @@ export default function App() {
                 onClick={() => setActiveTab(t.id)}
               >
                 {t.label}
+                {t.id === 'users' && isManager && <PendingBadge count={pendingUsersCount} />}
               </button>
             ))}
           </div>

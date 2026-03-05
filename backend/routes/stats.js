@@ -88,6 +88,7 @@ router.get('/team', requireManager, wrap(async (req, res) => {
       SELECT
         u.id,
         u.username,
+        u.title,
         COUNT(e.id)                                                  AS total,
         SUM(CASE WHEN e.category = 'auto'    THEN 1 ELSE 0 END)     AS auto,
         SUM(CASE WHEN e.category = 'manual'  THEN 1 ELSE 0 END)     AS manual,
@@ -97,7 +98,7 @@ router.get('/team', requireManager, wrap(async (req, res) => {
       FROM users u
       LEFT JOIN entries e ON e.user_id = u.id AND e.date >= $1 AND e.date <= $2
       WHERE u.active = true
-      GROUP BY u.id, u.username
+      GROUP BY u.id, u.username, u.title
       ORDER BY total DESC
     `, [from, to]),
 

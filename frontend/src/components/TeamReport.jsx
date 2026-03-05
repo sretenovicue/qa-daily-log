@@ -115,7 +115,10 @@ export default function TeamReport() {
                 <tbody>
                   {teamStats.byEmployee.map(r => (
                     <tr key={r.id}>
-                      <td style={{ fontWeight: 600 }}>{r.username}</td>
+                      <td>
+                        <div style={{ fontWeight: 600 }}>{r.username}</div>
+                        {r.title && <div style={{ fontSize: 11, color: 'var(--text2)', opacity: 0.7 }}>{r.title}</div>}
+                      </td>
                       <td style={{ textAlign: 'right', color: 'var(--accent)', fontWeight: 700 }}>{r.total}</td>
                       <td style={{ textAlign: 'right' }}>{r.auto}</td>
                       <td style={{ textAlign: 'right' }}>{r.manual}</td>

@@ -10,6 +10,8 @@ import UsersPanel from './components/UsersPanel';
 import Toast from './components/Toast';
 import ErrorBoundary from './components/ErrorBoundary';
 import AuthPage from './components/AuthPage';
+import Avatar from './components/Avatar';
+import { getTitle } from './userProfiles';
 
 const BASE_TABS = [
   { id: 'log',      label: '📋 Dnevni log' },
@@ -62,8 +64,27 @@ function formatDate() {
   });
 }
 
+function resizeToBase64(file, maxSize = 200) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const scale = Math.min(maxSize / img.width, maxSize / img.height, 1);
+      const canvas = document.createElement('canvas');
+      canvas.width  = Math.round(img.width  * scale);
+      canvas.height = Math.round(img.height * scale);
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      resolve(canvas.toDataURL('image/jpeg', 0.85));
+    };
+    img.onerror = reject;
+    img.src = url;
+  });
+}
+
 export default function App() {
-  const { activeTab, setActiveTab, currentUser, authToken, fetchMe, logout, pendingUsersCount, fetchPendingCount } = useStore();
+  const { activeTab, setActiveTab, currentUser, authToken, fetchMe, logout, pendingUsersCount, fetchPendingCount, uploadAvatar, addToast } = useStore();
+  const [avatarUploading, setAvatarUploading] = useState(false);
   const headerDate = useHeaderDate();
   const isManager  = currentUser?.role === 'manager';
   const isGuest    = currentUser?.role === 'guest';
@@ -94,7 +115,38 @@ export default function App() {
           <div className="header-date">{headerDate}</div>
           <div className="header-user">
             {isManager && <span className="badge" style={{ background: 'rgba(124,111,247,0.2)', color: 'var(--accent)', marginRight: 6, fontSize: 11 }}>manager</span>}
-            <span className="header-username">{currentUser.username}</span>
+            <label title="Promeni profilnu sliku" style={{ cursor: avatarUploading ? 'wait' : 'pointer', position: 'relative', flexShrink: 0 }}>
+              <Avatar username={currentUser.username} avatarData={currentUser.avatar_data} size={30} style={{ border: '2px solid rgba(255,255,255,0.12)' }} />
+              {!isGuest && (
+                <input
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  disabled={avatarUploading}
+                  onChange={async (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    setAvatarUploading(true);
+                    try {
+                      const base64 = await resizeToBase64(file);
+                      await uploadAvatar(base64);
+                      addToast('Profilna slika ažurirana ✓', 'success');
+                    } catch {
+                      addToast('Greška pri uploadu slike', 'error');
+                    } finally {
+                      setAvatarUploading(false);
+                      e.target.value = '';
+                    }
+                  }}
+                />
+              )}
+            </label>
+            <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
+              <span className="header-username">{currentUser.username}</span>
+              {getTitle(currentUser.username) && (
+                <span style={{ fontSize: 10, color: 'var(--text2)', opacity: 0.7 }}>{getTitle(currentUser.username)}</span>
+              )}
+            </div>
             <button className="logout-btn" onClick={logout} title="Odjavi se">Odjava</button>
           </div>
         </div>

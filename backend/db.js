@@ -41,9 +41,10 @@ async function initDb() {
 
   // Safe migrations — add columns only if they don't exist yet
   await pool.query(`
-    ALTER TABLE users ADD COLUMN IF NOT EXISTS role     TEXT    DEFAULT 'user';
-    ALTER TABLE users ADD COLUMN IF NOT EXISTS active   BOOLEAN DEFAULT true;
-    ALTER TABLE users ADD COLUMN IF NOT EXISTS approved BOOLEAN DEFAULT true;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS role        TEXT    DEFAULT 'user';
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS active      BOOLEAN DEFAULT true;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS approved    BOOLEAN DEFAULT true;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_data TEXT    DEFAULT NULL;
   `);
 
   // Seed admin user if it doesn't exist

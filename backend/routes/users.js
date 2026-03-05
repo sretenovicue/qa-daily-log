@@ -28,7 +28,7 @@ router.get('/pending-count', wrap(async (req, res) => {
 // ── GET /api/users ────────────────────────────────────────────────────
 router.get('/', wrap(async (req, res) => {
   const { rows } = await pool.query(
-    'SELECT id, email, username, role, active, approved, created_at FROM users ORDER BY created_at ASC'
+    'SELECT id, email, username, role, active, approved, avatar_data, created_at FROM users ORDER BY created_at ASC'
   );
   res.json(rows);
 }));
@@ -89,8 +89,13 @@ router.patch('/:id', wrap(async (req, res) => {
     return res.status(400).json({ error: 'Ne možete deaktivirati sopstveni nalog' });
   }
 
-  const { rows } = await pool.query('SELECT id, active FROM users WHERE id = $1', [id]);
+  const { rows } = await pool.query('SELECT id, username, role, active FROM users WHERE id = $1', [id]);
   if (!rows[0]) return res.status(404).json({ error: 'Korisnik nije pronađen' });
+
+  // Cannot deactivate admin or guest accounts
+  if (['admin', 'guest'].includes(rows[0].username)) {
+    return res.status(400).json({ error: `Ne možete deaktivirati nalog "${rows[0].username}"` });
+  }
 
   const newActive = !rows[0].active;
   const updated = await pool.query(

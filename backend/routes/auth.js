@@ -71,7 +71,7 @@ router.post('/login', wrap(async (req, res) => {
     return res.status(401).json({ error: 'Pogrešan email ili lozinka' });
   }
 
-  const user  = { id: row.id, email: row.email, username: row.username, role: row.role || 'user', active: row.active };
+  const user  = { id: row.id, email: row.email, username: row.username, role: row.role || 'user', active: row.active, avatar_data: row.avatar_data || null };
   const token = signToken(user.id, user.role);
 
   res.json({ token, user });
@@ -80,10 +80,30 @@ router.post('/login', wrap(async (req, res) => {
 // ── GET /api/auth/me ──────────────────────────────────────────────────
 router.get('/me', authMiddleware, wrap(async (req, res) => {
   const { rows } = await pool.query(
-    'SELECT id, email, username, role, active, created_at FROM users WHERE id = $1',
+    'SELECT id, email, username, role, active, avatar_data, created_at FROM users WHERE id = $1',
     [req.userId]
   );
   if (!rows[0]) return res.status(404).json({ error: 'Korisnik nije pronađen' });
+  res.json(rows[0]);
+}));
+
+// ── PATCH /api/auth/me/avatar ─────────────────────────────────────────
+router.patch('/me/avatar', authMiddleware, wrap(async (req, res) => {
+  const { avatar_data } = req.body;
+  if (!avatar_data || typeof avatar_data !== 'string') {
+    return res.status(400).json({ error: 'avatar_data je obavezan' });
+  }
+  if (!avatar_data.startsWith('data:image/')) {
+    return res.status(400).json({ error: 'Nevažeći format slike' });
+  }
+  // ~500KB base64 limit (~375KB actual image — plenty for 200x200 JPEG)
+  if (avatar_data.length > 500_000) {
+    return res.status(400).json({ error: 'Slika je prevelika (max 375KB)' });
+  }
+  const { rows } = await pool.query(
+    'UPDATE users SET avatar_data = $1 WHERE id = $2 RETURNING id, email, username, role, active, avatar_data',
+    [avatar_data, req.userId]
+  );
   res.json(rows[0]);
 }));
 

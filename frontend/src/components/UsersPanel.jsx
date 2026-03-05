@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useStore } from '../store';
+import Avatar from './Avatar';
+import { getTitle } from '../userProfiles';
 
 const ROLE_LABELS = { manager: 'Manager', user: 'Korisnik' };
 
@@ -71,6 +73,7 @@ export default function UsersPanel() {
           <table className="entries-table">
             <thead>
               <tr>
+                <th></th>
                 <th>Email</th>
                 <th>Ime</th>
                 <th>Uloga</th>
@@ -82,8 +85,14 @@ export default function UsersPanel() {
             <tbody>
               {users.map(u => (
                 <tr key={u.id}>
+                  <td style={{ width: 40 }}><Avatar username={u.username} avatarData={u.avatar_data} size={30} /></td>
                   <td style={{ fontSize: 12 }}>{u.email}</td>
-                  <td style={{ fontWeight: 600 }}>{u.username}</td>
+                  <td>
+                    <div style={{ fontWeight: 600, lineHeight: 1.2 }}>{u.username}</div>
+                    {getTitle(u.username) && (
+                      <div style={{ fontSize: 11, color: 'var(--text2)', opacity: 0.7 }}>{getTitle(u.username)}</div>
+                    )}
+                  </td>
                   <td>
                     <span className="badge" style={{
                       background: u.role === 'manager' ? 'rgba(124,111,247,0.2)' : 'rgba(255,255,255,0.06)',
@@ -118,7 +127,7 @@ export default function UsersPanel() {
                         Odobri
                       </button>
                     )}
-                    {!isGuest && u.id !== currentUser?.id && (
+                    {!isGuest && u.id !== currentUser?.id && !['admin', 'guest'].includes(u.username) && (
                       <button
                         className={`btn btn-sm ${u.active !== false ? 'btn-danger' : 'btn-edit'}`}
                         onClick={() => handleToggle(u)}

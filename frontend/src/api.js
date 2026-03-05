@@ -113,6 +113,15 @@ export async function toggleUser(id) {
   return handleResponse(res);
 }
 
+export async function uploadAvatar(avatar_data) {
+  const res = await fetch(`${BASE}/auth/me/avatar`, {
+    method: 'PATCH',
+    headers: authHeaders(),
+    body: JSON.stringify({ avatar_data }),
+  });
+  return handleResponse(res);
+}
+
 export async function getPendingCount() {
   const res = await fetch(`${BASE}/users/pending-count`, { headers: authHeaders() });
   return handleResponse(res);

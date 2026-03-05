@@ -46,6 +46,14 @@ export const useStore = create((set, get) => ({
     }
   },
 
+  uploadAvatar: async (avatar_data) => {
+    const updated = await api.uploadAvatar(avatar_data);
+    set(s => ({
+      currentUser: { ...s.currentUser, avatar_data: updated.avatar_data },
+      users: s.users.map(u => u.id === updated.id ? { ...u, avatar_data: updated.avatar_data } : u),
+    }));
+  },
+
   // ── UI ────────────────────────────────────────────────────────────
   activeTab:          'log',
   viewDate:           todayStr(),

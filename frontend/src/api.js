@@ -114,6 +114,15 @@ export async function setUserTitle(id, title) {
   return handleResponse(res);
 }
 
+export async function changeUserRole(id, role) {
+  const res = await fetch(`${BASE}/users/${id}/role`, {
+    method: 'PATCH',
+    headers: authHeaders(),
+    body: JSON.stringify({ role }),
+  });
+  return handleResponse(res);
+}
+
 export async function toggleUser(id) {
   const res = await fetch(`${BASE}/users/${id}`, {
     method: 'PATCH',

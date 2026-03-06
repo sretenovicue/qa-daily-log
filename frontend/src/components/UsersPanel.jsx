@@ -56,7 +56,7 @@ export default function UsersPanel() {
   const { t } = useTranslation();
   const {
     users, usersLoading, usersError, fetchUsers, createUser, toggleUser, approveUser,
-    currentUser, addToast,
+    changeUserRole, currentUser, addToast,
   } = useStore();
   const isGuest = currentUser?.role === 'guest';
 
@@ -79,6 +79,15 @@ export default function UsersPanel() {
     try {
       const updated = await approveUser(user.id);
       addToast(`${updated.username} ${t('users.approvedSuccess')}`, 'success');
+    } catch (err) {
+      addToast(parseError(err), 'error');
+    }
+  }
+
+  async function handleRoleChange(user, newRole) {
+    try {
+      const updated = await changeUserRole(user.id, newRole);
+      addToast(`${updated.username} → ${newRole === 'manager' ? t('users.roleManager') : t('users.roleUser')}`, 'info');
     } catch (err) {
       addToast(parseError(err), 'error');
     }
@@ -140,12 +149,27 @@ export default function UsersPanel() {
                   </td>
                   <td style={{ fontWeight: 600 }}>{u.username}</td>
                   <td>
-                    <span className="badge" style={{
-                      background: u.role === 'manager' ? 'rgba(124,111,247,0.2)' : 'rgba(255,255,255,0.06)',
-                      color:      u.role === 'manager' ? 'var(--accent)' : 'var(--text2)',
-                    }}>
-                      {u.role === 'manager' ? t('users.roleManager') : t('users.roleUser')}
-                    </span>
+                    {!isGuest && u.id !== currentUser?.id && !['admin', 'guest'].includes(u.username) ? (
+                      <button
+                        className="badge"
+                        onClick={() => handleRoleChange(u, u.role === 'manager' ? 'user' : 'manager')}
+                        title={u.role === 'manager' ? t('users.demoteToUser') : t('users.promoteToManager')}
+                        style={{
+                          background: u.role === 'manager' ? 'rgba(124,111,247,0.2)' : 'rgba(255,255,255,0.06)',
+                          color:      u.role === 'manager' ? 'var(--accent)' : 'var(--text2)',
+                          border: 'none', cursor: 'pointer',
+                        }}
+                      >
+                        {u.role === 'manager' ? t('users.roleManager') : t('users.roleUser')}
+                      </button>
+                    ) : (
+                      <span className="badge" style={{
+                        background: u.role === 'manager' ? 'rgba(124,111,247,0.2)' : 'rgba(255,255,255,0.06)',
+                        color:      u.role === 'manager' ? 'var(--accent)' : 'var(--text2)',
+                      }}>
+                        {u.role === 'manager' ? t('users.roleManager') : t('users.roleUser')}
+                      </span>
+                    )}
                   </td>
                   <td>
                     <span className="badge" style={{

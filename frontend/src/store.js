@@ -214,6 +214,12 @@ export const useStore = create((set, get) => ({
     set(s => ({ users: s.users.map(u => u.id === id ? updated : u) }));
   },
 
+  changeUserRole: async (id, role) => {
+    const updated = await api.changeUserRole(id, role);
+    set(s => ({ users: s.users.map(u => u.id === id ? updated : u) }));
+    return updated;
+  },
+
   toggleUser: async (id) => {
     const updated = await api.toggleUser(id);
     set(s => ({ users: s.users.map(u => u.id === id ? updated : u) }));

@@ -94,6 +94,32 @@ router.patch('/:id/title', wrap(async (req, res) => {
   res.json(rows[0]);
 }));
 
+// ── PATCH /api/users/:id/role — change role ──────────────────────
+router.patch('/:id/role', wrap(async (req, res) => {
+  const id = parseId(req.params.id);
+  if (!id) return res.status(400).json({ error: 'ID mora biti pozitivan ceo broj' });
+
+  if (id === req.userId) return res.status(400).json({ error: 'Ne možete menjati sopstvenu ulogu' });
+
+  const { role } = req.body;
+  if (!['user', 'manager'].includes(role)) {
+    return res.status(400).json({ error: 'Uloga mora biti user ili manager' });
+  }
+
+  const { rows } = await pool.query('SELECT id, username FROM users WHERE id = $1', [id]);
+  if (!rows[0]) return res.status(404).json({ error: 'Korisnik nije pronađen' });
+
+  if (['admin', 'guest'].includes(rows[0].username)) {
+    return res.status(400).json({ error: `Ne možete menjati ulogu naloga "${rows[0].username}"` });
+  }
+
+  const updated = await pool.query(
+    'UPDATE users SET role = $1 WHERE id = $2 RETURNING id, email, username, role, active, approved, avatar_data, title, created_at',
+    [role, id]
+  );
+  res.json(updated.rows[0]);
+}));
+
 // ── PATCH /api/users/:id — toggle active ─────────────────────────────
 router.patch('/:id', wrap(async (req, res) => {
   const id = parseId(req.params.id);

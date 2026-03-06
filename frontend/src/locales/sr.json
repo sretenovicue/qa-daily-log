@@ -173,6 +173,8 @@
     "activate": "Aktiviraj",
     "roleManager": "Manager",
     "roleUser": "Korisnik",
+    "promoteToManager": "Promoviši u managera",
+    "demoteToUser": "Vrati na korisnika",
     "creating": "Kreiranje...",
     "addBtn": "+ Dodaj",
     "titlePlaceholder": "+ titula",

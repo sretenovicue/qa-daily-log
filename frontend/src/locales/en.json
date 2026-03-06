@@ -173,6 +173,8 @@
     "activate": "Activate",
     "roleManager": "Manager",
     "roleUser": "User",
+    "promoteToManager": "Promote to manager",
+    "demoteToUser": "Demote to user",
     "creating": "Creating...",
     "addBtn": "+ Add",
     "titlePlaceholder": "+ title",

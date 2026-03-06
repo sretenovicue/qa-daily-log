@@ -19,6 +19,7 @@ import AuthPage from './components/AuthPage';
 import Avatar from './components/Avatar';
 import DjokovicWink from './components/DjokovicWink';
 import FishAnimation from './components/FishAnimation';
+import SkierAnimation from './components/SkierAnimation';
 
 function PendingBadge({ count }) {
   if (!count) return null;
@@ -257,6 +258,7 @@ export default function App() {
       <QuoteToast quotes={TAXIDRIVER_QUOTES}        icon="🚕" active={email === 'boskobsk@gmail.com'} />
       <DjokovicWink active={email === 'vesna@gmail.com'} />
       <FishAnimation active={/stanko/i.test(currentUser?.username || '') || /stanko/i.test(email || '')} />
+      <SkierAnimation active={email === 'janajs96@gmail.com'} />
       <Toast />
     </ErrorBoundary>
   );

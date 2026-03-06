@@ -14,7 +14,6 @@
     line-height: 1.6;
   }
 
-  /* HEADER */
   .doc-header {
     background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #7c6ff7 100%);
     color: #fff;
@@ -26,14 +25,10 @@
   .doc-header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
   .doc-header h1 span { color: #a89ef8; }
   .doc-header .subtitle { margin-top: 6px; opacity: 0.75; font-size: 13px; }
-  .doc-header .meta { margin-top: 14px; display: flex; gap: 24px; font-size: 12px; opacity: 0.85; }
+  .doc-header .meta { margin-top: 14px; display: flex; gap: 24px; font-size: 12px; opacity: 0.85; flex-wrap: wrap; }
   .doc-header .meta span { background: rgba(255,255,255,0.12); padding: 4px 10px; border-radius: 20px; }
 
-  /* SECTION */
-  .section {
-    margin-bottom: 28px;
-    page-break-inside: avoid;
-  }
+  .section { margin-bottom: 28px; page-break-inside: avoid; }
   .section-title {
     font-size: 15px;
     font-weight: 700;
@@ -45,13 +40,7 @@
     letter-spacing: 0.4px;
   }
 
-  /* TABLES */
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12.5px;
-    margin-bottom: 8px;
-  }
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-bottom: 8px; }
   th {
     background: #f0effe;
     color: #3d3580;
@@ -62,147 +51,66 @@
     text-transform: uppercase;
     letter-spacing: 0.3px;
   }
-  td {
-    padding: 7px 12px;
-    border-bottom: 1px solid #f0f0f0;
-    vertical-align: top;
-  }
+  td { padding: 7px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
   tr:last-child td { border-bottom: none; }
   tr:hover td { background: #fafafe; }
   td:first-child { font-weight: 500; color: #444; white-space: nowrap; }
   td code, th code {
-    background: #f0effe;
-    color: #5c52c7;
-    padding: 1px 5px;
-    border-radius: 3px;
-    font-family: 'Courier New', monospace;
-    font-size: 11.5px;
+    background: #f0effe; color: #5c52c7; padding: 1px 5px;
+    border-radius: 3px; font-family: 'Courier New', monospace; font-size: 11.5px;
   }
 
-  /* DIAGRAM */
   .diagram {
-    background: #1a1a2e;
-    color: #a89ef8;
-    padding: 20px 24px;
-    border-radius: 8px;
-    font-family: 'Courier New', monospace;
-    font-size: 12px;
-    line-height: 1.8;
-    margin-bottom: 8px;
+    background: #1a1a2e; color: #a89ef8;
+    padding: 20px 24px; border-radius: 8px;
+    font-family: 'Courier New', monospace; font-size: 12px;
+    line-height: 1.8; margin-bottom: 8px;
   }
   .diagram .comment { color: #4e9a6e; }
   .diagram .highlight { color: #7c6ff7; font-weight: bold; }
   .diagram .arrow { color: #f0c060; }
 
-  /* CODE BLOCK */
   .code-block {
-    background: #f8f8ff;
-    border: 1px solid #e0dcff;
+    background: #f8f8ff; border: 1px solid #e0dcff;
     border-left: 3px solid #7c6ff7;
-    padding: 14px 16px;
-    border-radius: 0 6px 6px 0;
-    font-family: 'Courier New', monospace;
-    font-size: 11.5px;
-    color: #2a2a4a;
-    line-height: 1.7;
-    margin-bottom: 8px;
-    white-space: pre;
+    padding: 14px 16px; border-radius: 0 6px 6px 0;
+    font-family: 'Courier New', monospace; font-size: 11.5px;
+    color: #2a2a4a; line-height: 1.7; margin-bottom: 8px; white-space: pre;
   }
 
-  /* CARDS */
   .cards { display: flex; gap: 14px; margin-bottom: 8px; }
-  .card {
-    flex: 1;
-    border: 1px solid #e8e4ff;
-    border-radius: 8px;
-    padding: 14px 16px;
-    background: #fdfcff;
-  }
+  .card { flex: 1; border: 1px solid #e8e4ff; border-radius: 8px; padding: 14px 16px; background: #fdfcff; }
   .card h4 { font-size: 12px; font-weight: 700; color: #5c52c7; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.3px; }
   .card p, .card li { font-size: 12px; color: #444; margin-bottom: 4px; }
   .card ul { padding-left: 14px; }
 
-  /* WARNING BOX */
-  .warning {
-    background: #fff8e6;
-    border-left: 4px solid #f0c060;
-    padding: 10px 14px;
-    border-radius: 0 6px 6px 0;
-    font-size: 12px;
-    color: #6b5000;
-    margin-bottom: 8px;
-  }
+  .warning { background: #fff8e6; border-left: 4px solid #f0c060; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 12px; color: #6b5000; margin-bottom: 8px; }
   .warning strong { color: #8b6800; }
+  .info { background: #f0effe; border-left: 4px solid #7c6ff7; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 12px; color: #3d3580; margin-bottom: 8px; }
+  .success { background: #e6f9ee; border-left: 4px solid #1a7a3e; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 12px; color: #1a5030; margin-bottom: 8px; }
 
-  /* INFO BOX */
-  .info {
-    background: #f0effe;
-    border-left: 4px solid #7c6ff7;
-    padding: 10px 14px;
-    border-radius: 0 6px 6px 0;
-    font-size: 12px;
-    color: #3d3580;
-    margin-bottom: 8px;
-  }
-
-  /* BADGE */
-  .badge {
-    display: inline-block;
-    padding: 2px 8px;
-    border-radius: 20px;
-    font-size: 10.5px;
-    font-weight: 600;
-    margin-left: 6px;
-    vertical-align: middle;
-  }
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 10.5px; font-weight: 600; margin-left: 6px; vertical-align: middle; }
   .badge-green  { background: #e6f9ee; color: #1a7a3e; }
   .badge-orange { background: #fff0e0; color: #b35a00; }
   .badge-purple { background: #f0effe; color: #5c52c7; }
+  .badge-blue   { background: #e0f0ff; color: #0050a0; }
 
-  /* ROLE TABLE */
   .role-user    { color: #1a7a3e; font-weight: 600; }
   .role-manager { color: #5c52c7; font-weight: 600; }
   .role-guest   { color: #b35a00; font-weight: 600; }
 
-  /* URL highlight */
   .url { color: #5c52c7; font-family: 'Courier New', monospace; font-size: 12px; }
 
-  /* PAGE BREAK */
   .page-break { page-break-before: always; }
 
-  /* FOOTER */
-  .doc-footer {
-    margin-top: 40px;
-    padding-top: 14px;
-    border-top: 1px solid #e8e4ff;
-    font-size: 11px;
-    color: #999;
-    display: flex;
-    justify-content: space-between;
-  }
+  .doc-footer { margin-top: 40px; padding-top: 14px; border-top: 1px solid #e8e4ff; font-size: 11px; color: #999; display: flex; justify-content: space-between; }
 
-  /* PIPELINE */
-  .pipeline {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    margin: 10px 0;
-    flex-wrap: wrap;
-  }
-  .pipe-step {
-    background: #1a1a2e;
-    color: #a89ef8;
-    padding: 8px 14px;
-    font-size: 11.5px;
-    font-family: 'Courier New', monospace;
-    border-radius: 4px;
-  }
-  .pipe-arrow {
-    color: #7c6ff7;
-    font-size: 16px;
-    padding: 0 6px;
-    font-weight: bold;
-  }
+  .pipeline { display: flex; align-items: center; gap: 0; margin: 10px 0; flex-wrap: wrap; }
+  .pipe-step { background: #1a1a2e; color: #a89ef8; padding: 8px 14px; font-size: 11.5px; font-family: 'Courier New', monospace; border-radius: 4px; }
+  .pipe-arrow { color: #7c6ff7; font-size: 16px; padding: 0 6px; font-weight: bold; }
+
+  .test-row td:nth-child(1) { color: #1a7a3e; font-family: 'Courier New', monospace; font-size: 11px; white-space: normal; }
+  .test-row td:nth-child(2) { color: #555; font-size: 11.5px; white-space: normal; }
 
   @media print {
     body { padding: 20px 30px; }
@@ -215,12 +123,12 @@
 <!-- HEADER -->
 <div class="doc-header">
   <h1>🧪 QA Daily Log — <span>DevOps Dokumentacija</span></h1>
-  <div class="subtitle">Kompletan pregled arhitekture, deploymenta i upravljanja sistemom</div>
+  <div class="subtitle">Kompletan pregled arhitekture, deploymenta, testova i upravljanja sistemom</div>
   <div style="margin-top:14px; font-size:11.5px; opacity:0.55; letter-spacing:0.3px;">Vibecoded by Bosko</div>
   <div class="meta">
     <span>📅 Mart 2026</span>
     <span>👤 Bosko Sretenovic</span>
-    <span>🔖 v1.2</span>
+    <span>🔖 v2.0 — Raspberry Pi + Cloudflare Tunnel</span>
   </div>
 </div>
 
@@ -228,134 +136,423 @@
 <div class="section">
   <div class="section-title">1. URLs i pristup</div>
   <table>
-    <tr><th>Servis</th><th>URL</th><th>Napomena</th></tr>
-    <tr><td>App (korisnici)</td><td><span class="url">https://qa-daily-log.netlify.app</span></td><td>Javni URL za pristup</td></tr>
-    <tr><td>Backend API</td><td><span class="url">https://qa-daily-log.onrender.com</span></td><td>Node.js REST API</td></tr>
-    <tr><td>Health check</td><td><span class="url">https://qa-daily-log.onrender.com/api/health</span></td><td>Vraća <code>{ ok: true }</code></td></tr>
+    <tr><th>Servis</th><th>URL / adresa</th><th>Napomena</th></tr>
+    <tr><td>App (korisnici)</td><td><span class="url">https://qa-daily-log.online</span></td><td>Javni URL — Cloudflare + Tunnel</td></tr>
+    <tr><td>Health check</td><td><span class="url">https://qa-daily-log.online/api/health</span></td><td>Vraća <code>{ ok: true }</code></td></tr>
     <tr><td>GitHub repo</td><td><span class="url">https://github.com/sretenovicue/qa-daily-log</span></td><td>Izvorni kod</td></tr>
     <tr><td>Neon DB konzola</td><td><span class="url">https://console.neon.tech</span></td><td>PostgreSQL dashboard</td></tr>
-    <tr><td>Netlify konzola</td><td><span class="url">https://app.netlify.com/projects/qa-daily-log</span></td><td>Frontend deploy</td></tr>
-    <tr><td>Render konzola</td><td><span class="url">https://dashboard.render.com</span></td><td>Backend deploy</td></tr>
+    <tr><td>Cloudflare konzola</td><td><span class="url">https://dash.cloudflare.com</span></td><td>DNS + Tunnel upravljanje</td></tr>
+    <tr><td>Namecheap</td><td><span class="url">https://namecheap.com</span></td><td>Registrar domene (obnova Mar 2027)</td></tr>
+    <tr><td>SSH na Pi</td><td><span class="url">ssh sretenovicue@nasty.local</span></td><td>Lokalna mreža, port 22</td></tr>
   </table>
 </div>
 
 <!-- 2. ARHITEKTURA -->
 <div class="section">
-  <div class="section-title">2. Arhitektura sistema</div>
+  <div class="section-title">2. Arhitektura sistema (v2.0)</div>
   <div class="diagram">
-<span class="comment">┌─────────────────────────────────────────────────────────────────┐</span>
-<span class="comment">│                         BROWSER                                  │</span>
-<span class="comment">└─────────────────────┬───────────────────────────────────────────┘</span>
-                      <span class="arrow">│  HTTPS</span>
-                      <span class="arrow">▼</span>
-<span class="highlight">┌─────────────────────────────────────┐</span>
-<span class="highlight">│        NETLIFY CDN (frontend)        │</span>
-<span class="highlight">│   React SPA — qa-daily-log.netlify   │</span>
-<span class="highlight">└──────────┬──────────────────────────┘</span>
-           <span class="arrow">│  /api/*  →  proxy redirect (netlify.toml)</span>
-           <span class="arrow">▼</span>
-<span class="highlight">┌─────────────────────────────────────┐</span>
-<span class="highlight">│      RENDER.COM (backend)            │</span>
-<span class="highlight">│   Node.js + Express — port auto      │</span>
-<span class="highlight">└──────────┬──────────────────────────┘</span>
-           <span class="arrow">│  PostgreSQL (SSL, rejectUnauthorized)</span>
-           <span class="arrow">▼</span>
-<span class="highlight">┌─────────────────────────────────────┐</span>
-<span class="highlight">│  NEON POSTGRESQL (cloud DB)          │</span>
-<span class="highlight">│  Frankfurt — serverless Postgres     │</span>
-<span class="highlight">└─────────────────────────────────────┘</span></div>
+<span class="comment">  ┌──────────────────────────────────────────────────────────────────────────┐</span>
+<span class="comment">  │                              BROWSER                                     │</span>
+<span class="comment">  │         https://qa-daily-log.online                                      │</span>
+<span class="comment">  └──────────────────────────────┬───────────────────────────────────────────┘</span>
+                                 <span class="arrow">│  HTTPS port 443</span>
+                                 <span class="arrow">▼</span>
+<span class="highlight">  ┌───────────────────────────────────────────────────────────────────────┐</span>
+<span class="highlight">  │                    CLOUDFLARE EDGE (besplatno)                        │</span>
+<span class="highlight">  │  • SSL terminacija (HTTPS ↔ Tunnel)                                   │</span>
+<span class="highlight">  │  • DDoS zaštita — pravi IP Pi-a NIKAD nije izložen internetu          │</span>
+<span class="highlight">  │  • DNS proxy (CNAME Tunnel zapis)                                     │</span>
+<span class="highlight">  └───────────────────────────────┬───────────────────────────────────────┘</span>
+                                  <span class="arrow">│  Cloudflare Tunnel (TLS, izlazna veza — ISP portovi nisu bitni)</span>
+                                  <span class="arrow">▼</span>
+<span class="highlight">  ┌───────────────────────────────────────────────────────────────────────┐</span>
+<span class="highlight">  │              RASPBERRY PI 4B  (hostname: nasty, Debian Linux)         │</span>
+<span class="highlight">  │                                                                        │</span>
+<span class="highlight">  │  cloudflared (systemd) ──────→ http://localhost:3001                  │</span>
+<span class="highlight">  │                                        │                              │</span>
+<span class="highlight">  │  PM2 → node server.js (port 3001)      │                              │</span>
+<span class="highlight">  │         │                              │                              │</span>
+<span class="highlight">  │         ├── /api/*  →  Express routes  │                              │</span>
+<span class="highlight">  │         └── /*      →  React dist/ ───┘                              │</span>
+<span class="highlight">  └───────────────────────────────┬───────────────────────────────────────┘</span>
+                                  <span class="arrow">│  PostgreSQL SSL  (Neon cloud, Frankfurt)</span>
+                                  <span class="arrow">▼</span>
+<span class="highlight">  ┌───────────────────────────────────────────────────────────────────────┐</span>
+<span class="highlight">  │              NEON POSTGRESQL  (serverless, besplatno)                 │</span>
+<span class="highlight">  │              ep-jolly-king-a9bnwjuq — gwc.azure.neon.tech            │</span>
+<span class="highlight">  └───────────────────────────────────────────────────────────────────────┘</span></div>
+
   <div class="info">
-    <strong>Ključna napomena:</strong> Browser nikad ne komunicira direktno sa backendom. Sve <code>/api/*</code> rute prolaze kroz Netlify proxy — backend URL ostaje skriven, CORS je centralizovan.
+    <strong>Ključna prednost Cloudflare Tunnel-a:</strong> Pi ne treba ni jedan otvoren ulazni port. Cloudflared uspostavlja <em>izlaznu</em> konekciju prema Cloudflare-u — MTS blokiranje ulaznih portova (80, 443) ne utiče na rad. Pravi IP Pi-a ostaje skriven.
+  </div>
+
+  <div style="margin-top: 14px;">
+    <div class="section-title" style="font-size:12px; margin-bottom:10px;">Tok jednog HTTP zahtjeva:</div>
+    <div class="pipeline">
+      <div class="pipe-step">Browser</div><div class="pipe-arrow">→</div>
+      <div class="pipe-step">Cloudflare edge</div><div class="pipe-arrow">→</div>
+      <div class="pipe-step">Cloudflare Tunnel</div><div class="pipe-arrow">→</div>
+      <div class="pipe-step">cloudflared (Pi)</div><div class="pipe-arrow">→</div>
+      <div class="pipe-step">Express :3001</div><div class="pipe-arrow">→</div>
+      <div class="pipe-step">Neon DB</div>
+    </div>
   </div>
 </div>
 
-<!-- 3. FRONTEND -->
+<!-- 3. RASPBERRY PI -->
 <div class="section">
-  <div class="section-title">3. Frontend — Netlify</div>
+  <div class="section-title">3. Raspberry Pi — hardware i OS</div>
   <div class="cards">
     <div class="card">
-      <h4>Build konfiguracija</h4>
+      <h4>Hardware</h4>
       <table>
-        <tr><td>Servis</td><td>Netlify (free tier)</td></tr>
-        <tr><td>Branch</td><td><code>main</code></td></tr>
-        <tr><td>Base dir</td><td><code>frontend/</code></td></tr>
-        <tr><td>Build komanda</td><td><code>npm run build</code></td></tr>
-        <tr><td>Publish dir</td><td><code>dist/</code> (rel. od base)</td></tr>
-        <tr><td>Konfig fajl</td><td><code>netlify.toml</code> (root)</td></tr>
+        <tr><td>Model</td><td>Raspberry Pi 4B</td></tr>
+        <tr><td>Hostname</td><td><code>nasty</code></td></tr>
+        <tr><td>OS</td><td>Debian Linux (Raspberry Pi OS)</td></tr>
+        <tr><td>Korisnik</td><td><code>sretenovicue</code></td></tr>
+        <tr><td>SSH pristup</td><td><code>ssh sretenovicue@nasty.local</code></td></tr>
       </table>
     </div>
     <div class="card">
-      <h4>Stack</h4>
-      <ul>
-        <li>React 18 + Vite 5</li>
-        <li>Zustand (state management)</li>
-        <li>Chart.js (statistike)</li>
-        <li>SheetJS / xlsx (Excel export)</li>
-        <li>Vitest (unit testovi)</li>
-      </ul>
+      <h4>Instalirani servisi</h4>
+      <table>
+        <tr><td>Node.js</td><td>v20.20.1</td></tr>
+        <tr><td>npm</td><td>v10.8.2</td></tr>
+        <tr><td>PM2</td><td>process manager (auto-start na boot)</td></tr>
+        <tr><td>cloudflared</td><td>Cloudflare Tunnel daemon (systemd)</td></tr>
+        <tr><td>OpenMediaVault</td><td>NAS UI (odvojen port, ne ometa app)</td></tr>
+      </table>
     </div>
   </div>
 
-  <div class="section-title" style="font-size:12px; margin-top:12px;">Pipeline — svaki push na main:</div>
-  <div class="pipeline">
-    <div class="pipe-step">git push</div><div class="pipe-arrow">→</div>
-    <div class="pipe-step">GitHub webhook</div><div class="pipe-arrow">→</div>
-    <div class="pipe-step">Netlify build (~1-2 min)</div><div class="pipe-arrow">→</div>
-    <div class="pipe-step">npm run build</div><div class="pipe-arrow">→</div>
-    <div class="pipe-step">Deploy na CDN ✓</div>
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Lokacija aplikacije na Pi:</div>
+  <div class="code-block">/home/sretenovicue/qa-daily-log/     ← root repozitorijuma (git clone)
+├── backend/
+│   ├── server.js                    ← Express (servira i React dist/)
+│   ├── db.js
+│   ├── .env                         ← produkcione env varijable (NIJE u gitu)
+│   └── routes/
+└── frontend/
+    ├── src/
+    └── dist/                        ← React build (Express static serving)</div>
+</div>
+
+<!-- 4. CLOUDFLARE TUNNEL -->
+<div class="section">
+  <div class="section-title">4. Cloudflare Tunnel</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Konfiguracija tunnela</h4>
+      <table>
+        <tr><td>Tunnel ID</td><td><code>2db48967-9405-40c3-b595-07fc3912589c</code></td></tr>
+        <tr><td>Tunnel naziv</td><td><code>qa-daily-log</code></td></tr>
+        <tr><td>Hostname</td><td><code>qa-daily-log.online</code></td></tr>
+        <tr><td>Target servis</td><td><code>http://localhost:3001</code></td></tr>
+        <tr><td>Servis tip</td><td>systemd — <code>cloudflared.service</code></td></tr>
+        <tr><td>Auto-start</td><td>Pokreće se automatski pri restartu Pi-a</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h4>Fajlovi na Pi</h4>
+      <table>
+        <tr><td>Config</td><td><code>/etc/cloudflared/config.yml</code></td></tr>
+        <tr><td>Credentials</td><td><code>/etc/cloudflared/2db48967...json</code></td></tr>
+        <tr><td>Cert</td><td><code>/etc/cloudflared/cert.pem</code></td></tr>
+      </table>
+      <h4 style="margin-top:10px;">DNS zapis (Cloudflare)</h4>
+      <table>
+        <tr><td>Tip</td><td>CNAME (Tunnel)</td></tr>
+        <tr><td>Ime</td><td><code>qa-daily-log.online</code></td></tr>
+        <tr><td>Proxy</td><td>Proxied 🟠</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">config.yml:</div>
+  <div class="code-block">tunnel: 2db48967-9405-40c3-b595-07fc3912589c
+credentials-file: /etc/cloudflared/2db48967-9405-40c3-b595-07fc3912589c.json
+
+ingress:
+  - hostname: qa-daily-log.online
+    service: http://localhost:3001
+  - service: http_status:404</div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Upravljanje servisom:</div>
+  <div class="code-block">sudo systemctl status cloudflared      # provjeri status
+sudo systemctl restart cloudflared     # restart
+sudo journalctl -u cloudflared -f      # živi logovi</div>
+</div>
+
+<!-- 5. DOMENA -->
+<div class="section">
+  <div class="section-title">5. Domena i DNS</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Domena</h4>
+      <table>
+        <tr><td>Domena</td><td><code>qa-daily-log.online</code></td></tr>
+        <tr><td>Registrar</td><td>Namecheap</td></tr>
+        <tr><td>Cijena</td><td>$0.98 / god (obnova Mar 2027 ~$2.88/god)</td></tr>
+        <tr><td>Nameserveri</td><td>Cloudflare (mcgrory + rayne)</td></tr>
+        <tr><td>SSL</td><td>Cloudflare auto — HTTPS besplatno</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h4>Tok DNS-a</h4>
+      <p style="margin-bottom: 6px; font-size: 12px;">
+        1. Korisnik otvori <code>qa-daily-log.online</code><br>
+        2. DNS razrješava na Cloudflare nameservere<br>
+        3. Cloudflare proxy prima zahtjev<br>
+        4. Cloudflare prosljeđuje zahtjev kroz Tunnel<br>
+        5. cloudflared na Pi prima i prosljeđuje na <code>:3001</code><br>
+        6. Express odgovara HTML-om ili JSON-om
+      </p>
+    </div>
   </div>
 </div>
 
-<!-- 4. BACKEND -->
+<!-- 6. BACKEND -->
 <div class="section page-break">
-  <div class="section-title">4. Backend — Render.com</div>
+  <div class="section-title">6. Backend — Node.js + PM2</div>
   <div class="cards">
     <div class="card">
-      <h4>Konfiguracija servisa</h4>
+      <h4>PM2 konfiguracija</h4>
       <table>
-        <tr><td>Servis</td><td>Render Web Service (free)</td></tr>
-        <tr><td>Root dir</td><td><code>backend/</code></td></tr>
-        <tr><td>Build</td><td><code>npm install</code></td></tr>
-        <tr><td>Start</td><td><code>node server.js</code></td></tr>
-        <tr><td>Port</td><td><code>process.env.PORT</code> (auto)</td></tr>
-        <tr><td>Runtime</td><td>Node.js</td></tr>
+        <tr><td>Naziv procesa</td><td><code>qa-backend</code></td></tr>
+        <tr><td>Start komanda</td><td><code>node server.js</code></td></tr>
+        <tr><td>Radni dir</td><td><code>~/qa-daily-log/backend</code></td></tr>
+        <tr><td>Port</td><td><code>3001</code></td></tr>
+        <tr><td>Auto-start</td><td><code>pm2 startup</code> (systemd)</td></tr>
       </table>
     </div>
     <div class="card">
-      <h4>Environment varijable</h4>
+      <h4>backend/.env (produkcija)</h4>
       <table>
-        <tr><td><code>DATABASE_URL</code></td><td>Neon connection string</td></tr>
-        <tr><td><code>JWT_SECRET</code></td><td>Random tajni ključ</td></tr>
-        <tr><td><code>JWT_EXPIRY</code></td><td><code>7d</code></td></tr>
-        <tr><td><code>NODE_ENV</code></td><td><code>production</code></td></tr>
-        <tr><td><code>ALLOWED_ORIGIN</code></td><td>Netlify URL</td></tr>
+        <tr><td><code>DATABASE_URL</code></td><td>Neon connection string (SSL)</td></tr>
+        <tr><td><code>PORT</code></td><td><code>3001</code></td></tr>
+        <tr><td><code>ALLOWED_ORIGIN</code></td><td><code>https://qa-daily-log.online</code></td></tr>
+        <tr><td><code>JWT_SECRET</code></td><td>tajni ključ (min 32 znaka)</td></tr>
       </table>
     </div>
   </div>
 
-  <div class="warning">
-    <strong>⚠️ Free tier upozorenje:</strong> Render gasi servis nakon 15 min neaktivnosti. Prvi request (cold start) može trajati 30-60 sekundi. Ako je app u redovnoj upotrebi, ostaje aktivan.
+  <div class="info" style="margin-top:8px;">
+    <strong>Frontend serving:</strong> Express servira React build iz <code>frontend/dist/</code>. Nema posebnog web servera — jedan Node.js proces za sve. Ruta <code>GET *</code> vraća <code>index.html</code> za SPA routing.
   </div>
 
-  <div class="section-title" style="font-size:12px; margin-top:12px;">Pipeline — svaki push na main:</div>
-  <div class="pipeline">
+  <div class="section-title" style="font-size:12px; margin-top:12px;">PM2 komande:</div>
+  <div class="code-block">pm2 status                   # pregled procesa (status, CPU, RAM)
+pm2 logs qa-backend          # živi logovi
+pm2 restart qa-backend       # restart
+pm2 monit                    # monitor u realnom vremenu
+pm2 save                     # sačuvaj listu za auto-start</div>
+</div>
+
+<!-- 7. DEPLOYMENT -->
+<div class="section">
+  <div class="section-title">7. Deployment — objava nove verzije</div>
+  <div class="section-title" style="font-size:12px; margin-top:0;">Korak 1 — lokalni računar (push koda):</div>
+  <div class="code-block">cd ~/Desktop/testApp
+git add .
+git commit -m "opis izmjena"
+git push origin main</div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Korak 2 — Raspberry Pi (SSH):</div>
+  <div class="code-block">ssh sretenovicue@nasty.local
+cd ~/qa-daily-log
+
+git pull origin main                           # povuci izmjene
+
+# Ako ima novih npm paketa:
+cd backend  && npm install && cd ..
+cd frontend && npm install && cd ..
+
+cd frontend && npm run build && cd ..          # rebuild React app
+
+pm2 restart qa-backend                         # restart backenda</div>
+
+  <div class="pipeline" style="margin-top:12px;">
     <div class="pipe-step">git push</div><div class="pipe-arrow">→</div>
-    <div class="pipe-step">GitHub webhook</div><div class="pipe-arrow">→</div>
-    <div class="pipe-step">Render build (~2-3 min)</div><div class="pipe-arrow">→</div>
-    <div class="pipe-step">npm install</div><div class="pipe-arrow">→</div>
-    <div class="pipe-step">node server.js restart ✓</div>
+    <div class="pipe-step">ssh na Pi</div><div class="pipe-arrow">→</div>
+    <div class="pipe-step">git pull</div><div class="pipe-arrow">→</div>
+    <div class="pipe-step">npm run build</div><div class="pipe-arrow">→</div>
+    <div class="pipe-step">pm2 restart ✓</div>
+  </div>
+
+  <div class="warning" style="margin-top:10px;">
+    <strong>⚠️ Važno:</strong> Uvijek pokrenuti <code>npm run build</code> u <code>frontend/</code> folderu nakon React izmjena. Express servira statički <code>dist/</code> — bez rebuilda korisnici vide staru verziju.
   </div>
 </div>
 
-<!-- 5. BAZA -->
+<!-- 8. IZMJENE U APP -->
 <div class="section">
-  <div class="section-title">5. Baza — Neon PostgreSQL</div>
+  <div class="section-title">8. Izmjene u aplikaciji — changelog</div>
+  <table>
+    <tr><th>Verzija / Feature</th><th>Opis</th><th>Fajlovi</th></tr>
+    <tr>
+      <td>i18n SR / EN</td>
+      <td>Dvojezičnost — srpski i engleski. Flag switcher (🇷🇸/🇬🇧) u headeru. Jezik se pamti u localStorage. Datum format se lokalizuje (<code>sr-Latn</code> / <code>en-GB</code>).</td>
+      <td><code>i18n.js</code>, <code>locales/sr.json</code>, <code>locales/en.json</code></td>
+    </tr>
+    <tr>
+      <td>Avatar upload</td>
+      <td>Korisnik može uploadovati profilnu sliku klikom na avatar u headeru. Slika se resizuje na max 200×200px, kompresuje kao JPEG i čuva kao base64 u bazi.</td>
+      <td><code>App.jsx</code>, <code>Avatar.jsx</code>, <code>routes/users.js</code></td>
+    </tr>
+    <tr>
+      <td>User title (titula)</td>
+      <td>Manager može dodijeliti titulu svakom korisniku inline (klik u tabeli). Titula se prikazuje ispod korisničkog imena u headeru.</td>
+      <td><code>UsersPanel.jsx</code>, <code>App.jsx</code></td>
+    </tr>
+    <tr>
+      <td>Guest rola</td>
+      <td>Posebna rola za demo pristup — može pregledati sve ali ne može dodavati unose. Demo dugme na login stranici (bez lozinke).</td>
+      <td><code>AuthPage.jsx</code>, <code>App.jsx</code>, <code>middleware/auth.js</code></td>
+    </tr>
+    <tr>
+      <td>Weekly Report tab</td>
+      <td>Nedeljni izvještaj za managere i goste — pregled aktivnosti po sedmicama.</td>
+      <td><code>WeeklyReport.jsx</code></td>
+    </tr>
+    <tr>
+      <td>Easter eggs — per user</td>
+      <td>Personalizovane animacije i citati za specifične korisnike: Sopranos citati, Stranger Things citati, Taxi Driver citati, Đoković wink, riba animacija (Stanko), skijanje animacija (Jana).</td>
+      <td><code>QuoteToast.jsx</code>, <code>DjokovicWink.jsx</code>, <code>FishAnimation.jsx</code>, <code>SkierAnimation.jsx</code></td>
+    </tr>
+    <tr>
+      <td>Pending approval badge</td>
+      <td>Crveni badge na Users tabu koji prikazuje broj korisnika koji čekaju odobrenje. Automatski se osvježava svakih 60 sekundi.</td>
+      <td><code>App.jsx</code>, <code>store.js</code></td>
+    </tr>
+    <tr>
+      <td>Raspberry Pi deploy</td>
+      <td>Prelaz sa Netlify+Render na self-hosted Pi. Express servira i frontend i backend. Cloudflare Tunnel za javni pristup bez otvorenih portova.</td>
+      <td><code>server.js</code>, <code>backend/.env</code></td>
+    </tr>
+  </table>
+</div>
+
+<!-- 9. UNIT TESTOVI -->
+<div class="section page-break">
+  <div class="section-title">9. Unit testovi — Vitest</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Pokretanje</h4>
+      <div class="code-block" style="font-size:11px; padding:10px 12px;">cd frontend
+npm test           # jednokratno
+npm run test:watch # watch mode</div>
+    </div>
+    <div class="card">
+      <h4>Test fajlovi</h4>
+      <table>
+        <tr><td><code>validate.test.js</code></td><td>Validacija unosa (12 testova)</td></tr>
+        <tr><td><code>authValidation.test.js</code></td><td>Validacija auth forme</td></tr>
+        <tr><td><code>constants.test.js</code></td><td>Konstante i struktura podataka</td></tr>
+        <tr><td><code>store.auth.test.js</code></td><td>Auth store logika</td></tr>
+        <tr><td><code>backend/tests/auth.utils.test.js</code></td><td>Backend auth utils</td></tr>
+        <tr><td><code>backend/tests/entries.utils.test.js</code></td><td>Backend entries utils</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">validate.test.js — testovani slučajevi:</div>
+  <table>
+    <tr><th>Test</th><th>Očekivano</th></tr>
+    <tr class="test-row"><td>prolazi za kompletan validan unos</td><td>vraća [] (nema grešaka)</td></tr>
+    <tr class="test-row"><td>greška ako nema kategorije</td><td><code>validation.categoryRequired</code></td></tr>
+    <tr class="test-row"><td>greška ako nema akcije</td><td><code>validation.actionRequired</code></td></tr>
+    <tr class="test-row"><td>greška ako nema statusa</td><td><code>validation.statusRequired</code></td></tr>
+    <tr class="test-row"><td>greška ako nema opisa</td><td><code>validation.descriptionRequired</code></td></tr>
+    <tr class="test-row"><td>greška ako nema trajanja</td><td><code>validation.durationRequired</code></td></tr>
+    <tr class="test-row"><td>prolazi za ispravno vreme <code>1:30</code></td><td>vraća []</td></tr>
+    <tr class="test-row"><td>prolazi za ispravno vreme <code>0:05</code></td><td>vraća []</td></tr>
+    <tr class="test-row"><td>greška za neispravan format <code>"90"</code></td><td><code>validation.durationFormat</code></td></tr>
+    <tr class="test-row"><td>greška za format <code>"1:60"</code> (minuti van opsega)</td><td><code>validation.durationFormat</code></td></tr>
+    <tr class="test-row"><td>vraća više grešaka za prazan unos</td><td>errors.length ≥ 4</td></tr>
+    <tr class="test-row"><td>ValidationError sadrži listu grešaka</td><td>instanceof Error, errors.length === 2</td></tr>
+  </table>
+</div>
+
+<!-- 10. PLAYWRIGHT E2E TESTOVI -->
+<div class="section">
+  <div class="section-title">10. Playwright E2E testovi</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Konfiguracija</h4>
+      <table>
+        <tr><td>Framework</td><td>Playwright (TypeScript)</td></tr>
+        <tr><td>Browser</td><td>Chromium (headed)</td></tr>
+        <tr><td>Base URL</td><td><code>http://localhost:5173</code></td></tr>
+        <tr><td>Test fajlovi</td><td><code>tests/e2e/*.spec.ts</code></td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h4>Pokretanje</h4>
+      <div class="code-block" style="font-size:11px; padding:10px 12px;"># Pokreni dev servere:
+npm run dev
+
+# U drugom terminalu:
+npx playwright test
+npx playwright test --ui      # grafički UI
+npx playwright test auth      # samo auth testovi</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:12px; margin-top:14px;">auth.spec.ts — Auth i login testovi:</div>
+  <table>
+    <tr><th>Test</th><th>Opis</th></tr>
+    <tr class="test-row"><td>prikazuje login formu po defaultu</td><td>Email/lozinka input vidljivi, submit dugme prisutno</td></tr>
+    <tr class="test-row"><td>demo dugme loguje kao guest</td><td>Klik na "Pogledaj demo" → tabovi su vidljivi, username = "guest"</td></tr>
+    <tr class="test-row"><td>pogrešni kredencijali pokazuju grešku</td><td>API greška se prikazuje u <code>.auth-api-error</code></td></tr>
+    <tr class="test-row"><td>prazna forma pokazuje validacione greške</td><td><code>.field-error</code> vidljiv sa tekstom "obavezno"</td></tr>
+    <tr class="test-row"><td>prelaz na registraciju prikazuje nova polja</td><td>Username i confirm password polja se pojavljuju</td></tr>
+    <tr class="test-row"><td>registracija — validacija na srpskom</td><td>Greška sadrži "obavezan"</td></tr>
+    <tr class="test-row"><td>odjava vraća na login stranicu</td><td>Klik "Odjava" → login forma vidljiva</td></tr>
+  </table>
+
+  <div class="section-title" style="font-size:12px; margin-top:14px;">navigation.spec.ts — Navigacija i tabovi:</div>
+  <table>
+    <tr><th>Test</th><th>Opis</th></tr>
+    <tr class="test-row"><td>svi tabovi su vidljivi</td><td>Log, Period, Projekti, Statistike, Tim, Korisnici</td></tr>
+    <tr class="test-row"><td>Dnevni log tab je aktivan po defaultu</td><td>Klasa <code>active</code>, prev/next dugmad i datum vidljivi</td></tr>
+    <tr class="test-row"><td>klik na Period tab prikazuje period view</td><td>"Od datuma", "Do datuma" inputi i shortcut dugmad</td></tr>
+    <tr class="test-row"><td>klik na Projekti tab prikazuje matrix</td><td>Mesec selector, kolone "Projekat" i "Ukupno"</td></tr>
+    <tr class="test-row"><td>klik na Statistike tab prikazuje kartice</td><td>Stat kartice "Danas", "Ukupno unosa" vidljive</td></tr>
+    <tr class="test-row"><td>datum navigacija — Prethodni menja datum</td><td>Datum label se razlikuje od početnog</td></tr>
+    <tr class="test-row"><td>datum navigacija — Sledeći vraća danas</td><td>Datum label se vraća na originalni</td></tr>
+    <tr class="test-row"><td>Period shortcut 7 dana menja datume</td><td>"Od datuma" input se promijenio</td></tr>
+  </table>
+
+  <div class="section-title" style="font-size:12px; margin-top:14px;">i18n.spec.ts — Internacionalizacija (SR/EN):</div>
+  <table>
+    <tr><th>Test</th><th>Opis</th></tr>
+    <tr class="test-row"><td>podrazumevani jezik je srpski</td><td>SRB dugme ima klasu "active", labeli na srpskom</td></tr>
+    <tr class="test-row"><td>klik ENG prebacuje auth na engleski</td><td>ENG dugme aktivno, "Login", "Email or username" vidljivi</td></tr>
+    <tr class="test-row"><td>lang se čuva u localStorage</td><td><code>localStorage.getItem('lang')</code> vraća "en"/"sr"</td></tr>
+    <tr class="test-row"><td>engleski se čuva posle reload-a</td><td>Nakon <code>page.reload()</code> engleski je i dalje aktivan</td></tr>
+    <tr class="test-row"><td>validacione greške na srpskom</td><td>Greška sadrži "obavezan"</td></tr>
+    <tr class="test-row"><td>validacione greške na engleskom</td><td>Greška sadrži "required"</td></tr>
+    <tr class="test-row"><td>tabovi na srpskom po defaultu</td><td>"Dnevni log", "Statistike", "Projekti"</td></tr>
+    <tr class="test-row"><td>ENG menja sve tabove na engleski</td><td>"Daily Log", "Statistics", "Projects", "Team"</td></tr>
+    <tr class="test-row"><td>logout dugme je prevedeno</td><td>SR: "Odjava" / EN: "Logout"</td></tr>
+    <tr class="test-row"><td>header datum se lokalizuje</td><td>sr-Latn format ≠ en-GB format</td></tr>
+    <tr class="test-row"><td>Projekti — meseci na srpskom</td><td>Select sadrži "Januar"</td></tr>
+    <tr class="test-row"><td>Projekti — meseci na engleskom</td><td>Select sadrži "January"</td></tr>
+    <tr class="test-row"><td>Statistike labeli su prevedeni</td><td>SR: "Danas" / EN: "Today"</td></tr>
+    <tr class="test-row"><td>Period date labeli se prevode</td><td>SR: "Od datuma" / EN: "From date"</td></tr>
+    <tr class="test-row"><td>ENG dugme postaje active</td><td>ENG ima klasu "active", SRB nema</td></tr>
+  </table>
+</div>
+
+<!-- 11. BAZA -->
+<div class="section page-break">
+  <div class="section-title">11. Baza — Neon PostgreSQL</div>
   <div class="cards">
     <div class="card">
       <h4>Detalji</h4>
       <table>
         <tr><td>Servis</td><td>Neon.tech (free, serverless)</td></tr>
-        <tr><td>Region</td><td>Frankfurt (Azure Germany)</td></tr>
+        <tr><td>Region</td><td>Frankfurt (Azure Germany West)</td></tr>
         <tr><td>Projekt</td><td><code>qatrackapp</code></td></tr>
         <tr><td>Branch</td><td><code>production</code></td></tr>
         <tr><td>Database</td><td><code>neondb</code></td></tr>
@@ -380,49 +577,51 @@ entries
     </div>
   </div>
 
-  <div class="section-title" style="font-size:12px; margin-top:12px;">Korisni SQL upiti:</div>
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Korisni SQL upiti (Neon konzola):</div>
   <div class="code-block">-- Postavi manager rolu
 UPDATE users SET role = 'manager' WHERE email = 'email@domen.com';
 
--- Deaktiviraj korisnika (ne može da se loguje)
+-- Deaktiviraj / aktiviraj korisnika
 UPDATE users SET active = false WHERE username = 'korisnik';
+UPDATE users SET active = true  WHERE username = 'korisnik';
 
--- Reaktiviraj korisnika
-UPDATE users SET active = true WHERE username = 'korisnik';
+-- Odobri korisnika (approved = može se prijaviti)
+UPDATE users SET approved = true WHERE email = 'email@domen.com';
 
 -- Pregled svih korisnika
-SELECT id, email, username, role, active FROM users;</div>
+SELECT id, email, username, role, active, approved FROM users;</div>
 </div>
 
-<!-- 6. API RUTE -->
+<!-- 12. API RUTE -->
 <div class="section">
-  <div class="section-title">6. Backend API rute</div>
+  <div class="section-title">12. Backend API rute</div>
   <table>
     <tr><th>Metoda + putanja</th><th>Pristup</th><th>Opis</th></tr>
-    <tr><td><code>POST /api/auth/register</code></td><td><span class="badge badge-green">javna</span></td><td>Kreiranje korisnika</td></tr>
+    <tr><td><code>POST /api/auth/register</code></td><td><span class="badge badge-green">javna</span></td><td>Kreiranje korisnika (pending approval)</td></tr>
     <tr><td><code>POST /api/auth/login</code></td><td><span class="badge badge-green">javna</span></td><td>Login (email ili username)</td></tr>
     <tr><td><code>GET /api/auth/me</code></td><td><span class="badge badge-purple">JWT</span></td><td>Podaci o prijavljenom korisniku</td></tr>
     <tr><td><code>GET /api/entries</code></td><td><span class="badge badge-purple">JWT</span></td><td>Lista unosa (korisnik = samo svoje)</td></tr>
-    <tr><td><code>POST /api/entries</code></td><td><span class="badge badge-purple">JWT</span></td><td>Novi unos (nije dostupno guest-u)</td></tr>
-    <tr><td><code>PATCH /api/entries/:id</code></td><td><span class="badge badge-purple">JWT</span></td><td>Izmjena unosa (nije dostupno guest-u)</td></tr>
-    <tr><td><code>DELETE /api/entries/:id</code></td><td><span class="badge badge-purple">JWT</span></td><td>Brisanje unosa (nije dostupno guest-u)</td></tr>
+    <tr><td><code>POST /api/entries</code></td><td><span class="badge badge-purple">JWT</span></td><td>Novi unos (guest ne može)</td></tr>
+    <tr><td><code>PATCH /api/entries/:id</code></td><td><span class="badge badge-purple">JWT</span></td><td>Izmjena unosa (guest ne može)</td></tr>
+    <tr><td><code>DELETE /api/entries/:id</code></td><td><span class="badge badge-purple">JWT</span></td><td>Brisanje unosa (guest ne može)</td></tr>
     <tr><td><code>GET /api/stats</code></td><td><span class="badge badge-purple">JWT</span></td><td>Statistike za korisnika</td></tr>
     <tr><td><code>GET /api/stats/team</code></td><td><span class="badge badge-orange">manager</span></td><td>Tim izvještaj (svi korisnici)</td></tr>
     <tr><td><code>GET /api/users</code></td><td><span class="badge badge-orange">manager</span></td><td>Lista svih korisnika</td></tr>
-    <tr><td><code>POST /api/users</code></td><td><span class="badge badge-orange">manager</span></td><td>Kreiranje korisnika</td></tr>
-    <tr><td><code>PATCH /api/users/:id</code></td><td><span class="badge badge-orange">manager</span></td><td>Aktivacija / deaktivacija</td></tr>
-    <tr><td><code>GET /api/health</code></td><td><span class="badge badge-green">javna</span></td><td>Status servera</td></tr>
+    <tr><td><code>POST /api/users</code></td><td><span class="badge badge-orange">manager</span></td><td>Kreiranje korisnika direktno</td></tr>
+    <tr><td><code>PATCH /api/users/:id</code></td><td><span class="badge badge-orange">manager</span></td><td>Aktivacija / deaktivacija / rola / titula</td></tr>
+    <tr><td><code>PATCH /api/users/:id/avatar</code></td><td><span class="badge badge-purple">JWT</span></td><td>Upload profilne slike (base64 JPEG)</td></tr>
+    <tr><td><code>GET /api/health</code></td><td><span class="badge badge-green">javna</span></td><td>Status servera — <code>{ ok: true }</code></td></tr>
   </table>
 </div>
 
-<!-- 7. ULOGE -->
+<!-- 13. ULOGE -->
 <div class="section">
-  <div class="section-title">7. Uloge korisnika</div>
+  <div class="section-title">13. Uloge korisnika</div>
   <table>
-    <tr><th>Uloga</th><th>Login</th><th>Čitanje</th><th>Dodavanje unosa</th><th>Tim izvještaj</th><th>Upravljanje korisnicima</th></tr>
+    <tr><th>Uloga</th><th>Login</th><th>Čitanje unosa</th><th>Dodaj/uredi/briši</th><th>Tim izvještaj</th><th>Upravljanje korisnicima</th></tr>
     <tr>
       <td><span class="role-guest">guest</span></td>
-      <td>✅</td><td>✅</td><td>❌</td><td>❌</td><td>❌</td>
+      <td>✅ (demo dugme)</td><td>✅ (svi korisnici)</td><td>❌</td><td>✅</td><td>❌</td>
     </tr>
     <tr>
       <td><span class="role-user">user</span></td>
@@ -430,33 +629,79 @@ SELECT id, email, username, role, active FROM users;</div>
     </tr>
     <tr>
       <td><span class="role-manager">manager</span></td>
-      <td>✅</td><td>✅ (svi)</td><td>✅</td><td>✅</td><td>✅</td>
+      <td>✅</td><td>✅ (svi)</td><td>✅</td><td>✅</td><td>✅ (approve, activate, title, role)</td>
     </tr>
   </table>
   <div class="info" style="margin-top:10px;">
-    <strong>Manager rola</strong> se dodjeljuje isključivo direktno u bazi podataka. <strong>Guest i user</strong> se mogu upravljati iz Korisnici taba u aplikaciji.
+    <strong>Manager rola</strong> se dodjeljuje isključivo direktno SQL-om u Neon bazi. <strong>Guest</strong> pristup je hardkodovan na bazu — postoji jedan guest nalog za demo.
   </div>
 </div>
 
-<!-- 8. SIGURNOST -->
+<!-- 14. SIGURNOST -->
 <div class="section">
-  <div class="section-title">8. Sigurnost</div>
+  <div class="section-title">14. Sigurnost</div>
   <table>
     <tr><th>Mjera</th><th>Implementacija</th></tr>
-    <tr><td>HTTP security headers</td><td><code>helmet.js</code> — CSP, HSTS, X-Frame-Options, X-Content-Type-Options...</td></tr>
-    <tr><td>Brute force zaštita</td><td><code>express-rate-limit</code> — max 10 pokušaja / 15 min / IP na login i register</td></tr>
+    <tr><td>HTTP security headers</td><td><code>helmet.js</code> — CSP, HSTS, X-Frame-Options, X-Content-Type-Options</td></tr>
+    <tr><td>Brute force zaštita</td><td><code>express-rate-limit</code> — max 10 pokušaja / 15 min / IP (login + register)</td></tr>
     <tr><td>Hashovanje lozinki</td><td><code>bcryptjs</code> — salt rounds: 10</td></tr>
     <tr><td>Autentifikacija</td><td>JWT token (7 dana), payload: <code>{ userId, role }</code></td></tr>
-    <tr><td>CORS</td><td>Samo <code>ALLOWED_ORIGIN</code> domen (Netlify URL)</td></tr>
+    <tr><td>CORS</td><td>Samo <code>ALLOWED_ORIGIN=https://qa-daily-log.online</code></td></tr>
     <tr><td>Payload limit</td><td>50 KB maksimalni request body</td></tr>
-    <tr><td>SSL prema DB</td><td><code>rejectUnauthorized: true</code> u produkciji</td></tr>
+    <tr><td>SSL prema DB</td><td><code>sslmode=require&amp;channel_binding=require</code> u Neon URL-u</td></tr>
+    <tr><td>SQL injection</td><td>Parametrizovani upiti svuda — nema string concatenation</td></tr>
+    <tr><td>DDoS zaštita</td><td>Cloudflare proxy — pravi IP Pi-a nikad nije izložen</td></tr>
     <tr><td>Tajni podaci</td><td><code>.env</code> u <code>.gitignore</code> — nikad u GitHub-u</td></tr>
   </table>
 </div>
 
-<!-- 9. LOKALNI RAZVOJ -->
+<!-- 15. TECH STACK -->
 <div class="section page-break">
-  <div class="section-title">9. Lokalni razvoj</div>
+  <div class="section-title">15. Tech stack</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Frontend</h4>
+      <ul>
+        <li>React 18 + Vite 5</li>
+        <li>Zustand (state management)</li>
+        <li>react-i18next (SR/EN dvojezičnost)</li>
+        <li>Chart.js (statistike grafikoni)</li>
+        <li>SheetJS / xlsx (Excel export)</li>
+        <li>Vitest (unit testovi)</li>
+        <li>Playwright (E2E testovi)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Backend</h4>
+      <ul>
+        <li>Node.js 20 + Express 4</li>
+        <li>pg (PostgreSQL driver)</li>
+        <li>bcryptjs (hashovanje lozinki)</li>
+        <li>jsonwebtoken (JWT auth)</li>
+        <li>helmet (security headers)</li>
+        <li>express-rate-limit</li>
+        <li>morgan (HTTP access log)</li>
+        <li>dotenv (.env konfiguracija)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Infrastruktura</h4>
+      <ul>
+        <li>Raspberry Pi 4B (Debian Linux)</li>
+        <li>PM2 (process manager)</li>
+        <li>cloudflared v2024+ (tunnel daemon)</li>
+        <li>Cloudflare Free (proxy + DNS + SSL)</li>
+        <li>Namecheap (domain registrar)</li>
+        <li>Neon.tech (PostgreSQL cloud)</li>
+        <li>GitHub (git repozitorij)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 16. LOKALNI RAZVOJ -->
+<div class="section">
+  <div class="section-title">16. Lokalni razvoj</div>
   <div class="cards">
     <div class="card">
       <h4>Pokretanje</h4>
@@ -464,14 +709,13 @@ SELECT id, email, username, role, active FROM users;</div>
 npm run dev
 
 # Ili posebno:
-cd backend && npm start    # port 3001
-cd frontend && npm run dev # port 5173</div>
+cd backend  && npm start     # port 3001
+cd frontend && npm run dev   # port 5173</div>
     </div>
     <div class="card">
       <h4>backend/.env (lokalno)</h4>
       <div class="code-block" style="font-size:11px; padding:10px 12px;">DATABASE_URL=postgres://...neon.tech/...
-JWT_SECRET=tajni_kljuc
-JWT_EXPIRY=7d
+JWT_SECRET=tajni_kljuc_za_lokalno
 NODE_ENV=development
 ALLOWED_ORIGIN=http://localhost:5173
 PORT=3001</div>
@@ -481,40 +725,63 @@ PORT=3001</div>
   <div class="section-title" style="font-size:12px; margin-top:12px;">Struktura repozitorijuma:</div>
   <div class="code-block">qa-daily-log/
 ├── backend/
-│   ├── server.js          ← Express entry point
-│   ├── db.js              ← PostgreSQL pool + migracije
+│   ├── server.js              ← Express (servira i frontend dist/)
+│   ├── db.js                  ← PostgreSQL pool + migracije
 │   ├── middleware/
-│   │   └── auth.js        ← JWT middleware + requireManager
-│   └── routes/
-│       ├── auth.js        ← /api/auth/*
-│       ├── entries.js     ← /api/entries/*
-│       ├── stats.js       ← /api/stats/*
-│       └── users.js       ← /api/users/* (manager only)
+│   │   └── auth.js            ← JWT + requireManager
+│   ├── routes/
+│   │   ├── auth.js, entries.js, stats.js, users.js
+│   └── tests/
+│       ├── auth.utils.test.js
+│       └── entries.utils.test.js
 ├── frontend/
 │   └── src/
-│       ├── App.jsx         ← Root komponenta, tabovi
-│       ├── store.js        ← Zustand state management
-│       ├── api.js          ← Fetch wrapper
-│       ├── constants.js    ← Kategorije, akcije, projekti
+│       ├── App.jsx             ← root, tabovi, easter eggs, lang switcher
+│       ├── store.js            ← Zustand state
+│       ├── api.js              ← fetch wrapper
+│       ├── constants.js        ← kategorije, akcije, statusi, projekti
+│       ├── validate.js         ← validacija unosa
+│       ├── i18n.js             ← i18next config (SR/EN)
+│       ├── locales/sr.json, en.json
+│       ├── sopranos-quotes.js, stranger-things-quotes.js, taxidriver-quotes.js
 │       └── components/
-│           ├── AuthPage.jsx
-│           ├── AddEntry.jsx
-│           ├── DailyLog.jsx
-│           ├── PeriodView.jsx
-│           ├── Statistics.jsx
-│           ├── ProjectsView.jsx
-│           ├── TeamReport.jsx   ← manager only
-│           ├── UsersPanel.jsx   ← manager only
-│           ├── Avatar.jsx       ← profilna slika
-│           ├── EditModal.jsx    ← izmjena unosa
-│           ├── ErrorBoundary.jsx
-│           └── Toast.jsx        ← notifikacije
-└── netlify.toml           ← Build config + proxy pravila</div>
+│           ├── AuthPage, AddEntry, DailyLog, PeriodView
+│           ├── Statistics, ProjectsView, TeamReport
+│           ├── UsersPanel, WeeklyReport, EditModal
+│           ├── Avatar, Toast, QuoteToast, ErrorBoundary
+│           ├── DjokovicWink, FishAnimation, SkierAnimation
+│           └── ConfirmDialog
+├── tests/e2e/
+│   ├── auth.spec.ts           ← auth E2E testovi
+│   ├── navigation.spec.ts     ← navigacija E2E testovi
+│   └── i18n.spec.ts           ← internacionalizacija E2E testovi
+├── playwright.config.ts
+└── package.json               ← "dev": concurrently oba servera</div>
+</div>
+
+<!-- 17. TROUBLESHOOTING -->
+<div class="section">
+  <div class="section-title">17. Troubleshooting</div>
+  <table>
+    <tr><th>Problem</th><th>Provjeri</th><th>Rješenje</th></tr>
+    <tr><td>App nedostupna</td><td><code>pm2 status</code> na Pi</td><td><code>pm2 restart qa-backend</code></td></tr>
+    <tr><td>App nedostupna</td><td><code>systemctl status cloudflared</code></td><td><code>sudo systemctl restart cloudflared</code></td></tr>
+    <tr><td>Stara verzija prikazana</td><td>Je li rebuild pokrenut?</td><td><code>cd frontend && npm run build</code></td></tr>
+    <tr><td>DB greška pri pokretanju</td><td>Neon konzola — status baze</td><td>Provjeri <code>DATABASE_URL</code> u <code>.env</code></td></tr>
+    <tr><td>Login ne radi (401)</td><td><code>pm2 logs qa-backend</code></td><td>Provjeri <code>JWT_SECRET</code> u <code>.env</code></td></tr>
+    <tr><td>CORS greška u browseru</td><td>Network tab u DevTools</td><td>Provjeri <code>ALLOWED_ORIGIN</code> u <code>.env</code></td></tr>
+    <tr><td>Pi reboot — app ne radi</td><td><code>pm2 status</code>, <code>systemctl status cloudflared</code></td><td>PM2 i cloudflared su na auto-start (systemd). Ako ne rade: <code>pm2 resurrect</code></td></tr>
+  </table>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Živi logovi na Pi:</div>
+  <div class="code-block">pm2 logs qa-backend                    # backend logovi (živo)
+pm2 monit                              # PM2 monitor (CPU, RAM, restarts)
+sudo journalctl -u cloudflared -f      # Tunnel logovi</div>
 </div>
 
 <!-- FOOTER -->
 <div class="doc-footer">
-  <span>QA Daily Log — DevOps Dokumentacija</span>
+  <span>QA Daily Log — DevOps Dokumentacija v2.0 (Raspberry Pi 4B + Cloudflare Tunnel)</span>
   <span>Bosko Sretenovic © 2026</span>
 </div>
 

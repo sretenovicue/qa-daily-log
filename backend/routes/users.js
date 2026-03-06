@@ -3,6 +3,7 @@ const router         = express.Router();
 const bcrypt         = require('bcryptjs');
 const pool           = require('../db');
 const { requireManager } = require('../middleware/auth');
+const { sendWelcomeEmail } = require('../email');
 
 const wrap = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
@@ -76,7 +77,10 @@ router.post('/:id/approve', wrap(async (req, res) => {
     'UPDATE users SET approved = true WHERE id = $1 RETURNING id, email, username, role, active, approved, created_at',
     [id]
   );
-  res.json(updated.rows[0]);
+  const user = updated.rows[0];
+  sendWelcomeEmail({ to: user.email, username: user.username })
+    .catch(err => console.error('[EMAIL]', err.message));
+  res.json(user);
 }));
 
 // ── PATCH /api/users/:id/title — set title ───────────────────────────

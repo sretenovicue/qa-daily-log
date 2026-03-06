@@ -23,9 +23,11 @@ app.use(express.json({ limit: '50kb' }));
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms'));
 
 // Rate limiting — 10 auth attempts per 15 min per IP
+// Skip in Playwright E2E tests (identified by custom header)
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 10,
+  skip: (req) => req.headers['x-playwright-test'] === '1',
   standardHeaders: true,
   legacyHeaders: false,
   message: { error: 'Previše pokušaja prijave. Pokušajte ponovo za 15 minuta.' },

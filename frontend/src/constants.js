@@ -51,6 +51,11 @@ export const PROJECTS = [
   { value: 'MSS',           label: 'MSS' },
   { value: 'URLShortener',  label: 'URLShortener' },
   { value: 'PHPTools',      label: 'PHP tools' },
+  { value: 'ChatApps',     label: 'ChatApps' },
+  { value: 'MCP',          label: 'MCP' },
+  { value: 'AdminConsole',     label: 'Admin Console' },
+  { value: 'MailsFromSupport', label: 'Mails from Support' },
+  { value: 'SAP',              label: 'SAP' },
 ];
 
 export function todayStr() {

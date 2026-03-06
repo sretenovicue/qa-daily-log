@@ -1,27 +1,11 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useStore } from '../store';
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-function validateLogin(email, password) {
-  const errors = {};
-  if (!email.trim()) errors.email = 'Email ili korisničko ime je obavezno';
-  if (!password) errors.password = 'Lozinka je obavezna';
-  return errors;
-}
-
-function validateRegister(email, username, password, confirm) {
-  const errors = {};
-  if (!email.trim()) errors.email = 'Email je obavezan';
-  else if (!EMAIL_RE.test(email)) errors.email = 'Email format nije validan';
-  if (!username.trim()) errors.username = 'Korisničko ime je obavezno';
-  if (!password) errors.password = 'Lozinka je obavezna';
-  else if (password.length < 8) errors.password = 'Lozinka mora imati najmanje 8 znakova';
-  if (password !== confirm) errors.confirm = 'Lozinke se ne poklapaju';
-  return errors;
-}
-
 export default function AuthPage() {
+  const { t, i18n } = useTranslation();
   const { login, register } = useStore();
   const [mode, setMode] = useState('login'); // 'login' | 'register'
 
@@ -35,11 +19,34 @@ export default function AuthPage() {
   const [loading, setLoading] = useState(false);
   const [pendingApproval, setPendingApproval] = useState(false);
 
+  function validateLogin(emailVal, passwordVal) {
+    const errs = {};
+    if (!emailVal.trim()) errs.email = t('authValidation.emailRequired');
+    if (!passwordVal) errs.password = t('authValidation.passwordRequired');
+    return errs;
+  }
+
+  function validateRegister(emailVal, usernameVal, passwordVal, confirmVal) {
+    const errs = {};
+    if (!emailVal.trim()) errs.email = t('authValidation.emailOnlyRequired');
+    else if (!EMAIL_RE.test(emailVal)) errs.email = t('authValidation.emailInvalid');
+    if (!usernameVal.trim()) errs.username = t('authValidation.usernameRequired');
+    if (!passwordVal) errs.password = t('authValidation.passwordRequired');
+    else if (passwordVal.length < 8) errs.password = t('authValidation.passwordMin');
+    if (passwordVal !== confirmVal) errs.confirm = t('authValidation.passwordMismatch');
+    return errs;
+  }
+
   function switchMode(m) {
     setMode(m);
     setErrors({});
     setApiError('');
     setPendingApproval(false);
+  }
+
+  function changeLang(lang) {
+    i18n.changeLanguage(lang);
+    localStorage.setItem('lang', lang);
   }
 
   async function handleSubmit(e) {
@@ -76,6 +83,24 @@ export default function AuthPage() {
   return (
     <div className="auth-page">
       <div className="auth-card" style={{ position: 'relative' }}>
+        {/* Language switcher on auth page */}
+        <div style={{ position: 'absolute', top: 12, left: 14, display: 'flex', gap: 4 }}>
+          <button
+            className={`lang-btn${i18n.language === 'sr' ? ' active' : ''}`}
+            onClick={() => changeLang('sr')}
+            type="button"
+          >
+            🇷🇸 SRB
+          </button>
+          <button
+            className={`lang-btn${i18n.language === 'en' ? ' active' : ''}`}
+            onClick={() => changeLang('en')}
+            type="button"
+          >
+            🇬🇧 ENG
+          </button>
+        </div>
+
         <div style={{
           position: 'absolute',
           top: 12,
@@ -109,16 +134,16 @@ export default function AuthPage() {
             textAlign: 'center',
           }}>
             <div style={{ fontSize: 22, marginBottom: 6 }}>✅</div>
-            <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--green)' }}>Registracija uspešna!</div>
+            <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--green)' }}>{t('auth.pendingTitle')}</div>
             <div style={{ fontSize: 13, color: 'var(--text2)', marginTop: 4 }}>
-              Nalog čeka odobrenje menadžera. Bićete obavešteni kada se nalog aktivira.
+              {t('auth.pendingDesc')}
             </div>
             <button
               type="button"
               style={{ marginTop: 12, fontSize: 12, background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer', textDecoration: 'underline' }}
               onClick={() => { setPendingApproval(false); switchMode('login'); }}
             >
-              Idi na prijavu
+              {t('auth.goToLogin')}
             </button>
           </div>
         )}
@@ -129,14 +154,14 @@ export default function AuthPage() {
             onClick={() => switchMode('login')}
             type="button"
           >
-            Prijava
+            {t('auth.login')}
           </button>
           <button
             className={`auth-tab${mode === 'register' ? ' active' : ''}`}
             onClick={() => switchMode('register')}
             type="button"
           >
-            Registracija
+            {t('auth.register')}
           </button>
         </div>
 
@@ -154,18 +179,18 @@ export default function AuthPage() {
             }}>
               <span style={{ fontSize: 16, marginTop: 1 }}>ℹ️</span>
               <span style={{ fontSize: 12, color: 'var(--text2)', lineHeight: 1.5 }}>
-                Nakon registracije, manager mora odobriti vaš nalog pre prve prijave.
+                {t('auth.registerNotice')}
               </span>
             </div>
           )}
           <div className="form-group">
-            <label htmlFor="auth-email">{mode === 'login' ? 'Email ili korisničko ime' : 'Email'}</label>
+            <label htmlFor="auth-email">{mode === 'login' ? t('auth.emailOrUsername') : t('auth.email')}</label>
             <input
               id="auth-email"
               type={mode === 'login' ? 'text' : 'email'}
               value={email}
               onChange={e => setEmail(e.target.value)}
-              placeholder={mode === 'login' ? 'Email ili korisničko ime' : 'vas@email.com'}
+              placeholder={mode === 'login' ? t('auth.emailLoginPlaceholder') : t('auth.emailPlaceholder')}
               autoComplete="email"
             />
             {errors.email && <span className="field-error">{errors.email}</span>}
@@ -173,13 +198,13 @@ export default function AuthPage() {
 
           {mode === 'register' && (
             <div className="form-group">
-              <label htmlFor="auth-username">Korisničko ime</label>
+              <label htmlFor="auth-username">{t('auth.username')}</label>
               <input
                 id="auth-username"
                 type="text"
                 value={username}
                 onChange={e => setUsername(e.target.value)}
-                placeholder="Vaše ime"
+                placeholder={t('auth.usernamePlaceholder')}
                 autoComplete="username"
               />
               {errors.username && <span className="field-error">{errors.username}</span>}
@@ -187,13 +212,13 @@ export default function AuthPage() {
           )}
 
           <div className="form-group">
-            <label htmlFor="auth-password">Lozinka</label>
+            <label htmlFor="auth-password">{t('auth.password')}</label>
             <input
               id="auth-password"
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              placeholder={mode === 'register' ? 'Minimum 8 znakova' : ''}
+              placeholder={mode === 'register' ? t('auth.passwordMinPlaceholder') : ''}
               autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
             />
             {errors.password && <span className="field-error">{errors.password}</span>}
@@ -201,13 +226,13 @@ export default function AuthPage() {
 
           {mode === 'register' && (
             <div className="form-group">
-              <label htmlFor="auth-confirm">Potvrda lozinke</label>
+              <label htmlFor="auth-confirm">{t('auth.confirmPassword')}</label>
               <input
                 id="auth-confirm"
                 type="password"
                 value={confirm}
                 onChange={e => setConfirm(e.target.value)}
-                placeholder="Ponovite lozinku"
+                placeholder={t('auth.confirmPlaceholder')}
                 autoComplete="new-password"
               />
               {errors.confirm && <span className="field-error">{errors.confirm}</span>}
@@ -217,7 +242,7 @@ export default function AuthPage() {
           {apiError && <div className="auth-api-error">{apiError}</div>}
 
           <button type="submit" className="auth-submit" disabled={loading}>
-            {loading ? 'Učitavanje…' : mode === 'login' ? 'Prijavi se' : 'Registruj se'}
+            {loading ? t('auth.loading') : mode === 'login' ? t('auth.submit') : t('auth.registerSubmit')}
           </button>
         </form>
 
@@ -225,7 +250,7 @@ export default function AuthPage() {
           <>
             <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '18px 0 14px' }}>
               <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }} />
-              <span style={{ fontSize: 11, color: 'var(--text2)', opacity: 0.5, letterSpacing: '0.05em' }}>ILI</span>
+              <span style={{ fontSize: 11, color: 'var(--text2)', opacity: 0.5, letterSpacing: '0.05em' }}>{t('auth.or')}</span>
               <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }} />
             </div>
 
@@ -258,8 +283,8 @@ export default function AuthPage() {
             >
               <span style={{ fontSize: 20 }}>👀</span>
               <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)' }}>Pogledaj demo</div>
-                <div style={{ fontSize: 11, color: 'var(--text2)', marginTop: 1 }}>Bez registracije — samo pregled</div>
+                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)' }}>{t('auth.demoTitle')}</div>
+                <div style={{ fontSize: 11, color: 'var(--text2)', marginTop: 1 }}>{t('auth.demoDesc')}</div>
               </div>
               <span style={{ marginLeft: 'auto', fontSize: 16, color: 'var(--accent)', opacity: 0.6 }}>→</span>
             </button>

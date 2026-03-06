@@ -1,4 +1,5 @@
 import { useState, useCallback } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useStore } from '../store';
 import { CATEGORIES, ACTIONS, STATUSES, PROJECTS } from '../constants';
 import { ValidationError } from '../validate';
@@ -17,6 +18,7 @@ const INITIAL_FORM = {
 };
 
 export default function AddEntry() {
+  const { t } = useTranslation();
   const [form, setForm]     = useState(INITIAL_FORM);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors]   = useState([]);
@@ -25,7 +27,7 @@ export default function AddEntry() {
 
   const set = useCallback((field, value) => {
     setForm(f => ({ ...f, [field]: value }));
-    if (errors.length) setErrors([]); // clear errors on change
+    if (errors.length) setErrors([]);
   }, [errors.length]);
 
   async function handleSubmit(e) {
@@ -39,7 +41,7 @@ export default function AddEntry() {
       if (err instanceof ValidationError) {
         setErrors(err.errors);
       } else {
-        setErrors(['Greška pri dodavanju. Proveri konekciju sa serverom.']);
+        setErrors(['entry.addError']);
         console.error(err);
       }
     } finally {
@@ -49,13 +51,13 @@ export default function AddEntry() {
 
   return (
     <div className="card">
-      <div className="card-title">Novi unos</div>
+      <div className="card-title">{t('entry.new')}</div>
       <form onSubmit={handleSubmit} noValidate>
 
         <div className="form-group">
-          <label>Projekat</label>
+          <label>{t('form.project')}</label>
           <select value={form.project} onChange={e => set('project', e.target.value)}>
-            <option value="">— Bez projekta —</option>
+            <option value="">{t('form.noProject')}</option>
             {PROJECTS.map(p => (
               <option key={p.value} value={p.value}>{p.label}</option>
             ))}
@@ -63,46 +65,46 @@ export default function AddEntry() {
         </div>
 
         <div className="form-group">
-          <label>Kategorija</label>
+          <label>{t('form.category')}</label>
           <select value={form.category} onChange={e => set('category', e.target.value)}>
-            <option value="">— Odaberi —</option>
+            <option value="">{t('form.select')}</option>
             {CATEGORY_KEYS.map(k => (
-              <option key={k} value={k}>{CATEGORIES[k].emoji} {CATEGORIES[k].label}</option>
+              <option key={k} value={k}>{CATEGORIES[k].emoji} {t(`categories.${k}`, CATEGORIES[k].label)}</option>
             ))}
           </select>
         </div>
 
         <div className="form-group">
-          <label>Akcija</label>
+          <label>{t('form.action')}</label>
           <select value={form.action} onChange={e => set('action', e.target.value)}>
-            <option value="">— Odaberi —</option>
+            <option value="">{t('form.select')}</option>
             {ACTION_KEYS.map(k => (
-              <option key={k} value={k}>{ACTIONS[k]}</option>
+              <option key={k} value={k}>{t(`actions.${k}`, ACTIONS[k])}</option>
             ))}
           </select>
         </div>
 
         <div className="form-group">
-          <label>Status</label>
+          <label>{t('form.status')}</label>
           <select value={form.status} onChange={e => set('status', e.target.value)}>
-            <option value="">— Odaberi —</option>
+            <option value="">{t('form.select')}</option>
             {STATUS_KEYS.map(k => (
-              <option key={k} value={k}>{STATUSES[k].emoji} {STATUSES[k].label}</option>
+              <option key={k} value={k}>{STATUSES[k].emoji} {t(`statuses.${k}`, STATUSES[k].label)}</option>
             ))}
           </select>
         </div>
 
         <div className="form-group">
-          <label>Opis</label>
+          <label>{t('form.description')}</label>
           <textarea
             value={form.description}
             onChange={e => set('description', e.target.value)}
-            placeholder="Npr: Test slučaj za login, bug #123..."
+            placeholder={t('form.descPlaceholder')}
           />
         </div>
 
         <div className="form-group">
-          <label>Trajanje (h:mm) — npr. 1:30</label>
+          <label>{t('form.duration')}</label>
           <input
             type="text"
             value={form.manualTime}
@@ -112,22 +114,24 @@ export default function AddEntry() {
         </div>
 
         {errors.length > 0 && (
-          <div style={{
-            background: 'rgba(240,108,108,0.1)',
-            border: '1px solid rgba(240,108,108,0.3)',
-            borderRadius: 8, padding: '10px 12px',
-            marginBottom: 10,
-          }}>
+          <div
+            style={{
+              background: 'rgba(240,108,108,0.1)',
+              border: '1px solid rgba(240,108,108,0.3)',
+              borderRadius: 8, padding: '10px 12px',
+              marginBottom: 10,
+            }}
+          >
             {errors.map((err, i) => (
               <div key={i} style={{ color: 'var(--red)', fontSize: 12, fontWeight: 600 }}>
-                {err}
+                {t(err, err)}
               </div>
             ))}
           </div>
         )}
 
         <button className="btn btn-primary" type="submit" disabled={loading}>
-          {loading ? 'Dodavanje...' : '+ Dodaj unos'}
+          {loading ? t('entry.adding') : t('entry.add')}
         </button>
       </form>
     </div>

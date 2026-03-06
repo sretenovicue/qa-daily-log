@@ -10,21 +10,21 @@ export function validateEntry(form) {
   const errors = [];
 
   if (!form.category) {
-    errors.push('Kategorija je obavezna');
+    errors.push('validation.categoryRequired');
   }
   if (!form.action) {
-    errors.push('Akcija je obavezna');
+    errors.push('validation.actionRequired');
   }
   if (!form.status) {
-    errors.push('Status je obavezan');
+    errors.push('validation.statusRequired');
   }
   if (!form.description || !form.description.trim()) {
-    errors.push('Opis je obavezan');
+    errors.push('validation.descriptionRequired');
   }
   if (!form.manualTime || !form.manualTime.trim()) {
-    errors.push('Trajanje je obavezno');
+    errors.push('validation.durationRequired');
   } else if (!isValidDuration(form.manualTime.trim())) {
-    errors.push('Trajanje mora biti u formatu h:mm (npr. 1:30 ili 0:45)');
+    errors.push('validation.durationFormat');
   }
 
   return errors;

@@ -61,11 +61,8 @@ router.get('/', wrap(async (req, res) => {
   const params = [];
   let i        = 1;
 
-  // Non-managers always filtered to their own entries
-  if (!isManager) {
-    query += ` AND e.user_id = $${i++}`; params.push(req.userId);
-  } else if (userId) {
-    // Manager can optionally filter by a specific user
+  // Managers can optionally filter by a specific user
+  if (isManager && userId) {
     query += ` AND e.user_id = $${i++}`; params.push(parseInt(userId, 10));
   }
 

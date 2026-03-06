@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import * as api from './api';
 import { todayStr, parseManualTime } from './constants';
 import { validateEntry, ValidationError } from './validate';
+import i18n from './i18n';
 
 // HH:MM — locale-safe, deterministic on every OS
 function formatTime() {
@@ -132,7 +133,7 @@ export const useStore = create((set, get) => ({
     // Invalidate stats if they've been loaded
     if (get().stats !== null) get().fetchStats();
 
-    get().addToast('Unos dodat ✓', 'success');
+    get().addToast(i18n.t('toast.entryAdded'), 'success');
     return entry;
   },
 
@@ -143,7 +144,7 @@ export const useStore = create((set, get) => ({
     }));
     // Invalidate stats if they've been loaded
     if (get().stats !== null) get().fetchStats();
-    get().addToast('Izmene sačuvane ✓', 'success');
+    get().addToast(i18n.t('toast.entrySaved'), 'success');
     return updated;
   },
 
@@ -155,11 +156,11 @@ export const useStore = create((set, get) => ({
       await api.deleteEntry(id);
       // Invalidate stats if they've been loaded
       if (get().stats !== null) get().fetchStats();
-      get().addToast('Unos obrisan', 'info');
+      get().addToast(i18n.t('toast.entryDeleted'), 'info');
     } catch (err) {
       // Revert on failure
       set({ dailyEntries: snapshot });
-      get().addToast('Greška pri brisanju', 'error');
+      get().addToast(i18n.t('toast.deleteError'), 'error');
       throw err;
     }
   },

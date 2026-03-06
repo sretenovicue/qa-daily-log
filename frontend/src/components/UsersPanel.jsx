@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useStore } from '../store';
 import Avatar from './Avatar';
 
-const ROLE_LABELS = { manager: 'Manager', user: 'Korisnik' };
-
 function TitleCell({ user, isGuest }) {
+  const { t } = useTranslation();
   const { setUserTitle, addToast } = useStore();
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(user.title || '');
@@ -16,7 +16,7 @@ function TitleCell({ user, isGuest }) {
     try {
       await setUserTitle(user.id, newTitle);
     } catch {
-      addToast('Greška pri čuvanju titule', 'error');
+      addToast(t('users.titleSaveError'), 'error');
       setValue(user.title || '');
     }
   }
@@ -44,15 +44,16 @@ function TitleCell({ user, isGuest }) {
   return (
     <div
       onClick={() => setEditing(true)}
-      title="Klikni da izmeniš titulu"
+      title={t('users.titleClickHint')}
       style={{ fontSize: 11, color: 'var(--text2)', opacity: 0.7, cursor: 'pointer', minHeight: 14 }}
     >
-      {user.title || <span style={{ opacity: 0.35, fontStyle: 'italic' }}>+ titula</span>}
+      {user.title || <span style={{ opacity: 0.35, fontStyle: 'italic' }}>{t('users.titlePlaceholder')}</span>}
     </div>
   );
 }
 
 export default function UsersPanel() {
+  const { t } = useTranslation();
   const {
     users, usersLoading, usersError, fetchUsers, createUser, toggleUser, approveUser,
     currentUser, addToast,
@@ -68,7 +69,7 @@ export default function UsersPanel() {
   async function handleToggle(user) {
     try {
       const updated = await toggleUser(user.id);
-      addToast(`${updated.username} ${updated.active ? 'aktiviran' : 'deaktiviran'}`, 'info');
+      addToast(`${updated.username} ${updated.active ? t('users.activated') : t('users.deactivated')}`, 'info');
     } catch (err) {
       addToast(parseError(err), 'error');
     }
@@ -77,7 +78,7 @@ export default function UsersPanel() {
   async function handleApprove(user) {
     try {
       const updated = await approveUser(user.id);
-      addToast(`${updated.username} odobren ✓`, 'success');
+      addToast(`${updated.username} ${t('users.approvedSuccess')}`, 'success');
     } catch (err) {
       addToast(parseError(err), 'error');
     }
@@ -90,7 +91,7 @@ export default function UsersPanel() {
     try {
       await createUser(form);
       setForm({ email: '', username: '', password: '', role: 'user' });
-      addToast('Korisnik kreiran ✓', 'success');
+      addToast(t('users.created'), 'success');
     } catch (err) {
       setFormError(parseError(err));
     } finally {
@@ -105,7 +106,7 @@ export default function UsersPanel() {
   return (
     <div>
       {/* ── User table ── */}
-      <h3 style={{ marginBottom: 12, fontSize: 14, color: 'var(--text2)', fontWeight: 600 }}>Korisnici</h3>
+      <h3 style={{ marginBottom: 12, fontSize: 14, color: 'var(--text2)', fontWeight: 600 }}>{t('users.title')}</h3>
 
       {usersError && (
         <div style={{ background: 'rgba(240,108,108,0.1)', border: '1px solid rgba(240,108,108,0.3)', borderRadius: 8, padding: '10px 14px', marginBottom: 12, fontSize: 13, color: 'var(--red)' }}>
@@ -114,18 +115,18 @@ export default function UsersPanel() {
       )}
 
       {usersLoading ? (
-        <div className="empty-state"><span className="emoji">⏳</span>Učitavanje...</div>
+        <div className="empty-state"><span className="emoji">⏳</span>{t('common.loading')}</div>
       ) : (
         <div className="entries-table-wrap" style={{ marginBottom: 32 }}>
           <table className="entries-table">
             <thead>
               <tr>
                 <th></th>
-                <th>Email</th>
-                <th>Ime</th>
-                <th>Uloga</th>
-                <th>Odobrenje</th>
-                <th>Status</th>
+                <th>{t('users.email')}</th>
+                <th>{t('users.name')}</th>
+                <th>{t('users.role')}</th>
+                <th>{t('users.approval')}</th>
+                <th>{t('users.status')}</th>
                 <th></th>
               </tr>
             </thead>
@@ -143,7 +144,7 @@ export default function UsersPanel() {
                       background: u.role === 'manager' ? 'rgba(124,111,247,0.2)' : 'rgba(255,255,255,0.06)',
                       color:      u.role === 'manager' ? 'var(--accent)' : 'var(--text2)',
                     }}>
-                      {ROLE_LABELS[u.role] || u.role}
+                      {u.role === 'manager' ? t('users.roleManager') : t('users.roleUser')}
                     </span>
                   </td>
                   <td>
@@ -151,7 +152,7 @@ export default function UsersPanel() {
                       background: u.approved !== false ? 'rgba(72,199,142,0.15)' : 'rgba(255,193,7,0.15)',
                       color:      u.approved !== false ? 'var(--green)' : '#f0a500',
                     }}>
-                      {u.approved !== false ? 'Odobren' : 'Na čekanju'}
+                      {u.approved !== false ? t('users.approved') : t('users.pending')}
                     </span>
                   </td>
                   <td>
@@ -159,7 +160,7 @@ export default function UsersPanel() {
                       background: u.active !== false ? 'rgba(72,199,142,0.15)' : 'rgba(240,108,108,0.15)',
                       color:      u.active !== false ? 'var(--green)' : 'var(--red)',
                     }}>
-                      {u.active !== false ? 'Aktivan' : 'Neaktivan'}
+                      {u.active !== false ? t('users.active') : t('users.inactive')}
                     </span>
                   </td>
                   <td style={{ display: 'flex', gap: 6 }}>
@@ -167,18 +168,18 @@ export default function UsersPanel() {
                       <button
                         className="btn btn-sm btn-primary"
                         onClick={() => handleApprove(u)}
-                        title="Odobri korisnika"
+                        title={t('users.approveTitle')}
                       >
-                        Odobri
+                        {t('users.approve')}
                       </button>
                     )}
                     {!isGuest && u.id !== currentUser?.id && !['admin', 'guest'].includes(u.username) && (
                       <button
                         className={`btn btn-sm ${u.active !== false ? 'btn-danger' : 'btn-edit'}`}
                         onClick={() => handleToggle(u)}
-                        title={u.active !== false ? 'Deaktiviraj' : 'Aktiviraj'}
+                        title={u.active !== false ? t('users.deactivate') : t('users.activate')}
                       >
-                        {u.active !== false ? 'Deaktiviraj' : 'Aktiviraj'}
+                        {u.active !== false ? t('users.deactivate') : t('users.activate')}
                       </button>
                     )}
                   </td>
@@ -192,48 +193,48 @@ export default function UsersPanel() {
       {/* ── Add user form ── */}
       {!isGuest && (
       <>
-      <h3 style={{ marginBottom: 12, fontSize: 14, color: 'var(--text2)', fontWeight: 600 }}>Dodaj korisnika</h3>
+      <h3 style={{ marginBottom: 12, fontSize: 14, color: 'var(--text2)', fontWeight: 600 }}>{t('users.addTitle')}</h3>
       <form onSubmit={handleCreate} style={{ display: 'flex', gap: 12, flexWrap: 'wrap', alignItems: 'flex-end' }}>
         <div className="form-group" style={{ marginBottom: 0, minWidth: 180 }}>
-          <label>Email</label>
+          <label>{t('users.email')}</label>
           <input
             type="email"
             required
             value={form.email}
             onChange={e => setForm(s => ({ ...s, email: e.target.value }))}
-            placeholder="ime@kompanija.com"
+            placeholder={t('users.emailPlaceholder')}
           />
         </div>
         <div className="form-group" style={{ marginBottom: 0, minWidth: 140 }}>
-          <label>Korisničko ime</label>
+          <label>{t('users.name')}</label>
           <input
             type="text"
             required
             value={form.username}
             onChange={e => setForm(s => ({ ...s, username: e.target.value }))}
-            placeholder="Ime Prezime"
+            placeholder={t('users.usernamePlaceholder')}
           />
         </div>
         <div className="form-group" style={{ marginBottom: 0, minWidth: 140 }}>
-          <label>Lozinka</label>
+          <label>{t('auth.password')}</label>
           <input
             type="password"
             required
             minLength={8}
             value={form.password}
             onChange={e => setForm(s => ({ ...s, password: e.target.value }))}
-            placeholder="min 8 znakova"
+            placeholder={t('users.passwordPlaceholder')}
           />
         </div>
         <div className="form-group" style={{ marginBottom: 0, minWidth: 120 }}>
-          <label>Uloga</label>
+          <label>{t('users.role')}</label>
           <select value={form.role} onChange={e => setForm(s => ({ ...s, role: e.target.value }))}>
-            <option value="user">Korisnik</option>
-            <option value="manager">Manager</option>
+            <option value="user">{t('users.roleUser')}</option>
+            <option value="manager">{t('users.roleManager')}</option>
           </select>
         </div>
         <button type="submit" className="btn btn-primary btn-sm" disabled={formLoading}>
-          {formLoading ? 'Kreiranje...' : '+ Dodaj'}
+          {formLoading ? t('users.creating') : t('users.addBtn')}
         </button>
       </form>
       {formError && (

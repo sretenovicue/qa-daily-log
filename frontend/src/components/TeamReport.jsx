@@ -1,5 +1,6 @@
 import { useEffect, useCallback } from 'react';
 import * as XLSX from 'xlsx';
+import { useTranslation } from 'react-i18next';
 import { useStore } from '../store';
 import { secondsToHuman } from '../constants';
 
@@ -12,6 +13,7 @@ function firstOfMonth() {
 }
 
 export default function TeamReport() {
+  const { t } = useTranslation();
   const {
     teamStats, teamStatsLoading, teamStatsError, fetchTeamStats, currentUser,
   } = useStore();
@@ -35,30 +37,30 @@ export default function TeamReport() {
     const wb = XLSX.utils.book_new();
 
     const empRows = teamStats.byEmployee.map(r => ({
-      'Ime':       r.username,
-      'Ukupno':    Number(r.total),
-      'Auto':      Number(r.auto),
-      'Manual':    Number(r.manual),
-      'Dodato':    Number(r.added),
-      'Ažurirano': Number(r.updated),
-      'Trajanje':  r.duration ? secondsToHuman(Number(r.duration)) : '—',
+      [t('table.name')]:       r.username,
+      [t('table.total')]:      Number(r.total),
+      'Auto':                  Number(r.auto),
+      'Manual':                Number(r.manual),
+      [t('table.added')]:      Number(r.added),
+      [t('table.updated')]:    Number(r.updated),
+      [t('table.duration')]:   r.duration ? secondsToHuman(Number(r.duration)) : '—',
     }));
     const wsEmp = XLSX.utils.json_to_sheet(empRows);
     wsEmp['!cols'] = [{ wch: 20 }, { wch: 9 }, { wch: 9 }, { wch: 9 }, { wch: 9 }, { wch: 12 }, { wch: 12 }];
-    XLSX.utils.book_append_sheet(wb, wsEmp, 'Po zaposlenom');
+    XLSX.utils.book_append_sheet(wb, wsEmp, t('xlsx.byEmployee'));
 
     const projRows = teamStats.byProject.map(r => ({
-      'Projekat':  r.project,
-      'Ukupno':    Number(r.total),
-      'Auto':      Number(r.auto),
-      'Manual':    Number(r.manual),
-      'Dodato':    Number(r.added),
-      'Ažurirano': Number(r.updated),
-      'Trajanje':  r.duration ? secondsToHuman(Number(r.duration)) : '—',
+      [t('table.project')]:    r.project,
+      [t('table.total')]:      Number(r.total),
+      'Auto':                  Number(r.auto),
+      'Manual':                Number(r.manual),
+      [t('table.added')]:      Number(r.added),
+      [t('table.updated')]:    Number(r.updated),
+      [t('table.duration')]:   r.duration ? secondsToHuman(Number(r.duration)) : '—',
     }));
     const wsProj = XLSX.utils.json_to_sheet(projRows);
     wsProj['!cols'] = [{ wch: 16 }, { wch: 9 }, { wch: 9 }, { wch: 9 }, { wch: 9 }, { wch: 12 }, { wch: 12 }];
-    XLSX.utils.book_append_sheet(wb, wsProj, 'Po projektu');
+    XLSX.utils.book_append_sheet(wb, wsProj, t('xlsx.byProject'));
 
     XLSX.writeFile(wb, `qa-tim-${from}-${to}.xlsx`);
   }
@@ -69,17 +71,17 @@ export default function TeamReport() {
     <div>
       <form onSubmit={handleRange} style={{ display: 'flex', gap: 12, alignItems: 'flex-end', marginBottom: 20, flexWrap: 'wrap' }}>
         <div className="form-group" style={{ marginBottom: 0 }}>
-          <label>Od datuma</label>
+          <label>{t('team.from')}</label>
           <input type="date" name="from" defaultValue={firstOfMonth()} />
         </div>
         <div className="form-group" style={{ marginBottom: 0 }}>
-          <label>Do datuma</label>
+          <label>{t('team.to')}</label>
           <input type="date" name="to" defaultValue={nowYMD()} />
         </div>
-        <button type="submit" className="btn btn-primary btn-sm" disabled={isGuest}>Prikaži</button>
+        <button type="submit" className="btn btn-primary btn-sm" disabled={isGuest}>{t('team.show')}</button>
         {teamStats && !isGuest && (
           <button type="button" className="btn btn-ghost btn-sm" onClick={exportXLSX} style={{ marginLeft: 'auto' }}>
-            ⬇ Excel (.xlsx)
+            {t('common.xlsx')}
           </button>
         )}
       </form>
@@ -91,25 +93,25 @@ export default function TeamReport() {
       )}
 
       {teamStatsLoading ? (
-        <div className="empty-state"><span className="emoji">⏳</span>Učitavanje...</div>
+        <div className="empty-state"><span className="emoji">⏳</span>{t('common.loading')}</div>
       ) : teamStats ? (
         <>
-          {/* ── Po zaposlenom ── */}
-          <h3 style={{ marginBottom: 10, fontSize: 14, color: 'var(--text2)', fontWeight: 600 }}>Po zaposlenom</h3>
+          {/* ── By employee ── */}
+          <h3 style={{ marginBottom: 10, fontSize: 14, color: 'var(--text2)', fontWeight: 600 }}>{t('team.byEmployee')}</h3>
           {teamStats.byEmployee.length === 0 ? (
-            <div className="empty-state" style={{ marginBottom: 24 }}><span className="emoji">👤</span>Nema podataka</div>
+            <div className="empty-state" style={{ marginBottom: 24 }}><span className="emoji">👤</span>{t('team.noData')}</div>
           ) : (
             <div className="entries-table-wrap" style={{ marginBottom: 28 }}>
               <table className="entries-table">
                 <thead>
                   <tr style={hdStyle}>
-                    <th>Ime</th>
-                    <th style={{ textAlign: 'right' }}>Ukupno</th>
+                    <th>{t('table.name')}</th>
+                    <th style={{ textAlign: 'right' }}>{t('table.total')}</th>
                     <th style={{ textAlign: 'right' }}>Auto</th>
                     <th style={{ textAlign: 'right' }}>Manual</th>
-                    <th style={{ textAlign: 'right' }}>Dodato</th>
-                    <th style={{ textAlign: 'right' }}>Ažurirano</th>
-                    <th style={{ textAlign: 'right' }}>Trajanje</th>
+                    <th style={{ textAlign: 'right' }}>{t('table.added')}</th>
+                    <th style={{ textAlign: 'right' }}>{t('table.updated')}</th>
+                    <th style={{ textAlign: 'right' }}>{t('table.duration')}</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -132,22 +134,22 @@ export default function TeamReport() {
             </div>
           )}
 
-          {/* ── Po projektu ── */}
-          <h3 style={{ marginBottom: 10, fontSize: 14, color: 'var(--text2)', fontWeight: 600 }}>Po projektu</h3>
+          {/* ── By project ── */}
+          <h3 style={{ marginBottom: 10, fontSize: 14, color: 'var(--text2)', fontWeight: 600 }}>{t('team.byProject')}</h3>
           {teamStats.byProject.length === 0 ? (
-            <div className="empty-state"><span className="emoji">🏗</span>Nema podataka</div>
+            <div className="empty-state"><span className="emoji">🏗</span>{t('team.noData')}</div>
           ) : (
             <div className="entries-table-wrap">
               <table className="entries-table">
                 <thead>
                   <tr style={hdStyle}>
-                    <th>Projekat</th>
-                    <th style={{ textAlign: 'right' }}>Ukupno</th>
+                    <th>{t('table.project')}</th>
+                    <th style={{ textAlign: 'right' }}>{t('table.total')}</th>
                     <th style={{ textAlign: 'right' }}>Auto</th>
                     <th style={{ textAlign: 'right' }}>Manual</th>
-                    <th style={{ textAlign: 'right' }}>Dodato</th>
-                    <th style={{ textAlign: 'right' }}>Ažurirano</th>
-                    <th style={{ textAlign: 'right' }}>Trajanje</th>
+                    <th style={{ textAlign: 'right' }}>{t('table.added')}</th>
+                    <th style={{ textAlign: 'right' }}>{t('table.updated')}</th>
+                    <th style={{ textAlign: 'right' }}>{t('table.duration')}</th>
                   </tr>
                 </thead>
                 <tbody>

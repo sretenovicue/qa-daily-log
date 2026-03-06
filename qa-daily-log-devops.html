@@ -220,7 +220,7 @@
   <div class="meta">
     <span>📅 Mart 2026</span>
     <span>👤 Bosko Sretenovic</span>
-    <span>🔖 v1.0</span>
+    <span>🔖 v1.2</span>
   </div>
 </div>
 
@@ -367,6 +367,9 @@
   id, email, username, password_hash
   role: 'user' | 'manager' | 'guest'
   active: boolean
+  approved: boolean
+  title: text (nullable)
+  avatar_data: text (base64, nullable)
   created_at
 
 entries
@@ -501,7 +504,11 @@ PORT=3001</div>
 │           ├── Statistics.jsx
 │           ├── ProjectsView.jsx
 │           ├── TeamReport.jsx   ← manager only
-│           └── UsersPanel.jsx   ← manager only
+│           ├── UsersPanel.jsx   ← manager only
+│           ├── Avatar.jsx       ← profilna slika
+│           ├── EditModal.jsx    ← izmjena unosa
+│           ├── ErrorBoundary.jsx
+│           └── Toast.jsx        ← notifikacije
 └── netlify.toml           ← Build config + proxy pravila</div>
 </div>
 

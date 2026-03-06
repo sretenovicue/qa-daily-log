@@ -25,3 +25,9 @@ backend/backups/
 # Editor
 .vscode/
 .idea/
+qa-daily-log-devops.pdf
+
+# Playwright
+test-results/
+.playwright-mcp/
+tests/e2e/.auth/

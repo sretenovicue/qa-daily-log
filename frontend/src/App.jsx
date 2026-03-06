@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useStore } from './store';
 import { SOPRANOS_QUOTES } from './sopranos-quotes';
 import { STRANGER_THINGS_QUOTES } from './stranger-things-quotes';
@@ -11,24 +12,13 @@ import Statistics from './components/Statistics';
 import ProjectsView from './components/ProjectsView';
 import TeamReport from './components/TeamReport';
 import UsersPanel from './components/UsersPanel';
+import WeeklyReport from './components/WeeklyReport';
 import Toast from './components/Toast';
 import ErrorBoundary from './components/ErrorBoundary';
 import AuthPage from './components/AuthPage';
 import Avatar from './components/Avatar';
 import DjokovicWink from './components/DjokovicWink';
 import FishAnimation from './components/FishAnimation';
-
-const BASE_TABS = [
-  { id: 'log',      label: '📋 Dnevni log' },
-  { id: 'period',   label: '📅 Period' },
-  { id: 'projects', label: '🏗 Projekti' },
-  { id: 'stats',    label: '📊 Statistike' },
-];
-
-const MANAGER_TABS = [
-  { id: 'team',  label: '👥 Tim' },
-  { id: 'users', label: '⚙️ Korisnici' },
-];
 
 function PendingBadge({ count }) {
   if (!count) return null;
@@ -51,20 +41,21 @@ function PendingBadge({ count }) {
   );
 }
 
-function useHeaderDate() {
-  const [date, setDate] = useState(formatDate());
+function useHeaderDate(language) {
+  const [date, setDate] = useState(() => formatDate(language));
 
   useEffect(() => {
-    // Update when day changes (check every minute)
-    const interval = setInterval(() => setDate(formatDate()), 60_000);
+    setDate(formatDate(language));
+    const interval = setInterval(() => setDate(formatDate(language)), 60_000);
     return () => clearInterval(interval);
-  }, []);
+  }, [language]);
 
   return date;
 }
 
-function formatDate() {
-  return new Date().toLocaleDateString('sr-Latn', {
+function formatDate(language) {
+  const locale = language === 'sr' ? 'sr-Latn' : 'en-GB';
+  return new Date().toLocaleDateString(locale, {
     weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
   });
 }
@@ -89,11 +80,30 @@ function resizeToBase64(file, maxSize = 200) {
 
 export default function App() {
   const { activeTab, setActiveTab, currentUser, authToken, fetchMe, logout, pendingUsersCount, fetchPendingCount, uploadAvatar, addToast } = useStore();
+  const { t, i18n } = useTranslation();
   const email = currentUser?.email;
   const [avatarUploading, setAvatarUploading] = useState(false);
-  const headerDate = useHeaderDate();
+  const headerDate = useHeaderDate(i18n.language);
   const isManager  = currentUser?.role === 'manager';
   const isGuest    = currentUser?.role === 'guest';
+
+  function changeLang(lang) {
+    i18n.changeLanguage(lang);
+    localStorage.setItem('lang', lang);
+  }
+
+  const BASE_TABS = [
+    { id: 'log',      label: `📋 ${t('nav.log')}` },
+    { id: 'period',   label: `📅 ${t('nav.period')}` },
+    { id: 'projects', label: `🏗 ${t('nav.projects')}` },
+    { id: 'stats',    label: `📊 ${t('nav.stats')}` },
+  ];
+
+  const MANAGER_TABS = [
+    { id: 'team',   label: `👥 ${t('nav.team')}` },
+    { id: 'users',  label: `⚙️ ${t('nav.users')}` },
+    { id: 'weekly', label: `📋 ${t('nav.weekly')}` },
+  ];
 
   useEffect(() => {
     if (authToken) fetchMe();
@@ -120,9 +130,29 @@ export default function App() {
         </div>
         <div className="header-right">
           <div className="header-date">{headerDate}</div>
+
+          <div className="lang-switcher">
+            <button
+              className={`lang-btn${i18n.language === 'sr' ? ' active' : ''}`}
+              onClick={() => changeLang('sr')}
+            >
+              🇷🇸 SRB
+            </button>
+            <button
+              className={`lang-btn${i18n.language === 'en' ? ' active' : ''}`}
+              onClick={() => changeLang('en')}
+            >
+              🇬🇧 ENG
+            </button>
+          </div>
+
           <div className="header-user">
-            {isManager && <span className="badge" style={{ background: 'rgba(124,111,247,0.2)', color: 'var(--accent)', marginRight: 6, fontSize: 11 }}>manager</span>}
-            <label title="Promeni profilnu sliku" style={{ cursor: avatarUploading ? 'wait' : 'pointer', position: 'relative', flexShrink: 0 }}>
+            {isManager && (
+              <span className="badge" style={{ background: 'rgba(124,111,247,0.2)', color: 'var(--accent)', marginRight: 6, fontSize: 11 }}>
+                {t('header.managerBadge')}
+              </span>
+            )}
+            <label title={t('header.changeAvatar')} style={{ cursor: avatarUploading ? 'wait' : 'pointer', position: 'relative', flexShrink: 0 }}>
               <Avatar username={currentUser.username} avatarData={currentUser.avatar_data} size={30} style={{ border: '2px solid rgba(255,255,255,0.12)' }} />
               {!isGuest && (
                 <input
@@ -137,9 +167,9 @@ export default function App() {
                     try {
                       const base64 = await resizeToBase64(file);
                       await uploadAvatar(base64);
-                      addToast('Profilna slika ažurirana ✓', 'success');
+                      addToast(t('header.avatarUpdated'), 'success');
                     } catch {
-                      addToast('Greška pri uploadu slike', 'error');
+                      addToast(t('header.avatarError'), 'error');
                     } finally {
                       setAvatarUploading(false);
                       e.target.value = '';
@@ -154,7 +184,9 @@ export default function App() {
                 <span style={{ fontSize: 10, color: 'var(--text2)', opacity: 0.7 }}>{currentUser.title}</span>
               )}
             </div>
-            <button className="logout-btn" onClick={logout} title="Odjavi se">Odjava</button>
+            <button className="logout-btn" onClick={logout} title={t('header.logoutTitle')}>
+              {t('header.logout')}
+            </button>
           </div>
         </div>
       </header>
@@ -173,9 +205,9 @@ export default function App() {
           }}>
             <span style={{ fontSize: 22 }}>👀</span>
             <div>
-              <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--accent)' }}>Demo mod — samo pregled</div>
+              <div style={{ fontWeight: 700, fontSize: 13, color: 'var(--accent)' }}>{t('guest.title')}</div>
               <div style={{ fontSize: 12, color: 'var(--text2)', marginTop: 2 }}>
-                Prijavljeni ste kao gost. Možete pregledati aplikaciju, ali ne možete dodavati unose.
+                {t('guest.desc')}
               </div>
             </div>
           </div>
@@ -189,14 +221,14 @@ export default function App() {
 
         <div>
           <div className="tabs">
-            {tabs.map(t => (
+            {tabs.map(tab => (
               <button
-                key={t.id}
-                className={`tab${activeTab === t.id ? ' active' : ''}`}
-                onClick={() => setActiveTab(t.id)}
+                key={tab.id}
+                className={`tab${activeTab === tab.id ? ' active' : ''}`}
+                onClick={() => setActiveTab(tab.id)}
               >
-                {t.label}
-                {t.id === 'users' && isManager && <PendingBadge count={pendingUsersCount} />}
+                {tab.label}
+                {tab.id === 'users' && isManager && <PendingBadge count={pendingUsersCount} />}
               </button>
             ))}
           </div>
@@ -208,8 +240,9 @@ export default function App() {
           <div style={{ display: activeTab === 'stats'    ? 'block' : 'none' }}><Statistics /></div>
           {(isManager || isGuest) && (
             <>
-              <div style={{ display: activeTab === 'team'  ? 'block' : 'none' }}><TeamReport /></div>
-              <div style={{ display: activeTab === 'users' ? 'block' : 'none' }}><UsersPanel /></div>
+              <div style={{ display: activeTab === 'team'   ? 'block' : 'none' }}><TeamReport /></div>
+              <div style={{ display: activeTab === 'users'  ? 'block' : 'none' }}><UsersPanel /></div>
+              <div style={{ display: activeTab === 'weekly' ? 'block' : 'none' }}><WeeklyReport /></div>
             </>
           )}
         </div>

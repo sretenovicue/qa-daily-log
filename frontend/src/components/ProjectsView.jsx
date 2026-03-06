@@ -1,24 +1,12 @@
 import { useState, useEffect } from 'react';
 import * as XLSX from 'xlsx';
-import { getStats, getEntries } from '../api';
+import { useTranslation } from 'react-i18next';
+import { getEntries } from '../api';
 import { useStore } from '../store';
 import { CATEGORIES, PROJECTS, secondsToHuman } from '../constants';
 
-const MONTHS = [
-  'Januar', 'Februar', 'Mart', 'April', 'Maj', 'Jun',
-  'Jul', 'Avgust', 'Septembar', 'Oktobar', 'Novembar', 'Decembar',
-];
-
-// Map categories to spreadsheet-like column groups
-const COL_DEFS = [
-  { key: 'manual',        label: 'Manual TC',        short: 'Manual' },
-  { key: 'auto',          label: 'Auto testovi',      short: 'Auto' },
-  { key: 'postman',       label: 'API testovi',       short: 'API' },
-  { key: 'regression',    label: 'Regresija',         short: 'Reg.' },
-  { key: 'bug',           label: 'Bugovi',            short: 'Bug' },
-];
-
 export default function ProjectsView({ refresh }) {
+  const { t } = useTranslation();
   const now  = new Date();
   const [year,  setYear]  = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth()); // 0-indexed
@@ -26,6 +14,16 @@ export default function ProjectsView({ refresh }) {
   const [loading, setLoading] = useState(false);
   const { currentUser } = useStore();
   const isGuest = currentUser?.role === 'guest';
+
+  const MONTHS = t('months', { returnObjects: true });
+
+  const COL_DEFS = [
+    { key: 'manual',     label: t('projects.colManualLabel'),     short: t('projects.colManualShort') },
+    { key: 'auto',       label: t('projects.colAutoLabel'),       short: t('projects.colAutoShort') },
+    { key: 'postman',    label: t('projects.colPostmanLabel'),    short: t('projects.colPostmanShort') },
+    { key: 'regression', label: t('projects.colRegressionLabel'), short: t('projects.colRegressionShort') },
+    { key: 'bug',        label: t('projects.colBugLabel'),        short: t('projects.colBugShort') },
+  ];
 
   useEffect(() => { fetchData(); }, [year, month, refresh]);
 
@@ -64,7 +62,7 @@ export default function ProjectsView({ refresh }) {
 
   function exportXLSX() {
     const monthLabel = `${MONTHS[month]} ${year}`;
-    const headers = ['Projekat', ...COL_DEFS.map(c => c.label), 'Ukupno'];
+    const headers = [t('table.project'), ...COL_DEFS.map(c => c.label), t('table.total')];
     const rows = PROJECTS.map(p => {
       const m = matrix[p.value] || {};
       const total = Object.values(m).reduce((s, v) => s + v, 0);
@@ -85,11 +83,11 @@ export default function ProjectsView({ refresh }) {
   return (
     <div>
       <div className="sort-bar" style={{ marginBottom: 20 }}>
-        <label>Mesec:</label>
+        <label>{t('projects.month')}</label>
         <select value={month} onChange={e => setMonth(Number(e.target.value))}>
           {MONTHS.map((m, i) => <option key={i} value={i}>{m}</option>)}
         </select>
-        <label>Godina:</label>
+        <label>{t('projects.year')}</label>
         <input
           type="number" value={year}
           onChange={e => setYear(Number(e.target.value))}
@@ -99,22 +97,22 @@ export default function ProjectsView({ refresh }) {
 
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 16 }}>
         <div style={{ fontWeight: 700, fontSize: 15 }}>📅 {monthLabel}</div>
-        <div style={{ color: 'var(--text2)', fontSize: 12 }}>{data.length} unosa ukupno</div>
+        <div style={{ color: 'var(--text2)', fontSize: 12 }}>{data.length} {t('projects.entriesTotal')}</div>
       </div>
 
       {loading ? (
-        <div className="empty-state"><span className="emoji">⏳</span>Učitavanje...</div>
+        <div className="empty-state"><span className="emoji">⏳</span>{t('common.loading')}</div>
       ) : (
         <>
           <div className="entries-table-wrap" style={{ marginBottom: 24 }}>
             <table className="entries-table">
               <thead>
                 <tr>
-                  <th>Projekat</th>
+                  <th>{t('table.project')}</th>
                   {COL_DEFS.map(c => (
                     <th key={c.key} title={c.label}>{c.short}</th>
                   ))}
-                  <th>Ukupno</th>
+                  <th>{t('table.total')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -158,7 +156,7 @@ export default function ProjectsView({ refresh }) {
           {/* Per-project breakdown bars */}
           {projectsWithData.length > 0 && (
             <>
-              <div className="card-title" style={{ marginBottom: 12 }}>Aktivnost po projektima</div>
+              <div className="card-title" style={{ marginBottom: 12 }}>{t('projects.activity')}</div>
               {projectsWithData.map(p => {
                 const m     = matrix[p.value] || {};
                 const total = Object.values(m).reduce((s, v) => s + v, 0);
@@ -188,21 +186,23 @@ export default function ProjectsView({ refresh }) {
 
           {noProjectCount > 0 && (
             <div style={{ marginTop: 16, color: 'var(--text2)', fontSize: 12 }}>
-              ℹ️ {noProjectCount} unosa bez dodeljenog projekta
+              ℹ️ {noProjectCount} {t('projects.noProject')}
             </div>
           )}
 
           {data.length === 0 && (
             <div className="empty-state">
               <span className="emoji">📊</span>
-              Nema unosa za {monthLabel}
+              {t('projects.noEntries')} {monthLabel}
             </div>
           )}
         </>
       )}
 
       <div className="export-section">
-        <button className="btn btn-ghost btn-sm" onClick={exportXLSX} disabled={isGuest}>⬇ Excel (.xlsx) — {monthLabel}</button>
+        <button className="btn btn-ghost btn-sm" onClick={exportXLSX} disabled={isGuest}>
+          {t('common.xlsx')} — {monthLabel}
+        </button>
       </div>
     </div>
   );

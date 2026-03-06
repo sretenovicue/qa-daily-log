@@ -406,8 +406,36 @@ select option { background: var(--surface2); }
   background: var(--surface2);
 }
 
-.entry-desc-cell { max-width: 340px; }
-.entry-desc-cell .desc-text { font-size: 13px; line-height: 1.45; }
+.entry-desc-cell { max-width: 260px; position: relative; }
+.entry-desc-cell .desc-text {
+  font-size: 13px;
+  line-height: 1.45;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 240px;
+  cursor: default;
+  display: block;
+}
+.entries-table tbody tr:hover .entry-desc-cell .desc-text::after {
+  content: attr(data-full);
+  position: absolute;
+  left: 0;
+  top: 0;
+  white-space: normal;
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 8px 12px;
+  z-index: 20;
+  min-width: 240px;
+  max-width: 420px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+  font-size: 13px;
+  line-height: 1.45;
+  color: var(--text);
+  pointer-events: none;
+}
 .action-cell { white-space: nowrap; display: flex; gap: 4px; }
 
 /* ── BADGES ──────────────────────────────────────────────────────────── */
@@ -606,6 +634,32 @@ select option { background: var(--surface2); }
   transition: all 0.15s;
 }
 .logout-btn:hover { border-color: var(--red); color: var(--red); background: rgba(240,108,108,0.07); }
+
+/* ── LANG SWITCHER ───────────────────────────────────────────────────── */
+.lang-switcher { display: flex; gap: 4px; align-items: center; }
+.lang-btn {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.12);
+  color: var(--text2);
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
+  letter-spacing: 0.02em;
+  font-family: inherit;
+}
+.lang-btn.active {
+  background: rgba(124,111,247,0.2);
+  border-color: rgba(124,111,247,0.5);
+  color: var(--accent);
+}
+.lang-btn:hover:not(.active) {
+  background: rgba(255,255,255,0.07);
+  border-color: rgba(255,255,255,0.2);
+  color: var(--text);
+}
 
 /* ── AUTH PAGE ───────────────────────────────────────────────────────── */
 .auth-page {

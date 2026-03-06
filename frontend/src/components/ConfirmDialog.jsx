@@ -1,6 +1,9 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 export default function ConfirmDialog({ message, onConfirm, onCancel }) {
+  const { t } = useTranslation();
+
   // Close on Escape
   useEffect(() => {
     const handler = (e) => { if (e.key === 'Escape') onCancel(); };
@@ -21,10 +24,10 @@ export default function ConfirmDialog({ message, onConfirm, onCancel }) {
         </p>
         <div style={{ display: 'flex', gap: 10, justifyContent: 'center' }}>
           <button className="btn btn-ghost" onClick={onCancel} autoFocus>
-            Otkaži
+            {t('common.cancel')}
           </button>
           <button className="btn btn-danger" onClick={onConfirm}>
-            Obriši
+            {t('common.delete')}
           </button>
         </div>
       </div>

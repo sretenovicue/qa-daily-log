@@ -1,4 +1,5 @@
 import { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 import { useStore } from '../store';
 import { CATEGORIES, STATUSES, secondsToHuman } from '../constants';
 import {
@@ -27,12 +28,13 @@ const DONUT_OPTS = {
 };
 
 export default function Statistics() {
+  const { t } = useTranslation();
   const { stats, statsLoading, statsError, fetchStats } = useStore();
 
   useEffect(() => { fetchStats(); }, []);
 
   if (statsLoading || !stats) {
-    return <div className="empty-state"><span className="emoji">⏳</span>Učitavanje statistika...</div>;
+    return <div className="empty-state"><span className="emoji">⏳</span>{t('stats.loading')}</div>;
   }
 
   if (statsError) {
@@ -41,7 +43,7 @@ export default function Statistics() {
         <span className="emoji">⚠️</span>
         {statsError}
         <br />
-        <button className="btn btn-ghost btn-sm" style={{ marginTop: 12 }} onClick={fetchStats}>Pokušaj ponovo</button>
+        <button className="btn btn-ghost btn-sm" style={{ marginTop: 12 }} onClick={fetchStats}>{t('stats.retry')}</button>
       </div>
     );
   }
@@ -63,7 +65,7 @@ export default function Statistics() {
   const catColors = catKeys.map(k => (CATEGORIES[k] || CATEGORIES.other).color);
   const catLabels = catKeys.map(k => {
     const c = CATEGORIES[k] || CATEGORIES.other;
-    return `${c.emoji} ${c.label}`;
+    return `${c.emoji} ${t(`categories.${k}`, c.label)}`;
   });
   const maxCat = Math.max(...catCounts, 1);
 
@@ -72,23 +74,23 @@ export default function Statistics() {
       <div className="stats-grid">
         <div className="stat-card">
           <div className="stat-number" style={{ color: 'var(--accent)' }}>{today?.cnt ?? 0}</div>
-          <div className="stat-label">Danas</div>
+          <div className="stat-label">{t('stats.today')}</div>
         </div>
         <div className="stat-card">
           <div className="stat-number" style={{ color: 'var(--green)', fontSize: 20 }}>
             {today?.dur ? secondsToHuman(today.dur) : '—'}
           </div>
-          <div className="stat-label">Vreme danas</div>
+          <div className="stat-label">{t('stats.todayTime')}</div>
         </div>
         <div className="stat-card">
           <div className="stat-number" style={{ color: 'var(--yellow)' }}>{total?.cnt ?? 0}</div>
-          <div className="stat-label">Ukupno unosa</div>
+          <div className="stat-label">{t('stats.totalEntries')}</div>
         </div>
         <div className="stat-card">
           <div className="stat-number" style={{ color: 'var(--orange)', fontSize: 20 }}>
             {total?.dur ? secondsToHuman(total.dur) : '—'}
           </div>
-          <div className="stat-label">Ukupno vreme</div>
+          <div className="stat-label">{t('stats.totalTime')}</div>
         </div>
       </div>
 
@@ -100,7 +102,7 @@ export default function Statistics() {
               <div key={status} className="stat-card" style={{ flex: '1', minWidth: 100, padding: '10px 14px' }}>
                 <div style={{ fontSize: 20 }}>{st.emoji}</div>
                 <div style={{ fontWeight: 700, color: st.color, fontSize: 22 }}>{cnt}</div>
-                <div className="stat-label">{st.label}</div>
+                <div className="stat-label">{t(`statuses.${status}`, st.label)}</div>
               </div>
             );
           })}
@@ -109,15 +111,15 @@ export default function Statistics() {
 
       <div className="charts-row">
         <div className="chart-card">
-          <div className="card-title">Aktivnost — poslednjih 14 dana</div>
+          <div className="card-title">{t('stats.activity14')}</div>
           <Bar data={{
             labels: last14Labels,
-            datasets: [{ label: 'Unosa', data: last14Counts, backgroundColor: 'rgba(124,111,247,0.7)', borderRadius: 4 }],
+            datasets: [{ label: t('stats.entriesDataset'), data: last14Counts, backgroundColor: 'rgba(124,111,247,0.7)', borderRadius: 4 }],
           }} options={CHART_OPTS} />
         </div>
         {catKeys.length > 0 && (
           <div className="chart-card">
-            <div className="card-title">Kategorije (svi dani)</div>
+            <div className="card-title">{t('stats.categoriesAll')}</div>
             <Doughnut data={{
               labels: catLabels,
               datasets: [{ data: catCounts, backgroundColor: catColors, borderWidth: 2, borderColor: '#1c1f2e' }],
@@ -128,12 +130,12 @@ export default function Statistics() {
 
       {byCategory.length > 0 && (
         <>
-          <div className="card-title" style={{ marginBottom: 12 }}>Raspodela po kategorijama</div>
+          <div className="card-title" style={{ marginBottom: 12 }}>{t('stats.categoryBreakdown')}</div>
           {byCategory.map(({ category, cnt, dur }) => {
             const c = CATEGORIES[category] || CATEGORIES.other;
             return (
               <div key={category} className="cat-row">
-                <span style={{ minWidth: 120 }}>{c.emoji} {c.label}</span>
+                <span style={{ minWidth: 120 }}>{c.emoji} {t(`categories.${category}`, c.label)}</span>
                 <div className="cat-bar-wrap">
                   <div className="cat-bar" style={{ width: `${Math.round(cnt / maxCat * 100)}%`, background: c.color }} />
                 </div>

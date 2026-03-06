@@ -140,7 +140,9 @@
     <tr><td>Neon DB console</td><td><span class="url">https://console.neon.tech</span></td><td>PostgreSQL dashboard</td></tr>
     <tr><td>Cloudflare console</td><td><span class="url">https://dash.cloudflare.com</span></td><td>DNS + Tunnel management</td></tr>
     <tr><td>Namecheap</td><td><span class="url">https://namecheap.com</span></td><td>Domain registrar (renew Mar 2027)</td></tr>
-    <tr><td>Raspberry Pi (SSH)</td><td><span class="url">ssh sretenovicue@nasty.local</span></td><td>Local network, port 22</td></tr>
+    <tr><td>SSH to Pi (local)</td><td><span class="url">ssh sretenovicue@nasty.local</span></td><td>Home network only</td></tr>
+    <tr><td>SSH to Pi (remote)</td><td><span class="url">ssh-pi</span> (alias)</td><td>From anywhere — Cloudflare Tunnel</td></tr>
+    <tr><td>SSH subdomain</td><td><span class="url">ssh.qa-daily-log.online</span></td><td>Cloudflare Tunnel SSH ingress</td></tr>
   </table>
 </div>
 
@@ -243,8 +245,8 @@
       <table>
         <tr><td>Tunnel ID</td><td><code>2db48967-9405-40c3-b595-07fc3912589c</code></td></tr>
         <tr><td>Tunnel name</td><td><code>qa-daily-log</code></td></tr>
-        <tr><td>Hostname</td><td><code>qa-daily-log.online</code></td></tr>
-        <tr><td>Target service</td><td><code>http://localhost:3001</code></td></tr>
+        <tr><td>HTTP hostname</td><td><code>qa-daily-log.online</code> → <code>localhost:3001</code></td></tr>
+        <tr><td>SSH hostname</td><td><code>ssh.qa-daily-log.online</code> → <code>localhost:22</code></td></tr>
         <tr><td>Service type</td><td>systemd — <code>cloudflared.service</code></td></tr>
         <tr><td>Auto-start</td><td>Starts automatically on Pi reboot</td></tr>
       </table>
@@ -272,12 +274,27 @@ credentials-file: /etc/cloudflared/2db48967-9405-40c3-b595-07fc3912589c.json
 ingress:
   - hostname: qa-daily-log.online
     service: http://localhost:3001
+  - hostname: ssh.qa-daily-log.online
+    service: ssh://localhost:22
   - service: http_status:404</div>
 
   <div class="section-title" style="font-size:12px; margin-top:12px;">Service management:</div>
   <div class="code-block">sudo systemctl status cloudflared      # check status
 sudo systemctl restart cloudflared     # restart
 sudo journalctl -u cloudflared -f      # live logs</div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Remote SSH access from any machine:</div>
+  <div class="code-block"># Install cloudflared on local Mac:
+brew install cloudflared
+
+# Add alias to ~/.zshrc:
+alias ssh-pi="ssh -o ProxyCommand=\"cloudflared access ssh --hostname ssh.qa-daily-log.online\" sretenovicue@ssh.qa-daily-log.online"
+
+# Usage (from anywhere with internet):
+ssh-pi</div>
+  <div class="info">
+    <strong>Prerequisite:</strong> <code>cloudflared</code> must be installed on the machine you're connecting from. The Pi user password is still required on each login.
+  </div>
 </div>
 
 <!-- 5. DOMAIN -->
@@ -355,7 +372,12 @@ git commit -m "description of changes"
 git push origin main</div>
 
   <div class="section-title" style="font-size:12px; margin-top:12px;">Step 2 — Raspberry Pi (SSH):</div>
-  <div class="code-block">ssh sretenovicue@nasty.local
+  <div class="code-block"># Home network:
+ssh sretenovicue@nasty.local
+
+# From anywhere (internet):
+ssh-pi
+
 cd ~/qa-daily-log
 
 git pull origin main                           # pull new changes

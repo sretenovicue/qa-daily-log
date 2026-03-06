@@ -43,10 +43,19 @@ app.use('/api/stats',   authMiddleware, require('./routes/stats'));             
 app.use('/api/users',   authMiddleware, require('./routes/users'));             // manager only
 app.get('/api/health',  (_, res) => res.json({ ok: true }));
 
-// 404 handler
-app.use((req, res) => {
-  res.status(404).json({ error: `${req.method} ${req.path} nije pronađeno` });
-});
+// Serve frontend static files if dist folder exists
+const path = require('path');
+const fs   = require('fs');
+const distPath = path.join(__dirname, '../frontend/dist');
+if (fs.existsSync(distPath)) {
+  app.use(express.static(distPath));
+  app.get('*', (req, res) => res.sendFile(path.join(distPath, 'index.html')));
+} else {
+  // 404 handler (dev mode — no build)
+  app.use((req, res) => {
+    res.status(404).json({ error: `${req.method} ${req.path} nije pronađeno` });
+  });
+}
 
 // Global error handler — catches any unhandled error from routes
 app.use((err, req, res, next) => { // eslint-disable-line no-unused-vars

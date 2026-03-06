@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>QA Daily Log — DevOps Documentation</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, sans-serif;
+    font-size: 13px;
+    color: #1a1a2e;
+    background: #fff;
+    padding: 40px 50px;
+    line-height: 1.6;
+  }
+
+  .doc-header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 60%, #7c6ff7 100%);
+    color: #fff;
+    padding: 32px 36px;
+    border-radius: 10px;
+    margin-bottom: 32px;
+    page-break-inside: avoid;
+  }
+  .doc-header h1 { font-size: 26px; font-weight: 700; letter-spacing: -0.5px; }
+  .doc-header h1 span { color: #a89ef8; }
+  .doc-header .subtitle { margin-top: 6px; opacity: 0.75; font-size: 13px; }
+  .doc-header .meta { margin-top: 14px; display: flex; gap: 24px; font-size: 12px; opacity: 0.85; flex-wrap: wrap; }
+  .doc-header .meta span { background: rgba(255,255,255,0.12); padding: 4px 10px; border-radius: 20px; }
+
+  .section { margin-bottom: 28px; page-break-inside: avoid; }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1a1a2e;
+    border-left: 4px solid #7c6ff7;
+    padding-left: 12px;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.4px;
+  }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin-bottom: 8px; }
+  th {
+    background: #f0effe;
+    color: #3d3580;
+    text-align: left;
+    padding: 8px 12px;
+    font-weight: 600;
+    font-size: 11.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+  }
+  td { padding: 7px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: #fafafe; }
+  td:first-child { font-weight: 500; color: #444; white-space: nowrap; }
+  td code, th code {
+    background: #f0effe; color: #5c52c7; padding: 1px 5px;
+    border-radius: 3px; font-family: 'Courier New', monospace; font-size: 11.5px;
+  }
+
+  .diagram {
+    background: #1a1a2e; color: #a89ef8;
+    padding: 20px 24px; border-radius: 8px;
+    font-family: 'Courier New', monospace; font-size: 12px;
+    line-height: 1.8; margin-bottom: 8px;
+  }
+  .diagram .comment { color: #4e9a6e; }
+  .diagram .highlight { color: #7c6ff7; font-weight: bold; }
+  .diagram .arrow { color: #f0c060; }
+
+  .code-block {
+    background: #f8f8ff; border: 1px solid #e0dcff;
+    border-left: 3px solid #7c6ff7;
+    padding: 14px 16px; border-radius: 0 6px 6px 0;
+    font-family: 'Courier New', monospace; font-size: 11.5px;
+    color: #2a2a4a; line-height: 1.7; margin-bottom: 8px; white-space: pre;
+  }
+
+  .cards { display: flex; gap: 14px; margin-bottom: 8px; }
+  .card { flex: 1; border: 1px solid #e8e4ff; border-radius: 8px; padding: 14px 16px; background: #fdfcff; }
+  .card h4 { font-size: 12px; font-weight: 700; color: #5c52c7; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.3px; }
+  .card p, .card li { font-size: 12px; color: #444; margin-bottom: 4px; }
+  .card ul { padding-left: 14px; }
+
+  .warning { background: #fff8e6; border-left: 4px solid #f0c060; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 12px; color: #6b5000; margin-bottom: 8px; }
+  .warning strong { color: #8b6800; }
+  .info { background: #f0effe; border-left: 4px solid #7c6ff7; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 12px; color: #3d3580; margin-bottom: 8px; }
+
+  .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 10.5px; font-weight: 600; margin-left: 6px; vertical-align: middle; }
+  .badge-green  { background: #e6f9ee; color: #1a7a3e; }
+  .badge-orange { background: #fff0e0; color: #b35a00; }
+  .badge-purple { background: #f0effe; color: #5c52c7; }
+
+  .role-user    { color: #1a7a3e; font-weight: 600; }
+  .role-manager { color: #5c52c7; font-weight: 600; }
+  .role-guest   { color: #b35a00; font-weight: 600; }
+
+  .url { color: #5c52c7; font-family: 'Courier New', monospace; font-size: 12px; }
+  .page-break { page-break-before: always; }
+
+  .doc-footer { margin-top: 40px; padding-top: 14px; border-top: 1px solid #e8e4ff; font-size: 11px; color: #999; display: flex; justify-content: space-between; }
+
+  .pipeline { display: flex; align-items: center; gap: 0; margin: 10px 0; flex-wrap: wrap; }
+  .pipe-step { background: #1a1a2e; color: #a89ef8; padding: 8px 14px; font-size: 11.5px; font-family: 'Courier New', monospace; border-radius: 4px; }
+  .pipe-arrow { color: #7c6ff7; font-size: 16px; padding: 0 6px; font-weight: bold; }
+
+  .test-row td:nth-child(1) { color: #1a7a3e; font-family: 'Courier New', monospace; font-size: 11px; white-space: normal; }
+  .test-row td:nth-child(2) { color: #555; font-size: 11.5px; white-space: normal; }
+
+  @media print {
+    body { padding: 20px 30px; }
+    .section { page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="doc-header">
+  <h1>🧪 QA Daily Log — <span>DevOps Documentation</span></h1>
+  <div class="subtitle">Complete overview of architecture, deployment, tests, and system management</div>
+  <div style="margin-top:14px; font-size:11.5px; opacity:0.55; letter-spacing:0.3px;">Vibecoded by Bosko</div>
+  <div class="meta">
+    <span>📅 March 2026</span>
+    <span>👤 Bosko Sretenovic</span>
+    <span>🔖 v2.0 — Raspberry Pi + Cloudflare Tunnel</span>
+  </div>
+</div>
+
+<!-- 1. URLS -->
+<div class="section">
+  <div class="section-title">1. URLs and Access</div>
+  <table>
+    <tr><th>Service</th><th>URL / Address</th><th>Notes</th></tr>
+    <tr><td>App (users)</td><td><span class="url">https://qa-daily-log.online</span></td><td>Public URL — Cloudflare + Tunnel</td></tr>
+    <tr><td>Health check</td><td><span class="url">https://qa-daily-log.online/api/health</span></td><td>Returns <code>{ ok: true }</code></td></tr>
+    <tr><td>GitHub repo</td><td><span class="url">https://github.com/sretenovicue/qa-daily-log</span></td><td>Source code</td></tr>
+    <tr><td>Neon DB console</td><td><span class="url">https://console.neon.tech</span></td><td>PostgreSQL dashboard</td></tr>
+    <tr><td>Cloudflare console</td><td><span class="url">https://dash.cloudflare.com</span></td><td>DNS + Tunnel management</td></tr>
+    <tr><td>Namecheap</td><td><span class="url">https://namecheap.com</span></td><td>Domain registrar (renew Mar 2027)</td></tr>
+    <tr><td>Raspberry Pi (SSH)</td><td><span class="url">ssh sretenovicue@nasty.local</span></td><td>Local network, port 22</td></tr>
+  </table>
+</div>
+
+<!-- 2. ARCHITECTURE -->
+<div class="section">
+  <div class="section-title">2. System Architecture (v2.0)</div>
+  <div class="diagram">
+<span class="comment">  ┌──────────────────────────────────────────────────────────────────────────┐</span>
+<span class="comment">  │                              BROWSER                                     │</span>
+<span class="comment">  │         https://qa-daily-log.online                                      │</span>
+<span class="comment">  └──────────────────────────────┬───────────────────────────────────────────┘</span>
+                                 <span class="arrow">│  HTTPS port 443</span>
+                                 <span class="arrow">▼</span>
+<span class="highlight">  ┌───────────────────────────────────────────────────────────────────────┐</span>
+<span class="highlight">  │                    CLOUDFLARE EDGE (free plan)                        │</span>
+<span class="highlight">  │  • SSL termination (HTTPS ↔ Tunnel)                                   │</span>
+<span class="highlight">  │  • DDoS protection — Pi's real IP is NEVER exposed to the internet    │</span>
+<span class="highlight">  │  • DNS proxy (CNAME Tunnel record)                                    │</span>
+<span class="highlight">  └───────────────────────────────┬───────────────────────────────────────┘</span>
+                                  <span class="arrow">│  Cloudflare Tunnel (TLS, outbound connection — ISP port blocking irrelevant)</span>
+                                  <span class="arrow">▼</span>
+<span class="highlight">  ┌───────────────────────────────────────────────────────────────────────┐</span>
+<span class="highlight">  │              RASPBERRY PI 4B  (hostname: nasty, Debian Linux)         │</span>
+<span class="highlight">  │                                                                        │</span>
+<span class="highlight">  │  cloudflared (systemd) ──────→ http://localhost:3001                  │</span>
+<span class="highlight">  │                                        │                              │</span>
+<span class="highlight">  │  PM2 → node server.js (port 3001)      │                              │</span>
+<span class="highlight">  │         │                              │                              │</span>
+<span class="highlight">  │         ├── /api/*  →  Express routes  │                              │</span>
+<span class="highlight">  │         └── /*      →  React dist/ ───┘                              │</span>
+<span class="highlight">  └───────────────────────────────┬───────────────────────────────────────┘</span>
+                                  <span class="arrow">│  PostgreSQL SSL  (Neon cloud, Frankfurt)</span>
+                                  <span class="arrow">▼</span>
+<span class="highlight">  ┌───────────────────────────────────────────────────────────────────────┐</span>
+<span class="highlight">  │              NEON POSTGRESQL  (serverless, free tier)                 │</span>
+<span class="highlight">  │              ep-jolly-king-a9bnwjuq — gwc.azure.neon.tech            │</span>
+<span class="highlight">  └───────────────────────────────────────────────────────────────────────┘</span></div>
+
+  <div class="info">
+    <strong>Key advantage of Cloudflare Tunnel:</strong> The Pi requires no open inbound ports. Cloudflared establishes an <em>outbound</em> connection to Cloudflare — ISP blocking of inbound ports (80, 443) has no effect. The Pi's real IP remains hidden.
+  </div>
+
+  <div style="margin-top: 14px;">
+    <div class="section-title" style="font-size:12px; margin-bottom:10px;">Request flow:</div>
+    <div class="pipeline">
+      <div class="pipe-step">Browser</div><div class="pipe-arrow">→</div>
+      <div class="pipe-step">Cloudflare edge</div><div class="pipe-arrow">→</div>
+      <div class="pipe-step">Cloudflare Tunnel</div><div class="pipe-arrow">→</div>
+      <div class="pipe-step">cloudflared (Pi)</div><div class="pipe-arrow">→</div>
+      <div class="pipe-step">Express :3001</div><div class="pipe-arrow">→</div>
+      <div class="pipe-step">Neon DB</div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. RASPBERRY PI -->
+<div class="section">
+  <div class="section-title">3. Raspberry Pi — Hardware and OS</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Hardware</h4>
+      <table>
+        <tr><td>Model</td><td>Raspberry Pi 4B</td></tr>
+        <tr><td>Hostname</td><td><code>nasty</code></td></tr>
+        <tr><td>OS</td><td>Debian Linux (Raspberry Pi OS)</td></tr>
+        <tr><td>User</td><td><code>sretenovicue</code></td></tr>
+        <tr><td>SSH access</td><td><code>ssh sretenovicue@nasty.local</code></td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h4>Installed Services</h4>
+      <table>
+        <tr><td>Node.js</td><td>v20.20.1</td></tr>
+        <tr><td>npm</td><td>v10.8.2</td></tr>
+        <tr><td>PM2</td><td>Process manager (auto-start on boot)</td></tr>
+        <tr><td>cloudflared</td><td>Cloudflare Tunnel daemon (systemd)</td></tr>
+        <tr><td>OpenMediaVault</td><td>NAS UI (separate port, no conflict)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">App location on Pi:</div>
+  <div class="code-block">/home/sretenovicue/qa-daily-log/     ← repository root (git clone)
+├── backend/
+│   ├── server.js                    ← Express (also serves React dist/)
+│   ├── db.js
+│   ├── .env                         ← production env variables (NOT in git)
+│   └── routes/
+└── frontend/
+    ├── src/
+    └── dist/                        ← React build (served by Express)</div>
+</div>
+
+<!-- 4. CLOUDFLARE TUNNEL -->
+<div class="section">
+  <div class="section-title">4. Cloudflare Tunnel</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Tunnel Configuration</h4>
+      <table>
+        <tr><td>Tunnel ID</td><td><code>2db48967-9405-40c3-b595-07fc3912589c</code></td></tr>
+        <tr><td>Tunnel name</td><td><code>qa-daily-log</code></td></tr>
+        <tr><td>Hostname</td><td><code>qa-daily-log.online</code></td></tr>
+        <tr><td>Target service</td><td><code>http://localhost:3001</code></td></tr>
+        <tr><td>Service type</td><td>systemd — <code>cloudflared.service</code></td></tr>
+        <tr><td>Auto-start</td><td>Starts automatically on Pi reboot</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h4>Files on Pi</h4>
+      <table>
+        <tr><td>Config</td><td><code>/etc/cloudflared/config.yml</code></td></tr>
+        <tr><td>Credentials</td><td><code>/etc/cloudflared/2db48967...json</code></td></tr>
+        <tr><td>Cert</td><td><code>/etc/cloudflared/cert.pem</code></td></tr>
+      </table>
+      <h4 style="margin-top:10px;">DNS Record (Cloudflare)</h4>
+      <table>
+        <tr><td>Type</td><td>CNAME (Tunnel)</td></tr>
+        <tr><td>Name</td><td><code>qa-daily-log.online</code></td></tr>
+        <tr><td>Proxy</td><td>Proxied 🟠</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">config.yml:</div>
+  <div class="code-block">tunnel: 2db48967-9405-40c3-b595-07fc3912589c
+credentials-file: /etc/cloudflared/2db48967-9405-40c3-b595-07fc3912589c.json
+
+ingress:
+  - hostname: qa-daily-log.online
+    service: http://localhost:3001
+  - service: http_status:404</div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Service management:</div>
+  <div class="code-block">sudo systemctl status cloudflared      # check status
+sudo systemctl restart cloudflared     # restart
+sudo journalctl -u cloudflared -f      # live logs</div>
+</div>
+
+<!-- 5. DOMAIN -->
+<div class="section">
+  <div class="section-title">5. Domain and DNS</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Domain</h4>
+      <table>
+        <tr><td>Domain</td><td><code>qa-daily-log.online</code></td></tr>
+        <tr><td>Registrar</td><td>Namecheap</td></tr>
+        <tr><td>Price</td><td>$0.98 / yr (renewal Mar 2027, ~$2.88/yr)</td></tr>
+        <tr><td>Nameservers</td><td>Cloudflare (mcgrory + rayne)</td></tr>
+        <tr><td>SSL</td><td>Cloudflare auto — free HTTPS</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h4>DNS Flow</h4>
+      <p style="margin-bottom: 6px; font-size: 12px;">
+        1. User opens <code>qa-daily-log.online</code><br>
+        2. DNS resolves to Cloudflare nameservers<br>
+        3. Cloudflare proxy receives the request<br>
+        4. Cloudflare forwards request through Tunnel<br>
+        5. cloudflared on Pi receives and forwards to <code>:3001</code><br>
+        6. Express responds with HTML or JSON
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- 6. BACKEND -->
+<div class="section page-break">
+  <div class="section-title">6. Backend — Node.js + PM2</div>
+  <div class="cards">
+    <div class="card">
+      <h4>PM2 Configuration</h4>
+      <table>
+        <tr><td>Process name</td><td><code>qa-backend</code></td></tr>
+        <tr><td>Start command</td><td><code>node server.js</code></td></tr>
+        <tr><td>Working dir</td><td><code>~/qa-daily-log/backend</code></td></tr>
+        <tr><td>Port</td><td><code>3001</code></td></tr>
+        <tr><td>Auto-start</td><td><code>pm2 startup</code> (systemd)</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h4>backend/.env (production)</h4>
+      <table>
+        <tr><td><code>DATABASE_URL</code></td><td>Neon connection string (SSL)</td></tr>
+        <tr><td><code>PORT</code></td><td><code>3001</code></td></tr>
+        <tr><td><code>ALLOWED_ORIGIN</code></td><td><code>https://qa-daily-log.online</code></td></tr>
+        <tr><td><code>JWT_SECRET</code></td><td>Secret key (min 32 chars)</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="info" style="margin-top:8px;">
+    <strong>Frontend serving:</strong> Express serves the React build from <code>frontend/dist/</code>. No separate web server needed — one Node.js process handles everything. The <code>GET *</code> route returns <code>index.html</code> for SPA routing.
+  </div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">PM2 commands:</div>
+  <div class="code-block">pm2 status                   # list processes (status, CPU, RAM)
+pm2 logs qa-backend          # live logs
+pm2 restart qa-backend       # restart
+pm2 monit                    # real-time monitor
+pm2 save                     # save process list for auto-start</div>
+</div>
+
+<!-- 7. DEPLOYMENT -->
+<div class="section">
+  <div class="section-title">7. Deployment — Publishing a New Version</div>
+  <div class="section-title" style="font-size:12px; margin-top:0;">Step 1 — local machine (push code):</div>
+  <div class="code-block">cd ~/Desktop/testApp
+git add .
+git commit -m "description of changes"
+git push origin main</div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Step 2 — Raspberry Pi (SSH):</div>
+  <div class="code-block">ssh sretenovicue@nasty.local
+cd ~/qa-daily-log
+
+git pull origin main                           # pull new changes
+
+# If there are new npm packages:
+cd backend  && npm install && cd ..
+cd frontend && npm install && cd ..
+
+cd frontend && npm run build && cd ..          # rebuild React app
+
+pm2 restart qa-backend                         # restart backend</div>
+
+  <div class="pipeline" style="margin-top:12px;">
+    <div class="pipe-step">git push</div><div class="pipe-arrow">→</div>
+    <div class="pipe-step">ssh to Pi</div><div class="pipe-arrow">→</div>
+    <div class="pipe-step">git pull</div><div class="pipe-arrow">→</div>
+    <div class="pipe-step">npm run build</div><div class="pipe-arrow">→</div>
+    <div class="pipe-step">pm2 restart ✓</div>
+  </div>
+
+  <div class="warning" style="margin-top:10px;">
+    <strong>⚠️ Important:</strong> Always run <code>npm run build</code> in the <code>frontend/</code> folder after React code changes. Express serves the static <code>dist/</code> folder — without a rebuild, users see the old version.
+  </div>
+</div>
+
+<!-- 8. APP CHANGES -->
+<div class="section">
+  <div class="section-title">8. App Changes — Changelog</div>
+  <table>
+    <tr><th>Feature</th><th>Description</th><th>Files</th></tr>
+    <tr>
+      <td>i18n SR / EN</td>
+      <td>Bilingual support — Serbian and English. Flag switcher (🇷🇸/🇬🇧) in header. Language persisted in localStorage. Date format localised (<code>sr-Latn</code> / <code>en-GB</code>).</td>
+      <td><code>i18n.js</code>, <code>locales/sr.json</code>, <code>locales/en.json</code></td>
+    </tr>
+    <tr>
+      <td>Avatar upload</td>
+      <td>Users can upload a profile picture by clicking the avatar in the header. Image is resized to max 200×200px, compressed as JPEG, stored as base64 in the database.</td>
+      <td><code>App.jsx</code>, <code>Avatar.jsx</code>, <code>routes/users.js</code></td>
+    </tr>
+    <tr>
+      <td>User title</td>
+      <td>Manager can assign a title to any user inline (click in the table). Title is displayed below the username in the header.</td>
+      <td><code>UsersPanel.jsx</code>, <code>App.jsx</code></td>
+    </tr>
+    <tr>
+      <td>Guest role</td>
+      <td>Special role for demo access — can view everything but cannot add entries. Demo button on the login page (no password required).</td>
+      <td><code>AuthPage.jsx</code>, <code>App.jsx</code>, <code>middleware/auth.js</code></td>
+    </tr>
+    <tr>
+      <td>Weekly Report tab</td>
+      <td>Weekly activity report for managers and guests — overview of activity by week.</td>
+      <td><code>WeeklyReport.jsx</code></td>
+    </tr>
+    <tr>
+      <td>Easter eggs — per user</td>
+      <td>Personalised animations and quotes for specific users: Sopranos quotes, Stranger Things quotes, Taxi Driver quotes, Đoković wink, fish animation (Stanko), skier animation (Jana).</td>
+      <td><code>QuoteToast.jsx</code>, <code>DjokovicWink.jsx</code>, <code>FishAnimation.jsx</code>, <code>SkierAnimation.jsx</code></td>
+    </tr>
+    <tr>
+      <td>Pending approval badge</td>
+      <td>Red badge on the Users tab showing the number of users awaiting approval. Auto-refreshes every 60 seconds.</td>
+      <td><code>App.jsx</code>, <code>store.js</code></td>
+    </tr>
+    <tr>
+      <td>Raspberry Pi deploy</td>
+      <td>Migrated from Netlify+Render to self-hosted Pi. Express serves both frontend and backend. Cloudflare Tunnel for public access without open inbound ports.</td>
+      <td><code>server.js</code>, <code>backend/.env</code></td>
+    </tr>
+  </table>
+</div>
+
+<!-- 9. UNIT TESTS -->
+<div class="section page-break">
+  <div class="section-title">9. Unit Tests — Vitest</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Running Tests</h4>
+      <div class="code-block" style="font-size:11px; padding:10px 12px;">cd frontend
+npm test           # run once
+npm run test:watch # watch mode</div>
+    </div>
+    <div class="card">
+      <h4>Test Files</h4>
+      <table>
+        <tr><td><code>validate.test.js</code></td><td>Entry validation (12 tests)</td></tr>
+        <tr><td><code>authValidation.test.js</code></td><td>Auth form validation</td></tr>
+        <tr><td><code>constants.test.js</code></td><td>Constants and data structure</td></tr>
+        <tr><td><code>store.auth.test.js</code></td><td>Auth store logic</td></tr>
+        <tr><td><code>backend/tests/auth.utils.test.js</code></td><td>Backend auth utils</td></tr>
+        <tr><td><code>backend/tests/entries.utils.test.js</code></td><td>Backend entries utils</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">validate.test.js — test cases:</div>
+  <table>
+    <tr><th>Test</th><th>Expected</th></tr>
+    <tr class="test-row"><td>passes for a complete valid entry</td><td>returns [] (no errors)</td></tr>
+    <tr class="test-row"><td>error if category is missing</td><td><code>validation.categoryRequired</code></td></tr>
+    <tr class="test-row"><td>error if action is missing</td><td><code>validation.actionRequired</code></td></tr>
+    <tr class="test-row"><td>error if status is missing</td><td><code>validation.statusRequired</code></td></tr>
+    <tr class="test-row"><td>error if description is missing</td><td><code>validation.descriptionRequired</code></td></tr>
+    <tr class="test-row"><td>error if duration is missing</td><td><code>validation.durationRequired</code></td></tr>
+    <tr class="test-row"><td>passes for valid time <code>1:30</code></td><td>returns []</td></tr>
+    <tr class="test-row"><td>passes for valid time <code>0:05</code></td><td>returns []</td></tr>
+    <tr class="test-row"><td>error for invalid format <code>"90"</code></td><td><code>validation.durationFormat</code></td></tr>
+    <tr class="test-row"><td>error for <code>"1:60"</code> (minutes out of range)</td><td><code>validation.durationFormat</code></td></tr>
+    <tr class="test-row"><td>returns multiple errors for empty entry</td><td>errors.length ≥ 4</td></tr>
+    <tr class="test-row"><td>ValidationError contains error list</td><td>instanceof Error, errors.length === 2</td></tr>
+  </table>
+</div>
+
+<!-- 10. PLAYWRIGHT E2E TESTS -->
+<div class="section">
+  <div class="section-title">10. Playwright E2E Tests</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Configuration</h4>
+      <table>
+        <tr><td>Framework</td><td>Playwright (TypeScript)</td></tr>
+        <tr><td>Browser</td><td>Chromium (headed)</td></tr>
+        <tr><td>Base URL</td><td><code>http://localhost:5173</code></td></tr>
+        <tr><td>Test files</td><td><code>tests/e2e/*.spec.ts</code></td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h4>Running Tests</h4>
+      <div class="code-block" style="font-size:11px; padding:10px 12px;"># Start dev servers first:
+npm run dev
+
+# In a second terminal:
+npx playwright test
+npx playwright test --ui      # graphical UI
+npx playwright test auth      # auth tests only</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:12px; margin-top:14px;">auth.spec.ts — Auth and login tests:</div>
+  <table>
+    <tr><th>Test</th><th>Description</th></tr>
+    <tr class="test-row"><td>shows login form by default</td><td>Email/password inputs visible, submit button present</td></tr>
+    <tr class="test-row"><td>demo button logs in as guest</td><td>Click "View demo" → tabs visible, username = "guest"</td></tr>
+    <tr class="test-row"><td>wrong credentials show error</td><td>API error visible in <code>.auth-api-error</code></td></tr>
+    <tr class="test-row"><td>empty form shows validation errors</td><td><code>.field-error</code> visible with "required" text</td></tr>
+    <tr class="test-row"><td>switching to register shows new fields</td><td>Username and confirm password fields appear</td></tr>
+    <tr class="test-row"><td>register — validation in Serbian</td><td>Error contains "obavezan"</td></tr>
+    <tr class="test-row"><td>logout returns to login page</td><td>Click "Logout" → login form visible</td></tr>
+  </table>
+
+  <div class="section-title" style="font-size:12px; margin-top:14px;">navigation.spec.ts — Navigation and tabs:</div>
+  <table>
+    <tr><th>Test</th><th>Description</th></tr>
+    <tr class="test-row"><td>all tabs are visible</td><td>Log, Period, Projects, Statistics, Team, Users</td></tr>
+    <tr class="test-row"><td>Daily Log tab is active by default</td><td>Class <code>active</code>, prev/next buttons and date label visible</td></tr>
+    <tr class="test-row"><td>click Period tab shows period view</td><td>"From date", "To date" inputs and shortcut buttons visible</td></tr>
+    <tr class="test-row"><td>click Projects tab shows matrix</td><td>Month selector, "Project" and "Total" columns</td></tr>
+    <tr class="test-row"><td>click Statistics tab shows cards</td><td>Stat cards "Today", "Total entries" visible</td></tr>
+    <tr class="test-row"><td>date navigation — Previous changes date</td><td>Date label differs from initial value</td></tr>
+    <tr class="test-row"><td>date navigation — Next returns to today</td><td>Date label returns to original value</td></tr>
+    <tr class="test-row"><td>Period shortcut Last 7 days changes dates</td><td>"From date" input has changed</td></tr>
+  </table>
+
+  <div class="section-title" style="font-size:12px; margin-top:14px;">i18n.spec.ts — Internationalization (SR/EN):</div>
+  <table>
+    <tr><th>Test</th><th>Description</th></tr>
+    <tr class="test-row"><td>default language is Serbian</td><td>SRB button has class "active", labels in Serbian</td></tr>
+    <tr class="test-row"><td>click ENG switches auth page to English</td><td>ENG button active, "Login", "Email or username" visible</td></tr>
+    <tr class="test-row"><td>language saved in localStorage</td><td><code>localStorage.getItem('lang')</code> returns "en"/"sr"</td></tr>
+    <tr class="test-row"><td>English persists after reload</td><td>After <code>page.reload()</code> English is still active</td></tr>
+    <tr class="test-row"><td>validation errors in Serbian</td><td>Error contains "obavezan"</td></tr>
+    <tr class="test-row"><td>validation errors in English</td><td>Error contains "required"</td></tr>
+    <tr class="test-row"><td>tabs in Serbian by default</td><td>"Dnevni log", "Statistike", "Projekti"</td></tr>
+    <tr class="test-row"><td>ENG switches all tabs to English</td><td>"Daily Log", "Statistics", "Projects", "Team"</td></tr>
+    <tr class="test-row"><td>logout button is translated</td><td>SR: "Odjava" / EN: "Logout"</td></tr>
+    <tr class="test-row"><td>header date is localised</td><td>sr-Latn format ≠ en-GB format</td></tr>
+    <tr class="test-row"><td>Projects — months in Serbian</td><td>Select contains "Januar"</td></tr>
+    <tr class="test-row"><td>Projects — months in English</td><td>Select contains "January"</td></tr>
+    <tr class="test-row"><td>Statistics labels are translated</td><td>SR: "Danas" / EN: "Today"</td></tr>
+    <tr class="test-row"><td>Period date labels are translated</td><td>SR: "Od datuma" / EN: "From date"</td></tr>
+    <tr class="test-row"><td>ENG button becomes active</td><td>ENG has class "active", SRB does not</td></tr>
+  </table>
+</div>
+
+<!-- 11. DATABASE -->
+<div class="section page-break">
+  <div class="section-title">11. Database — Neon PostgreSQL</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Details</h4>
+      <table>
+        <tr><td>Service</td><td>Neon.tech (free, serverless)</td></tr>
+        <tr><td>Region</td><td>Frankfurt (Azure Germany West)</td></tr>
+        <tr><td>Project</td><td><code>qatrackapp</code></td></tr>
+        <tr><td>Branch</td><td><code>production</code></td></tr>
+        <tr><td>Database</td><td><code>neondb</code></td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h4>Table Schema</h4>
+      <div class="code-block" style="font-size:10.5px; padding:10px 12px;">users
+  id, email, username, password_hash
+  role: 'user' | 'manager' | 'guest'
+  active: boolean
+  approved: boolean
+  title: text (nullable)
+  avatar_data: text (base64, nullable)
+  created_at
+
+entries
+  id, task_number, category, action
+  status, description, duration
+  project, date, time, created_at
+  user_id → users(id) CASCADE</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Useful SQL queries (Neon console):</div>
+  <div class="code-block">-- Set manager role
+UPDATE users SET role = 'manager' WHERE email = 'email@domain.com';
+
+-- Deactivate / activate a user
+UPDATE users SET active = false WHERE username = 'user';
+UPDATE users SET active = true  WHERE username = 'user';
+
+-- Approve user (approved = can log in)
+UPDATE users SET approved = true WHERE email = 'email@domain.com';
+
+-- View all users
+SELECT id, email, username, role, active, approved FROM users;</div>
+</div>
+
+<!-- 12. API ROUTES -->
+<div class="section">
+  <div class="section-title">12. Backend API Routes</div>
+  <table>
+    <tr><th>Method + Path</th><th>Access</th><th>Description</th></tr>
+    <tr><td><code>POST /api/auth/register</code></td><td><span class="badge badge-green">public</span></td><td>Create user (pending approval)</td></tr>
+    <tr><td><code>POST /api/auth/login</code></td><td><span class="badge badge-green">public</span></td><td>Login (email or username)</td></tr>
+    <tr><td><code>GET /api/auth/me</code></td><td><span class="badge badge-purple">JWT</span></td><td>Current user data</td></tr>
+    <tr><td><code>GET /api/entries</code></td><td><span class="badge badge-purple">JWT</span></td><td>Entry list (user = own only)</td></tr>
+    <tr><td><code>POST /api/entries</code></td><td><span class="badge badge-purple">JWT</span></td><td>New entry (guest cannot)</td></tr>
+    <tr><td><code>PATCH /api/entries/:id</code></td><td><span class="badge badge-purple">JWT</span></td><td>Edit entry (guest cannot)</td></tr>
+    <tr><td><code>DELETE /api/entries/:id</code></td><td><span class="badge badge-purple">JWT</span></td><td>Delete entry (guest cannot)</td></tr>
+    <tr><td><code>GET /api/stats</code></td><td><span class="badge badge-purple">JWT</span></td><td>Statistics for current user</td></tr>
+    <tr><td><code>GET /api/stats/team</code></td><td><span class="badge badge-orange">manager</span></td><td>Team report (all users)</td></tr>
+    <tr><td><code>GET /api/users</code></td><td><span class="badge badge-orange">manager</span></td><td>All users list</td></tr>
+    <tr><td><code>POST /api/users</code></td><td><span class="badge badge-orange">manager</span></td><td>Create user directly</td></tr>
+    <tr><td><code>PATCH /api/users/:id</code></td><td><span class="badge badge-orange">manager</span></td><td>Activate / deactivate / role / title</td></tr>
+    <tr><td><code>PATCH /api/users/:id/avatar</code></td><td><span class="badge badge-purple">JWT</span></td><td>Upload profile picture (base64 JPEG)</td></tr>
+    <tr><td><code>GET /api/health</code></td><td><span class="badge badge-green">public</span></td><td>Server status — <code>{ ok: true }</code></td></tr>
+  </table>
+</div>
+
+<!-- 13. ROLES -->
+<div class="section">
+  <div class="section-title">13. User Roles</div>
+  <table>
+    <tr><th>Role</th><th>Login</th><th>Read entries</th><th>Add/edit/delete</th><th>Team report</th><th>User management</th></tr>
+    <tr>
+      <td><span class="role-guest">guest</span></td>
+      <td>✅ (demo button)</td><td>✅ (all users)</td><td>❌</td><td>✅</td><td>❌</td>
+    </tr>
+    <tr>
+      <td><span class="role-user">user</span></td>
+      <td>✅</td><td>✅ (own only)</td><td>✅</td><td>❌</td><td>❌</td>
+    </tr>
+    <tr>
+      <td><span class="role-manager">manager</span></td>
+      <td>✅</td><td>✅ (all)</td><td>✅</td><td>✅</td><td>✅ (approve, activate, title, role)</td>
+    </tr>
+  </table>
+  <div class="info" style="margin-top:10px;">
+    <strong>Manager role</strong> is assigned exclusively via SQL directly in the Neon database. <strong>Guest</strong> access is hardcoded — one guest account exists for demo purposes.
+  </div>
+</div>
+
+<!-- 14. SECURITY -->
+<div class="section">
+  <div class="section-title">14. Security</div>
+  <table>
+    <tr><th>Measure</th><th>Implementation</th></tr>
+    <tr><td>HTTP security headers</td><td><code>helmet.js</code> — CSP, HSTS, X-Frame-Options, X-Content-Type-Options</td></tr>
+    <tr><td>Brute force protection</td><td><code>express-rate-limit</code> — max 10 attempts / 15 min / IP (login + register)</td></tr>
+    <tr><td>Password hashing</td><td><code>bcryptjs</code> — salt rounds: 10</td></tr>
+    <tr><td>Authentication</td><td>JWT token (7 days), payload: <code>{ userId, role }</code></td></tr>
+    <tr><td>CORS</td><td>Only <code>ALLOWED_ORIGIN=https://qa-daily-log.online</code></td></tr>
+    <tr><td>Payload limit</td><td>50 KB maximum request body</td></tr>
+    <tr><td>DB SSL</td><td><code>sslmode=require&amp;channel_binding=require</code> in Neon URL</td></tr>
+    <tr><td>SQL injection</td><td>Parameterised queries everywhere — no string concatenation</td></tr>
+    <tr><td>DDoS protection</td><td>Cloudflare proxy — Pi's real IP is never exposed</td></tr>
+    <tr><td>Secrets</td><td><code>.env</code> in <code>.gitignore</code> — never in GitHub</td></tr>
+  </table>
+</div>
+
+<!-- 15. TECH STACK -->
+<div class="section page-break">
+  <div class="section-title">15. Tech Stack</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Frontend</h4>
+      <ul>
+        <li>React 18 + Vite 5</li>
+        <li>Zustand (state management)</li>
+        <li>react-i18next (SR/EN bilingual)</li>
+        <li>Chart.js (statistics charts)</li>
+        <li>SheetJS / xlsx (Excel export)</li>
+        <li>Vitest (unit tests)</li>
+        <li>Playwright (E2E tests)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Backend</h4>
+      <ul>
+        <li>Node.js 20 + Express 4</li>
+        <li>pg (PostgreSQL driver)</li>
+        <li>bcryptjs (password hashing)</li>
+        <li>jsonwebtoken (JWT auth)</li>
+        <li>helmet (security headers)</li>
+        <li>express-rate-limit</li>
+        <li>morgan (HTTP access log)</li>
+        <li>dotenv (.env configuration)</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h4>Infrastructure</h4>
+      <ul>
+        <li>Raspberry Pi 4B (Debian Linux)</li>
+        <li>PM2 (process manager)</li>
+        <li>cloudflared v2024+ (tunnel daemon)</li>
+        <li>Cloudflare Free (proxy + DNS + SSL)</li>
+        <li>Namecheap (domain registrar)</li>
+        <li>Neon.tech (PostgreSQL cloud)</li>
+        <li>GitHub (git repository)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- 16. LOCAL DEVELOPMENT -->
+<div class="section">
+  <div class="section-title">16. Local Development</div>
+  <div class="cards">
+    <div class="card">
+      <h4>Starting Up</h4>
+      <div class="code-block" style="font-size:11px; padding:10px 12px;"># Both servers at once (from root):
+npm run dev
+
+# Or separately:
+cd backend  && npm start     # port 3001
+cd frontend && npm run dev   # port 5173</div>
+    </div>
+    <div class="card">
+      <h4>backend/.env (local)</h4>
+      <div class="code-block" style="font-size:11px; padding:10px 12px;">DATABASE_URL=postgres://...neon.tech/...
+JWT_SECRET=local_secret_key
+NODE_ENV=development
+ALLOWED_ORIGIN=http://localhost:5173
+PORT=3001</div>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Repository structure:</div>
+  <div class="code-block">qa-daily-log/
+├── backend/
+│   ├── server.js              ← Express (also serves frontend dist/)
+│   ├── db.js                  ← PostgreSQL pool + migrations
+│   ├── middleware/
+│   │   └── auth.js            ← JWT + requireManager
+│   ├── routes/
+│   │   ├── auth.js, entries.js, stats.js, users.js
+│   └── tests/
+│       ├── auth.utils.test.js
+│       └── entries.utils.test.js
+├── frontend/
+│   └── src/
+│       ├── App.jsx             ← root, tabs, easter eggs, lang switcher
+│       ├── store.js            ← Zustand state
+│       ├── api.js              ← fetch wrapper
+│       ├── constants.js        ← categories, actions, statuses, projects
+│       ├── validate.js         ← entry validation
+│       ├── i18n.js             ← i18next config (SR/EN)
+│       ├── locales/sr.json, en.json
+│       ├── sopranos-quotes.js, stranger-things-quotes.js, taxidriver-quotes.js
+│       └── components/
+│           ├── AuthPage, AddEntry, DailyLog, PeriodView
+│           ├── Statistics, ProjectsView, TeamReport
+│           ├── UsersPanel, WeeklyReport, EditModal
+│           ├── Avatar, Toast, QuoteToast, ErrorBoundary
+│           ├── DjokovicWink, FishAnimation, SkierAnimation
+│           └── ConfirmDialog
+├── tests/e2e/
+│   ├── auth.spec.ts           ← auth E2E tests
+│   ├── navigation.spec.ts     ← navigation E2E tests
+│   └── i18n.spec.ts           ← internationalisation E2E tests
+├── playwright.config.ts
+└── package.json               ← "dev": concurrently both servers</div>
+</div>
+
+<!-- 17. TROUBLESHOOTING -->
+<div class="section">
+  <div class="section-title">17. Troubleshooting</div>
+  <table>
+    <tr><th>Problem</th><th>Check</th><th>Solution</th></tr>
+    <tr><td>App unreachable</td><td><code>pm2 status</code> on Pi</td><td><code>pm2 restart qa-backend</code></td></tr>
+    <tr><td>App unreachable</td><td><code>systemctl status cloudflared</code></td><td><code>sudo systemctl restart cloudflared</code></td></tr>
+    <tr><td>Old version displayed</td><td>Was rebuild run?</td><td><code>cd frontend && npm run build</code></td></tr>
+    <tr><td>DB error on startup</td><td>Neon console — database status</td><td>Check <code>DATABASE_URL</code> in <code>.env</code></td></tr>
+    <tr><td>Login not working (401)</td><td><code>pm2 logs qa-backend</code></td><td>Check <code>JWT_SECRET</code> in <code>.env</code></td></tr>
+    <tr><td>CORS error in browser</td><td>Network tab in DevTools</td><td>Check <code>ALLOWED_ORIGIN</code> in <code>.env</code></td></tr>
+    <tr><td>Pi rebooted — app not working</td><td><code>pm2 status</code>, <code>systemctl status cloudflared</code></td><td>PM2 and cloudflared are on auto-start (systemd). If not: <code>pm2 resurrect</code></td></tr>
+  </table>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Live logs on Pi:</div>
+  <div class="code-block">pm2 logs qa-backend                    # backend logs (live)
+pm2 monit                              # PM2 monitor (CPU, RAM, restarts)
+sudo journalctl -u cloudflared -f      # Tunnel logs</div>
+</div>
+
+<!-- FOOTER -->
+<div class="doc-footer">
+  <span>QA Daily Log — DevOps Documentation v2.0 (Raspberry Pi 4B + Cloudflare Tunnel)</span>
+  <span>Bosko Sretenovic © 2026</span>
+</div>
+
+</body>
+</html>

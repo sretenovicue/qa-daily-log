@@ -278,7 +278,7 @@ ingress:
   - service: http_status:404</div>
 
   <div class="section-title" style="font-size:12px; margin-top:12px;">Upravljanje servisom:</div>
-  <div class="code-block">sudo systemctl status cloudflared      # provjeri status
+  <div class="code-block">sudo systemctl status cloudflared      # proveri status
 sudo systemctl restart cloudflared     # restart
 sudo journalctl -u cloudflared -f      # živi logovi</div>
 </div>
@@ -292,7 +292,7 @@ sudo journalctl -u cloudflared -f      # živi logovi</div>
       <table>
         <tr><td>Domena</td><td><code>qa-daily-log.online</code></td></tr>
         <tr><td>Registrar</td><td>Namecheap</td></tr>
-        <tr><td>Cijena</td><td>$0.98 / god (obnova Mar 2027 ~$2.88/god)</td></tr>
+        <tr><td>Cena</td><td>$0.98 / god (obnova Mar 2027 ~$2.88/god)</td></tr>
         <tr><td>Nameserveri</td><td>Cloudflare (mcgrory + rayne)</td></tr>
         <tr><td>SSL</td><td>Cloudflare auto — HTTPS besplatno</td></tr>
       </table>
@@ -354,14 +354,14 @@ pm2 save                     # sačuvaj listu za auto-start</div>
   <div class="section-title" style="font-size:12px; margin-top:0;">Korak 1 — lokalni računar (push koda):</div>
   <div class="code-block">cd ~/Desktop/testApp
 git add .
-git commit -m "opis izmjena"
+git commit -m "opis izmena"
 git push origin main</div>
 
   <div class="section-title" style="font-size:12px; margin-top:12px;">Korak 2 — Raspberry Pi (SSH):</div>
   <div class="code-block">ssh sretenovicue@nasty.local
 cd ~/qa-daily-log
 
-git pull origin main                           # povuci izmjene
+git pull origin main                           # povuci izmene
 
 # Ako ima novih npm paketa:
 cd backend  && npm install && cd ..
@@ -380,13 +380,13 @@ pm2 restart qa-backend                         # restart backenda</div>
   </div>
 
   <div class="warning" style="margin-top:10px;">
-    <strong>⚠️ Važno:</strong> Uvijek pokrenuti <code>npm run build</code> u <code>frontend/</code> folderu nakon React izmjena. Express servira statički <code>dist/</code> — bez rebuilda korisnici vide staru verziju.
+    <strong>⚠️ Važno:</strong> Uvek pokrenuti <code>npm run build</code> u <code>frontend/</code> folderu nakon React izmena. Express servira statički <code>dist/</code> — bez rebuilda korisnici vide staru verziju.
   </div>
 </div>
 
 <!-- 8. IZMJENE U APP -->
 <div class="section">
-  <div class="section-title">8. Izmjene u aplikaciji — changelog</div>
+  <div class="section-title">8. Izmene u aplikaciji — changelog</div>
   <table>
     <tr><th>Verzija / Feature</th><th>Opis</th><th>Fajlovi</th></tr>
     <tr>
@@ -401,7 +401,7 @@ pm2 restart qa-backend                         # restart backenda</div>
     </tr>
     <tr>
       <td>User title (titula)</td>
-      <td>Manager može dodijeliti titulu svakom korisniku inline (klik u tabeli). Titula se prikazuje ispod korisničkog imena u headeru.</td>
+      <td>Manager može dodeliti titulu svakom korisniku inline (klik u tabeli). Titula se prikazuje ispod korisničkog imena u headeru.</td>
       <td><code>UsersPanel.jsx</code>, <code>App.jsx</code></td>
     </tr>
     <tr>
@@ -411,7 +411,7 @@ pm2 restart qa-backend                         # restart backenda</div>
     </tr>
     <tr>
       <td>Weekly Report tab</td>
-      <td>Nedeljni izvještaj za managere i goste — pregled aktivnosti po sedmicama.</td>
+      <td>Nedeljni izveštaj za managere i goste — pregled aktivnosti po sedmicama.</td>
       <td><code>WeeklyReport.jsx</code></td>
     </tr>
     <tr>
@@ -421,7 +421,7 @@ pm2 restart qa-backend                         # restart backenda</div>
     </tr>
     <tr>
       <td>Pending approval badge</td>
-      <td>Crveni badge na Users tabu koji prikazuje broj korisnika koji čekaju odobrenje. Automatski se osvježava svakih 60 sekundi.</td>
+      <td>Crveni badge na Users tabu koji prikazuje broj korisnika koji čekaju odobrenje. Automatski se osvežava svakih 60 sekundi.</td>
       <td><code>App.jsx</code>, <code>store.js</code></td>
     </tr>
     <tr>
@@ -520,7 +520,7 @@ npx playwright test auth      # samo auth testovi</div>
     <tr class="test-row"><td>klik na Statistike tab prikazuje kartice</td><td>Stat kartice "Danas", "Ukupno unosa" vidljive</td></tr>
     <tr class="test-row"><td>datum navigacija — Prethodni menja datum</td><td>Datum label se razlikuje od početnog</td></tr>
     <tr class="test-row"><td>datum navigacija — Sledeći vraća danas</td><td>Datum label se vraća na originalni</td></tr>
-    <tr class="test-row"><td>Period shortcut 7 dana menja datume</td><td>"Od datuma" input se promijenio</td></tr>
+    <tr class="test-row"><td>Period shortcut 7 dana menja datume</td><td>"Od datuma" input se promenio</td></tr>
   </table>
 
   <div class="section-title" style="font-size:12px; margin-top:14px;">i18n.spec.ts — Internacionalizacija (SR/EN):</div>
@@ -602,10 +602,10 @@ SELECT id, email, username, role, active, approved FROM users;</div>
     <tr><td><code>GET /api/auth/me</code></td><td><span class="badge badge-purple">JWT</span></td><td>Podaci o prijavljenom korisniku</td></tr>
     <tr><td><code>GET /api/entries</code></td><td><span class="badge badge-purple">JWT</span></td><td>Lista unosa (korisnik = samo svoje)</td></tr>
     <tr><td><code>POST /api/entries</code></td><td><span class="badge badge-purple">JWT</span></td><td>Novi unos (guest ne može)</td></tr>
-    <tr><td><code>PATCH /api/entries/:id</code></td><td><span class="badge badge-purple">JWT</span></td><td>Izmjena unosa (guest ne može)</td></tr>
+    <tr><td><code>PATCH /api/entries/:id</code></td><td><span class="badge badge-purple">JWT</span></td><td>Izmena unosa (guest ne može)</td></tr>
     <tr><td><code>DELETE /api/entries/:id</code></td><td><span class="badge badge-purple">JWT</span></td><td>Brisanje unosa (guest ne može)</td></tr>
     <tr><td><code>GET /api/stats</code></td><td><span class="badge badge-purple">JWT</span></td><td>Statistike za korisnika</td></tr>
-    <tr><td><code>GET /api/stats/team</code></td><td><span class="badge badge-orange">manager</span></td><td>Tim izvještaj (svi korisnici)</td></tr>
+    <tr><td><code>GET /api/stats/team</code></td><td><span class="badge badge-orange">manager</span></td><td>Tim izveštaj (svi korisnici)</td></tr>
     <tr><td><code>GET /api/users</code></td><td><span class="badge badge-orange">manager</span></td><td>Lista svih korisnika</td></tr>
     <tr><td><code>POST /api/users</code></td><td><span class="badge badge-orange">manager</span></td><td>Kreiranje korisnika direktno</td></tr>
     <tr><td><code>PATCH /api/users/:id</code></td><td><span class="badge badge-orange">manager</span></td><td>Aktivacija / deaktivacija / rola / titula</td></tr>
@@ -618,7 +618,7 @@ SELECT id, email, username, role, active, approved FROM users;</div>
 <div class="section">
   <div class="section-title">13. Uloge korisnika</div>
   <table>
-    <tr><th>Uloga</th><th>Login</th><th>Čitanje unosa</th><th>Dodaj/uredi/briši</th><th>Tim izvještaj</th><th>Upravljanje korisnicima</th></tr>
+    <tr><th>Uloga</th><th>Login</th><th>Čitanje unosa</th><th>Dodaj/uredi/briši</th><th>Tim izveštaj</th><th>Upravljanje korisnicima</th></tr>
     <tr>
       <td><span class="role-guest">guest</span></td>
       <td>✅ (demo dugme)</td><td>✅ (svi korisnici)</td><td>❌</td><td>✅</td><td>❌</td>
@@ -763,13 +763,13 @@ PORT=3001</div>
 <div class="section">
   <div class="section-title">17. Troubleshooting</div>
   <table>
-    <tr><th>Problem</th><th>Provjeri</th><th>Rješenje</th></tr>
+    <tr><th>Problem</th><th>Proveri</th><th>Rešenje</th></tr>
     <tr><td>App nedostupna</td><td><code>pm2 status</code> na Pi</td><td><code>pm2 restart qa-backend</code></td></tr>
     <tr><td>App nedostupna</td><td><code>systemctl status cloudflared</code></td><td><code>sudo systemctl restart cloudflared</code></td></tr>
     <tr><td>Stara verzija prikazana</td><td>Je li rebuild pokrenut?</td><td><code>cd frontend && npm run build</code></td></tr>
-    <tr><td>DB greška pri pokretanju</td><td>Neon konzola — status baze</td><td>Provjeri <code>DATABASE_URL</code> u <code>.env</code></td></tr>
-    <tr><td>Login ne radi (401)</td><td><code>pm2 logs qa-backend</code></td><td>Provjeri <code>JWT_SECRET</code> u <code>.env</code></td></tr>
-    <tr><td>CORS greška u browseru</td><td>Network tab u DevTools</td><td>Provjeri <code>ALLOWED_ORIGIN</code> u <code>.env</code></td></tr>
+    <tr><td>DB greška pri pokretanju</td><td>Neon konzola — status baze</td><td>Proveri <code>DATABASE_URL</code> u <code>.env</code></td></tr>
+    <tr><td>Login ne radi (401)</td><td><code>pm2 logs qa-backend</code></td><td>Proveri <code>JWT_SECRET</code> u <code>.env</code></td></tr>
+    <tr><td>CORS greška u browseru</td><td>Network tab u DevTools</td><td>Proveri <code>ALLOWED_ORIGIN</code> u <code>.env</code></td></tr>
     <tr><td>Pi reboot — app ne radi</td><td><code>pm2 status</code>, <code>systemctl status cloudflared</code></td><td>PM2 i cloudflared su na auto-start (systemd). Ako ne rade: <code>pm2 resurrect</code></td></tr>
   </table>
 

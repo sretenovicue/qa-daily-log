@@ -1,9 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStore } from './store';
-import { SOPRANOS_QUOTES } from './sopranos-quotes';
-import { STRANGER_THINGS_QUOTES } from './stranger-things-quotes';
-import { TAXIDRIVER_QUOTES } from './taxidriver-quotes';
+import { QA_QUOTES } from './qa-quotes';
 import QuoteToast from './components/QuoteToast';
 import AddEntry from './components/AddEntry';
 import DailyLog from './components/DailyLog';
@@ -16,10 +14,9 @@ import WeeklyReport from './components/WeeklyReport';
 import Toast from './components/Toast';
 import ErrorBoundary from './components/ErrorBoundary';
 import AuthPage from './components/AuthPage';
+import ConfirmPage from './components/ConfirmPage';
+import QAHub from './components/QAHub';
 import Avatar from './components/Avatar';
-import DjokovicWink from './components/DjokovicWink';
-import FishAnimation from './components/FishAnimation';
-import SkierAnimation from './components/SkierAnimation';
 
 function PendingBadge({ count }) {
   if (!count) return null;
@@ -79,10 +76,14 @@ function resizeToBase64(file, maxSize = 200) {
   });
 }
 
+// Handle /confirm/:token URL — no React Router needed
+const confirmToken = window.location.pathname.match(/^\/confirm\/([a-f0-9]{64})$/)?.[1] ?? null;
+
 export default function App() {
+  if (confirmToken) return <ConfirmPage token={confirmToken} />;
+
   const { activeTab, setActiveTab, currentUser, authToken, fetchMe, logout, pendingUsersCount, fetchPendingCount, uploadAvatar, addToast } = useStore();
   const { t, i18n } = useTranslation();
-  const email = currentUser?.email;
   const [avatarUploading, setAvatarUploading] = useState(false);
   const headerDate = useHeaderDate(i18n.language);
   const isManager  = currentUser?.role === 'manager';
@@ -98,6 +99,7 @@ export default function App() {
     { id: 'period',   label: `📅 ${t('nav.period')}` },
     { id: 'projects', label: `🏗 ${t('nav.projects')}` },
     { id: 'stats',    label: `📊 ${t('nav.stats')}` },
+    { id: 'hub',      label: `🚀 ${t('nav.hub')}` },
   ];
 
   const MANAGER_TABS = [
@@ -239,6 +241,7 @@ export default function App() {
           <div style={{ display: activeTab === 'period'   ? 'block' : 'none' }}><PeriodView /></div>
           <div style={{ display: activeTab === 'projects' ? 'block' : 'none' }}><ProjectsView /></div>
           <div style={{ display: activeTab === 'stats'    ? 'block' : 'none' }}><Statistics /></div>
+          <div style={{ display: activeTab === 'hub'      ? 'block' : 'none' }}><QAHub lang={i18n.language} /></div>
           {(isManager || isGuest) && (
             <>
               <div style={{ display: activeTab === 'team'   ? 'block' : 'none' }}><TeamReport /></div>
@@ -253,12 +256,7 @@ export default function App() {
         Vibecoded by Bosko
       </footer>
 
-      <QuoteToast quotes={SOPRANOS_QUOTES}        icon="🎭" active={email === 'misakisic@yahoo.com'} />
-      <QuoteToast quotes={STRANGER_THINGS_QUOTES} icon="🔦" active={email === 'milosnesic777@gmail.com'} />
-      <QuoteToast quotes={TAXIDRIVER_QUOTES}        icon="🚕" active={email === 'boskobsk@gmail.com'} />
-      <DjokovicWink active={email === 'vesna@gmail.com'} />
-      <FishAnimation active={/stanko/i.test(currentUser?.username || '') || /stanko/i.test(email || '')} />
-      <SkierAnimation active={email === 'janajs96@gmail.com'} />
+      <QuoteToast quotes={QA_QUOTES} icon="🧪" active={!!currentUser} />
       <Toast />
     </ErrorBoundary>
   );

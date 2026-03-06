@@ -7,33 +7,29 @@ const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 export default function AuthPage() {
   const { t, i18n } = useTranslation();
   const { login, register } = useStore();
-  const [mode, setMode] = useState('login'); // 'login' | 'register'
+  const [mode, setMode] = useState('login');
 
   const [email,    setEmail]    = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [confirm,  setConfirm]  = useState('');
 
-  const [errors,  setErrors]  = useState({});
-  const [apiError, setApiError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [errors,        setErrors]        = useState({});
+  const [apiError,      setApiError]      = useState('');
+  const [loading,       setLoading]       = useState(false);
   const [pendingApproval, setPendingApproval] = useState(false);
 
-  function validateLogin(emailVal, passwordVal) {
+  function validate() {
     const errs = {};
-    if (!emailVal.trim()) errs.email = t('authValidation.emailRequired');
-    if (!passwordVal) errs.password = t('authValidation.passwordRequired');
-    return errs;
-  }
-
-  function validateRegister(emailVal, usernameVal, passwordVal, confirmVal) {
-    const errs = {};
-    if (!emailVal.trim()) errs.email = t('authValidation.emailOnlyRequired');
-    else if (!EMAIL_RE.test(emailVal)) errs.email = t('authValidation.emailInvalid');
-    if (!usernameVal.trim()) errs.username = t('authValidation.usernameRequired');
-    if (!passwordVal) errs.password = t('authValidation.passwordRequired');
-    else if (passwordVal.length < 8) errs.password = t('authValidation.passwordMin');
-    if (passwordVal !== confirmVal) errs.confirm = t('authValidation.passwordMismatch');
+    if (!email.trim()) {
+      errs.email = mode === 'login'
+        ? t('authValidation.emailRequired')
+        : t('authValidation.emailOnlyRequired');
+    } else if (mode === 'register' && !EMAIL_RE.test(email)) errs.email = t('authValidation.emailInvalid');
+    if (mode === 'register' && !username.trim()) errs.username = t('authValidation.usernameRequired');
+    if (!password) errs.password = t('authValidation.passwordRequired');
+    else if (mode === 'register' && password.length < 8) errs.password = t('authValidation.passwordMin');
+    if (mode === 'register' && password !== confirm) errs.confirm = t('authValidation.passwordMismatch');
     return errs;
   }
 
@@ -52,24 +48,16 @@ export default function AuthPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     setApiError('');
-
-    const errs = mode === 'login'
-      ? validateLogin(email, password)
-      : validateRegister(email, username, password, confirm);
-
+    const errs = validate();
     if (Object.keys(errs).length) { setErrors(errs); return; }
     setErrors({});
     setLoading(true);
-
     try {
       if (mode === 'login') {
         await login(email, password);
       } else {
         const result = await register(email, username, password);
-        if (result?.pending) {
-          setPendingApproval(true);
-          return;
-        }
+        if (result?.pending) { setPendingApproval(true); return; }
       }
     } catch (err) {
       let msg = err.message;
@@ -80,159 +68,110 @@ export default function AuthPage() {
     }
   }
 
-  return (
-    <div className="auth-page">
-      <div className="auth-card" style={{ position: 'relative' }}>
-        {/* Language switcher on auth page */}
-        <div style={{ position: 'absolute', top: 12, left: 14, display: 'flex', gap: 4 }}>
-          <button
-            className={`lang-btn${i18n.language === 'sr' ? ' active' : ''}`}
-            onClick={() => changeLang('sr')}
-            type="button"
-          >
-            🇷🇸 SRB
-          </button>
-          <button
-            className={`lang-btn${i18n.language === 'en' ? ' active' : ''}`}
-            onClick={() => changeLang('en')}
-            type="button"
-          >
-            🇬🇧 ENG
-          </button>
-        </div>
-
-        <div style={{
-          position: 'absolute',
-          top: 12,
-          right: 14,
-          fontSize: 8,
-          fontWeight: 600,
-          letterSpacing: '0.06em',
-          color: 'transparent',
-          background: 'linear-gradient(90deg, var(--accent, #7c6ff7), #a78bfa)',
-          WebkitBackgroundClip: 'text',
-          WebkitTextFillColor: 'transparent',
-          opacity: 0.75,
-          textTransform: 'uppercase',
-          pointerEvents: 'none',
-          userSelect: 'none',
-        }}>
-          vibecoded by Bosko
-        </div>
-        <div className="auth-logo">
-          <div className="logo-icon">🧪</div>
-          <h1>QA <span>Daily</span> Log</h1>
-        </div>
-
-        {pendingApproval && (
-          <div style={{
-            background: 'rgba(72,199,142,0.12)',
-            border: '1px solid rgba(72,199,142,0.35)',
-            borderRadius: 10,
-            padding: '14px 16px',
-            marginBottom: 16,
-            textAlign: 'center',
-          }}>
-            <div style={{ fontSize: 22, marginBottom: 6 }}>✅</div>
-            <div style={{ fontWeight: 700, fontSize: 14, color: 'var(--green)' }}>{t('auth.pendingTitle')}</div>
-            <div style={{ fontSize: 13, color: 'var(--text2)', marginTop: 4 }}>
+  if (pendingApproval) {
+    return (
+      <div className="auth-page">
+        <div className="auth-card auth-minimal">
+          <div className="auth-brand">🧪 <span>QA Daily Log</span></div>
+          <div style={{ textAlign: 'center', padding: '8px 0 16px' }}>
+            <div style={{ fontSize: 40, marginBottom: 12 }}>📬</div>
+            <div style={{ fontWeight: 700, fontSize: 15, marginBottom: 6, color: 'var(--accent)' }}>
+              {t('auth.pendingTitle')}
+            </div>
+            <div style={{ fontSize: 13, color: 'var(--text2)', lineHeight: 1.6 }}>
               {t('auth.pendingDesc')}
             </div>
             <button
               type="button"
-              style={{ marginTop: 12, fontSize: 12, background: 'none', border: 'none', color: 'var(--accent)', cursor: 'pointer', textDecoration: 'underline' }}
+              className="auth-link-btn"
               onClick={() => { setPendingApproval(false); switchMode('login'); }}
+              style={{ marginTop: 20 }}
             >
-              {t('auth.goToLogin')}
+              ← {t('auth.goToLogin')}
             </button>
           </div>
-        )}
+        </div>
+      </div>
+    );
+  }
 
-        <div className="auth-tabs">
+  return (
+    <div className="auth-page">
+      <div className="auth-card auth-minimal">
+
+        {/* Brand */}
+        <div className="auth-brand">🧪 <span>QA Daily Log</span></div>
+
+        {/* Mode switch — subtle */}
+        <div className="auth-mode-switch">
           <button
-            className={`auth-tab${mode === 'login' ? ' active' : ''}`}
-            onClick={() => switchMode('login')}
             type="button"
+            className={`auth-mode-btn${mode === 'login' ? ' active' : ''}`}
+            onClick={() => switchMode('login')}
           >
             {t('auth.login')}
           </button>
           <button
-            className={`auth-tab${mode === 'register' ? ' active' : ''}`}
-            onClick={() => switchMode('register')}
             type="button"
+            className={`auth-mode-btn${mode === 'register' ? ' active' : ''}`}
+            onClick={() => switchMode('register')}
           >
             {t('auth.register')}
           </button>
         </div>
 
-        <form onSubmit={handleSubmit} noValidate>
-          {mode === 'register' && (
-            <div style={{
-              display: 'flex',
-              alignItems: 'flex-start',
-              gap: 10,
-              background: 'rgba(124,111,247,0.08)',
-              border: '1px solid rgba(124,111,247,0.25)',
-              borderRadius: 8,
-              padding: '10px 12px',
-              marginBottom: 14,
-            }}>
-              <span style={{ fontSize: 16, marginTop: 1 }}>ℹ️</span>
-              <span style={{ fontSize: 12, color: 'var(--text2)', lineHeight: 1.5 }}>
-                {t('auth.registerNotice')}
-              </span>
-            </div>
-          )}
-          <div className="form-group">
-            <label htmlFor="auth-email">{mode === 'login' ? t('auth.emailOrUsername') : t('auth.email')}</label>
+        <form onSubmit={handleSubmit} noValidate style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+          {/* Fields — no labels, aria-label for accessibility + PW tests */}
+          <div>
             <input
-              id="auth-email"
+              className="auth-field"
               type={mode === 'login' ? 'text' : 'email'}
               value={email}
               onChange={e => setEmail(e.target.value)}
               placeholder={mode === 'login' ? t('auth.emailLoginPlaceholder') : t('auth.emailPlaceholder')}
+              aria-label={mode === 'login' ? t('auth.emailOrUsername') : t('auth.email')}
               autoComplete="email"
             />
             {errors.email && <span className="field-error">{errors.email}</span>}
           </div>
 
           {mode === 'register' && (
-            <div className="form-group">
-              <label htmlFor="auth-username">{t('auth.username')}</label>
+            <div>
               <input
-                id="auth-username"
+                className="auth-field"
                 type="text"
                 value={username}
                 onChange={e => setUsername(e.target.value)}
                 placeholder={t('auth.usernamePlaceholder')}
+                aria-label={t('auth.username')}
                 autoComplete="username"
               />
               {errors.username && <span className="field-error">{errors.username}</span>}
             </div>
           )}
 
-          <div className="form-group">
-            <label htmlFor="auth-password">{t('auth.password')}</label>
+          <div>
             <input
-              id="auth-password"
+              className="auth-field"
               type="password"
               value={password}
               onChange={e => setPassword(e.target.value)}
-              placeholder={mode === 'register' ? t('auth.passwordMinPlaceholder') : ''}
+              placeholder={mode === 'register' ? t('auth.passwordMinPlaceholder') : t('auth.password')}
+              aria-label={t('auth.password')}
               autoComplete={mode === 'login' ? 'current-password' : 'new-password'}
             />
             {errors.password && <span className="field-error">{errors.password}</span>}
           </div>
 
           {mode === 'register' && (
-            <div className="form-group">
-              <label htmlFor="auth-confirm">{t('auth.confirmPassword')}</label>
+            <div>
               <input
-                id="auth-confirm"
+                className="auth-field"
                 type="password"
                 value={confirm}
                 onChange={e => setConfirm(e.target.value)}
                 placeholder={t('auth.confirmPlaceholder')}
+                aria-label={t('auth.confirmPassword')}
                 autoComplete="new-password"
               />
               {errors.confirm && <span className="field-error">{errors.confirm}</span>}
@@ -241,55 +180,47 @@ export default function AuthPage() {
 
           {apiError && <div className="auth-api-error">{apiError}</div>}
 
-          <button type="submit" className="auth-submit" disabled={loading}>
+          <button type="submit" className="auth-submit" disabled={loading} style={{ marginTop: 4 }}>
             {loading ? t('auth.loading') : mode === 'login' ? t('auth.submit') : t('auth.registerSubmit')}
           </button>
         </form>
 
+        {/* Demo button — minimal */}
         {mode === 'login' && (
-          <>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, margin: '18px 0 14px' }}>
-              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }} />
-              <span style={{ fontSize: 11, color: 'var(--text2)', opacity: 0.5, letterSpacing: '0.05em' }}>{t('auth.or')}</span>
-              <div style={{ flex: 1, height: 1, background: 'rgba(255,255,255,0.08)' }} />
-            </div>
-
-            <button
-              type="button"
-              disabled={loading}
-              onClick={async () => {
-                setLoading(true);
-                try { await login('guest', 'guest'); }
-                catch (err) {
-                  let msg = err.message;
-                  try { msg = JSON.parse(msg).error || msg; } catch (_) {}
-                  setApiError(msg);
-                } finally { setLoading(false); }
-              }}
-              style={{
-                width: '100%',
-                padding: '11px 16px',
-                borderRadius: 10,
-                border: '1px dashed rgba(124,111,247,0.4)',
-                background: 'rgba(124,111,247,0.06)',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 12,
-                transition: 'all 0.18s',
-              }}
-              onMouseEnter={e => e.currentTarget.style.background = 'rgba(124,111,247,0.13)'}
-              onMouseLeave={e => e.currentTarget.style.background = 'rgba(124,111,247,0.06)'}
-            >
-              <span style={{ fontSize: 20 }}>👀</span>
-              <div style={{ textAlign: 'left' }}>
-                <div style={{ fontSize: 13, fontWeight: 700, color: 'var(--accent)' }}>{t('auth.demoTitle')}</div>
-                <div style={{ fontSize: 11, color: 'var(--text2)', marginTop: 1 }}>{t('auth.demoDesc')}</div>
-              </div>
-              <span style={{ marginLeft: 'auto', fontSize: 16, color: 'var(--accent)', opacity: 0.6 }}>→</span>
-            </button>
-          </>
+          <button
+            type="button"
+            disabled={loading}
+            className="auth-demo-btn"
+            onClick={async () => {
+              setLoading(true);
+              try { await login('guest', 'guest'); }
+              catch (err) {
+                let msg = err.message;
+                try { msg = JSON.parse(msg).error || msg; } catch (_) {}
+                setApiError(msg);
+              } finally { setLoading(false); }
+            }}
+          >
+            👀 {t('auth.demoTitle')}
+          </button>
         )}
+
+        {/* Lang + watermark */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 20 }}>
+          <div style={{ display: 'flex', gap: 4 }}>
+            <button
+              className={`lang-btn${i18n.language === 'sr' ? ' active' : ''}`}
+              onClick={() => changeLang('sr')} type="button"
+            >🇷🇸 SRB</button>
+            <button
+              className={`lang-btn${i18n.language === 'en' ? ' active' : ''}`}
+              onClick={() => changeLang('en')} type="button"
+            >🇬🇧 ENG</button>
+          </div>
+          <span style={{ fontSize: 9, color: 'rgba(255,255,255,0.18)', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+            vibecoded by bosko
+          </span>
+        </div>
       </div>
     </div>
   );

@@ -103,16 +103,16 @@ export default function DailyLog() {
       </div>
 
       <div className="sort-bar">
-        <label>{t('sort.label')}</label>
-        <select value={dailySort} onChange={e => setDailySort(e.target.value)}>
+        <label htmlFor="daily-sort">{t('sort.label')}</label>
+        <select id="daily-sort" value={dailySort} onChange={e => setDailySort(e.target.value)}>
           <option value="date-desc">{t('sort.dateDesc')}</option>
           <option value="date-asc">{t('sort.dateAsc')}</option>
           <option value="category">{t('sort.category')}</option>
           <option value="duration">{t('sort.duration')}</option>
           <option value="status">{t('sort.status')}</option>
         </select>
-        <label>{t('sort.project')}</label>
-        <select value={dailyProjectFilter} onChange={e => setDailyProjectFilter(e.target.value)}>
+        <label htmlFor="daily-project">{t('sort.project')}</label>
+        <select id="daily-project" value={dailyProjectFilter} onChange={e => setDailyProjectFilter(e.target.value)}>
           <option value="">{t('form.all')}</option>
           {PROJECTS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
         </select>

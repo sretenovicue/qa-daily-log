@@ -43,11 +43,10 @@ test.describe('Navigacija tabovima', () => {
   test('klik na Period tab prikazuje period view', async ({ page }) => {
     await page.locator('.tabs button').filter({ hasText: /Period/ }).click();
 
-    // "Od datuma" i "Do datuma" labelovi su vidljivi
-    await expect(page.getByLabel('Od datuma')).toBeVisible();
-    await expect(page.getByLabel('Do datuma')).toBeVisible();
+    // Koristimo ID jer su Period i Weekly oba mountovana (display:none pattern)
+    await expect(page.locator('#period-from')).toBeVisible();
+    await expect(page.locator('#period-to')).toBeVisible();
 
-    // Quick selection gumbi
     await expect(page.getByRole('button', { name: /7 dana/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /30 dana/ })).toBeVisible();
     await expect(page.getByRole('button', { name: /Ovaj mesec/ })).toBeVisible();
@@ -89,11 +88,11 @@ test.describe('Navigacija tabovima', () => {
   test('Period — shortcut dugme Posednjih 7 dana menja datume', async ({ page }) => {
     await page.locator('.tabs button').filter({ hasText: /Period/ }).click();
 
-    const fromBefore = await page.getByLabel('Od datuma').inputValue();
+    // Koristimo ID jer su Period i Weekly oba mountovana (display:none pattern)
+    const fromBefore = await page.locator('#period-from').inputValue();
     await page.getByRole('button', { name: /7 dana/ }).click();
-    const fromAfter = await page.getByLabel('Od datuma').inputValue();
+    const fromAfter = await page.locator('#period-from').inputValue();
 
-    // "Od datuma" se promenio
     expect(fromAfter).not.toBe(fromBefore);
   });
 });

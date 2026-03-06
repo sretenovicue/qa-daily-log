@@ -55,8 +55,8 @@ export default function AddEntry() {
       <form onSubmit={handleSubmit} noValidate>
 
         <div className="form-group">
-          <label>{t('form.project')}</label>
-          <select value={form.project} onChange={e => set('project', e.target.value)}>
+          <label htmlFor="add-project">{t('form.project')}</label>
+          <select id="add-project" value={form.project} onChange={e => set('project', e.target.value)}>
             <option value="">{t('form.noProject')}</option>
             {PROJECTS.map(p => (
               <option key={p.value} value={p.value}>{p.label}</option>
@@ -65,8 +65,8 @@ export default function AddEntry() {
         </div>
 
         <div className="form-group">
-          <label>{t('form.category')}</label>
-          <select value={form.category} onChange={e => set('category', e.target.value)}>
+          <label htmlFor="add-category">{t('form.category')}</label>
+          <select id="add-category" value={form.category} onChange={e => set('category', e.target.value)}>
             <option value="">{t('form.select')}</option>
             {CATEGORY_KEYS.map(k => (
               <option key={k} value={k}>{CATEGORIES[k].emoji} {t(`categories.${k}`, CATEGORIES[k].label)}</option>
@@ -75,8 +75,8 @@ export default function AddEntry() {
         </div>
 
         <div className="form-group">
-          <label>{t('form.action')}</label>
-          <select value={form.action} onChange={e => set('action', e.target.value)}>
+          <label htmlFor="add-action">{t('form.action')}</label>
+          <select id="add-action" value={form.action} onChange={e => set('action', e.target.value)}>
             <option value="">{t('form.select')}</option>
             {ACTION_KEYS.map(k => (
               <option key={k} value={k}>{t(`actions.${k}`, ACTIONS[k])}</option>
@@ -85,8 +85,8 @@ export default function AddEntry() {
         </div>
 
         <div className="form-group">
-          <label>{t('form.status')}</label>
-          <select value={form.status} onChange={e => set('status', e.target.value)}>
+          <label htmlFor="add-status">{t('form.status')}</label>
+          <select id="add-status" value={form.status} onChange={e => set('status', e.target.value)}>
             <option value="">{t('form.select')}</option>
             {STATUS_KEYS.map(k => (
               <option key={k} value={k}>{STATUSES[k].emoji} {t(`statuses.${k}`, STATUSES[k].label)}</option>

@@ -41,6 +41,7 @@ app.use('/api/auth',    require('./routes/auth'));                              
 app.use('/api/entries', authMiddleware, require('./routes/entries'));           // protected
 app.use('/api/stats',   authMiddleware, require('./routes/stats'));             // protected
 app.use('/api/users',   authMiddleware, require('./routes/users'));             // manager only
+app.use('/api/hub',     authMiddleware, require('./routes/hub'));               // QA Hub
 app.get('/api/health',  (_, res) => res.json({ ok: true }));
 
 // Serve frontend static files if dist folder exists

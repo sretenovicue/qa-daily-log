@@ -6,7 +6,8 @@
     "stats": "Statistike",
     "team": "Tim",
     "users": "Korisnici",
-    "weekly": "Nedeljni"
+    "weekly": "Nedeljni",
+    "hub": "QA Hub"
   },
   "header": {
     "changeAvatar": "Promeni profilnu sliku",
@@ -103,7 +104,9 @@
     "activity14": "Aktivnost — poslednjih 14 dana",
     "entriesDataset": "Unosa",
     "categoriesAll": "Kategorije (svi dani)",
-    "categoryBreakdown": "Raspodela po kategorijama"
+    "categoryBreakdown": "Raspodela po kategorijama",
+    "activityChartAria": "Grafikon aktivnosti za poslednjih 14 dana",
+    "categoriesChartAria": "Tortni grafikon raspodele po kategorijama"
   },
   "projects": {
     "month": "Mesec:",

@@ -8,6 +8,7 @@ export const CATEGORIES = {
   bug:             { label: 'Bug',         color: '#ff6584', emoji: '🐛' },
   review:          { label: 'Review',      color: '#00bcd4', emoji: '👁' },
   docs:            { label: 'Docs',        color: '#9c88ff', emoji: '📝' },
+  learning:        { label: 'Učenje',      color: '#ab47bc', emoji: '📚' },
   meeting:         { label: 'Sastanak',    color: '#78909c', emoji: '💬' },
   other:           { label: 'Ostalo',      color: '#90a4ae', emoji: '📌' },
 };

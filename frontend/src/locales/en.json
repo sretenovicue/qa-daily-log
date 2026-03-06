@@ -6,7 +6,8 @@
     "stats": "Statistics",
     "team": "Team",
     "users": "Users",
-    "weekly": "Weekly"
+    "weekly": "Weekly",
+    "hub": "QA Hub"
   },
   "header": {
     "changeAvatar": "Change profile picture",
@@ -103,7 +104,9 @@
     "activity14": "Activity — last 14 days",
     "entriesDataset": "Entries",
     "categoriesAll": "Categories (all time)",
-    "categoryBreakdown": "Category breakdown"
+    "categoryBreakdown": "Category breakdown",
+    "activityChartAria": "Activity chart for the last 14 days",
+    "categoriesChartAria": "Pie chart of category breakdown"
   },
   "projects": {
     "month": "Month:",

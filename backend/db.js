@@ -41,11 +41,31 @@ async function initDb() {
 
   // Safe migrations — add columns only if they don't exist yet
   await pool.query(`
-    ALTER TABLE users ADD COLUMN IF NOT EXISTS role        TEXT    DEFAULT 'user';
-    ALTER TABLE users ADD COLUMN IF NOT EXISTS active      BOOLEAN DEFAULT true;
-    ALTER TABLE users ADD COLUMN IF NOT EXISTS approved    BOOLEAN DEFAULT true;
-    ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_data TEXT    DEFAULT NULL;
-    ALTER TABLE users ADD COLUMN IF NOT EXISTS title      TEXT    DEFAULT NULL;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS role            TEXT    DEFAULT 'user';
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS active          BOOLEAN DEFAULT true;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS approved        BOOLEAN DEFAULT true;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS avatar_data     TEXT    DEFAULT NULL;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS title           TEXT    DEFAULT NULL;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS email_token     TEXT    DEFAULT NULL;
+    ALTER TABLE users ADD COLUMN IF NOT EXISTS email_confirmed BOOLEAN DEFAULT false;
+  `);
+
+  // Mark all existing approved users as email_confirmed
+  await pool.query(`UPDATE users SET email_confirmed = true WHERE approved = true`);
+
+  // Courses table for QA Hub
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS courses (
+      id         SERIAL PRIMARY KEY,
+      user_id    INT REFERENCES users(id) ON DELETE CASCADE,
+      title      TEXT NOT NULL,
+      url        TEXT,
+      author     TEXT,
+      status     TEXT DEFAULT 'planned',
+      notes      TEXT,
+      created_at TIMESTAMP DEFAULT NOW()
+    );
+    CREATE INDEX IF NOT EXISTS idx_courses_user ON courses(user_id);
   `);
 
   // Seed admin user if it doesn't exist
@@ -53,7 +73,7 @@ async function initDb() {
   if (!existing.rows[0]) {
     const hash = await bcrypt.hash('admin', 10);
     await pool.query(
-      "INSERT INTO users (email, username, password_hash, role, active, approved) VALUES ('admin@admin.com', 'admin', $1, 'manager', true, true)",
+      "INSERT INTO users (email, username, password_hash, role, active, approved, email_confirmed) VALUES ('admin@admin.com', 'admin', $1, 'manager', true, true, true)",
       [hash]
     );
     console.log('Admin user created (username: admin, password: admin)');
@@ -64,7 +84,7 @@ async function initDb() {
   if (!existingGuest.rows[0]) {
     const hash = await bcrypt.hash('guest', 10);
     await pool.query(
-      "INSERT INTO users (email, username, password_hash, role, active, approved) VALUES ('guest@guest.com', 'guest', $1, 'guest', true, true)",
+      "INSERT INTO users (email, username, password_hash, role, active, approved, email_confirmed) VALUES ('guest@guest.com', 'guest', $1, 'guest', true, true, true)",
       [hash]
     );
     console.log('Guest user created (username: guest, password: guest)');

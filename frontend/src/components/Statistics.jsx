@@ -112,18 +112,26 @@ export default function Statistics() {
       <div className="charts-row">
         <div className="chart-card">
           <div className="card-title">{t('stats.activity14')}</div>
-          <Bar data={{
-            labels: last14Labels,
-            datasets: [{ label: t('stats.entriesDataset'), data: last14Counts, backgroundColor: 'rgba(124,111,247,0.7)', borderRadius: 4 }],
-          }} options={CHART_OPTS} />
+          <Bar
+            aria-label={t('stats.activityChartAria')}
+            data={{
+              labels: last14Labels,
+              datasets: [{ label: t('stats.entriesDataset'), data: last14Counts, backgroundColor: 'rgba(124,111,247,0.7)', borderRadius: 4 }],
+            }}
+            options={CHART_OPTS}
+          />
         </div>
         {catKeys.length > 0 && (
           <div className="chart-card">
             <div className="card-title">{t('stats.categoriesAll')}</div>
-            <Doughnut data={{
-              labels: catLabels,
-              datasets: [{ data: catCounts, backgroundColor: catColors, borderWidth: 2, borderColor: '#1c1f2e' }],
-            }} options={DONUT_OPTS} />
+            <Doughnut
+              aria-label={t('stats.categoriesChartAria')}
+              data={{
+                labels: catLabels,
+                datasets: [{ data: catCounts, backgroundColor: catColors, borderWidth: 2, borderColor: '#1c1f2e' }],
+              }}
+              options={DONUT_OPTS}
+            />
           </div>
         )}
       </div>

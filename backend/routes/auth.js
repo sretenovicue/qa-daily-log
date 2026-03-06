@@ -2,8 +2,10 @@ const express  = require('express');
 const router   = express.Router();
 const bcrypt   = require('bcryptjs');
 const jwt      = require('jsonwebtoken');
+const crypto   = require('crypto');
 const pool     = require('../db');
 const authMiddleware = require('../middleware/auth');
+const { sendConfirmEmail } = require('../email');
 
 const wrap = fn => (req, res, next) => Promise.resolve(fn(req, res, next)).catch(next);
 
@@ -33,10 +35,14 @@ router.post('/register', wrap(async (req, res) => {
   }
 
   const password_hash = await bcrypt.hash(password, 10);
+  const email_token = crypto.randomBytes(32).toString('hex');
   await pool.query(
-    'INSERT INTO users (email, username, password_hash, approved) VALUES ($1, $2, $3, false)',
-    [email.toLowerCase(), username.trim(), password_hash]
+    'INSERT INTO users (email, username, password_hash, approved, email_token, email_confirmed) VALUES ($1, $2, $3, false, $4, false)',
+    [email.toLowerCase(), username.trim(), password_hash, email_token]
   );
+
+  // Fire-and-forget — don't block response if email fails
+  sendConfirmEmail({ to: email.toLowerCase(), username: username.trim(), token: email_token }).catch(console.error);
 
   res.status(201).json({ pending: true });
 }));
@@ -58,6 +64,10 @@ router.post('/login', wrap(async (req, res) => {
     return res.status(401).json({ error: 'Pogrešan email ili lozinka' });
   }
 
+  if (row.email_confirmed === false) {
+    return res.status(403).json({ error: 'Email nije potvrđen. Proverite inbox i kliknite na verifikacioni link.' });
+  }
+
   if (row.approved === false) {
     return res.status(403).json({ error: 'Nalog čeka odobrenje menadžera.' });
   }
@@ -75,6 +85,20 @@ router.post('/login', wrap(async (req, res) => {
   const token = signToken(user.id, user.role);
 
   res.json({ token, user });
+}));
+
+// ── GET /api/auth/confirm/:token ─────────────────────────────────────
+router.get('/confirm/:token', wrap(async (req, res) => {
+  const { token } = req.params;
+  if (!token || !/^[a-f0-9]{64}$/.test(token)) {
+    return res.status(400).json({ error: 'Nevažeći token' });
+  }
+  const { rows } = await pool.query(
+    'UPDATE users SET email_confirmed = true, email_token = NULL WHERE email_token = $1 RETURNING id',
+    [token]
+  );
+  if (!rows[0]) return res.status(404).json({ error: 'Token nije pronađen ili je već iskorišten' });
+  res.json({ ok: true });
 }));
 
 // ── GET /api/auth/me ──────────────────────────────────────────────────

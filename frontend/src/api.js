@@ -152,3 +152,52 @@ export async function approveUser(id) {
   });
   return handleResponse(res);
 }
+
+export async function confirmEmail(token) {
+  const res = await fetch(`${BASE}/auth/confirm/${token}`);
+  if (!res.ok) throw new Error(await res.text());
+  return res.json();
+}
+
+// ─── QA Hub ──────────────────────────────────────────────────────────────────
+
+export async function getHubFeed() {
+  const res = await fetch(`${BASE}/hub/feed`, { headers: authHeaders() });
+  return handleResponse(res);
+}
+
+export async function refreshHubFeed() {
+  const res = await fetch(`${BASE}/hub/feed/refresh`, { method: 'POST', headers: authHeaders() });
+  return handleResponse(res);
+}
+
+export async function getCourses() {
+  const res = await fetch(`${BASE}/hub/courses`, { headers: authHeaders() });
+  return handleResponse(res);
+}
+
+export async function createCourse(data) {
+  const res = await fetch(`${BASE}/hub/courses`, {
+    method: 'POST', headers: authHeaders(), body: JSON.stringify(data),
+  });
+  return handleResponse(res);
+}
+
+export async function updateCourse(id, data) {
+  const res = await fetch(`${BASE}/hub/courses/${id}`, {
+    method: 'PATCH', headers: authHeaders(), body: JSON.stringify(data),
+  });
+  return handleResponse(res);
+}
+
+export async function deleteCourse(id) {
+  const res = await fetch(`${BASE}/hub/courses/${id}`, {
+    method: 'DELETE', headers: authHeaders(),
+  });
+  return handleResponse(res);
+}
+
+export async function getAIRecommendation() {
+  const res = await fetch(`${BASE}/hub/recommend`, { method: 'POST', headers: authHeaders() });
+  return handleResponse(res);
+}

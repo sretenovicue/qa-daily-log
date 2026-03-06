@@ -135,15 +135,15 @@ export default function PeriodView() {
           <input id="period-to" type="date" value={to} onChange={e => setTo(e.target.value)} />
         </div>
         <div className="form-group" style={{ minWidth: 'auto' }}>
-          <label>{t('form.project')}</label>
-          <select value={projectFilter} onChange={e => setPF(e.target.value)}>
+          <label htmlFor="period-project">{t('form.project')}</label>
+          <select id="period-project" value={projectFilter} onChange={e => setPF(e.target.value)}>
             <option value="all">{t('form.all')}</option>
             {PROJECTS.map(p => <option key={p.value} value={p.value}>{p.label}</option>)}
           </select>
         </div>
         <div className="form-group" style={{ minWidth: 'auto' }}>
-          <label>{t('form.category')}</label>
-          <select value={catFilter} onChange={e => setCat(e.target.value)}>
+          <label htmlFor="period-category">{t('form.category')}</label>
+          <select id="period-category" value={catFilter} onChange={e => setCat(e.target.value)}>
             <option value="all">{t('form.allF')}</option>
             {Object.keys(CATEGORIES).map(k => (
               <option key={k} value={k}>{CATEGORIES[k].emoji} {t(`categories.${k}`, CATEGORIES[k].label)}</option>
@@ -151,8 +151,8 @@ export default function PeriodView() {
           </select>
         </div>
         <div className="form-group" style={{ minWidth: 'auto' }}>
-          <label>{t('form.status')}</label>
-          <select value={statusFilter} onChange={e => setSt(e.target.value)}>
+          <label htmlFor="period-status">{t('form.status')}</label>
+          <select id="period-status" value={statusFilter} onChange={e => setSt(e.target.value)}>
             <option value="all">{t('form.all')}</option>
             {Object.keys(STATUSES).map(k => (
               <option key={k} value={k}>{STATUSES[k].emoji} {t(`statuses.${k}`, STATUSES[k].label)}</option>
@@ -160,8 +160,8 @@ export default function PeriodView() {
           </select>
         </div>
         <div className="form-group" style={{ minWidth: 'auto' }}>
-          <label>{t('sort.label').replace(':', '')}</label>
-          <select value={sort} onChange={e => setSort(e.target.value)}>
+          <label htmlFor="period-sort">{t('sort.label').replace(':', '')}</label>
+          <select id="period-sort" value={sort} onChange={e => setSort(e.target.value)}>
             <option value="date-desc">{t('sort.dateDescLong')}</option>
             <option value="date-asc">{t('sort.dateAscLong')}</option>
             <option value="category">{t('sort.category')}</option>

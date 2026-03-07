@@ -1,8 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useStore } from './store';
-import { QA_QUOTES } from './qa-quotes';
-import QuoteToast from './components/QuoteToast';
 import AddEntry from './components/AddEntry';
 import DailyLog from './components/DailyLog';
 import PeriodView from './components/PeriodView';
@@ -256,7 +254,6 @@ export default function App() {
         Vibecoded by Bosko
       </footer>
 
-      <QuoteToast quotes={QA_QUOTES} icon="🧪" active={!!currentUser} />
       <Toast />
     </ErrorBoundary>
   );

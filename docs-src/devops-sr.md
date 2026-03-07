@@ -1,6 +1,6 @@
 ---
 title: "QA Daily Log — DevOps Dokumentacija"
-subtitle: "v3.0 — Raspberry Pi + Cloudflare Tunnel"
+subtitle: "v4.0 — Raspberry Pi + Cloudflare Tunnel"
 date: "Mart 2026"
 geometry: margin=2.5cm
 fontsize: 11pt
@@ -8,7 +8,7 @@ fontsize: 11pt
 
 # QA Daily Log — DevOps Dokumentacija
 
-**Verzija:** 3.0 | **Datum:** Mart 2026 | **Platforma:** Raspberry Pi 4 + Cloudflare Tunnel
+**Verzija:** 4.0 | **Datum:** Mart 2026 | **Platforma:** Raspberry Pi 4 + Cloudflare Tunnel
 
 ---
 
@@ -85,7 +85,16 @@ npx playwright test
 npx playwright show-report
 ```
 
-### Deploy Koraci
+### Automatski Deploy (preporučeno)
+
+```bash
+# Jednom komandom — testovi → GitHub push → Pi deploy:
+./deploy.sh
+```
+
+> **SSH ključ:** `~/.ssh/qa_deploy_key` — lozinka nije potrebna.
+
+### Ručni Deploy (rezervni postupak)
 
 ```bash
 # 1. Push na GitHub
@@ -94,7 +103,7 @@ git commit -m "feat/fix: opis izmena"
 git push origin main
 
 # 2. SSH na Pi
-ssh sretenovicue@nasty.local
+ssh -i ~/.ssh/qa_deploy_key sretenovicue@192.168.1.107
 
 # 3. Na Pi — povuci izmene i restartuj
 cd ~/qa-daily-log

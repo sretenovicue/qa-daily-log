@@ -125,7 +125,7 @@
   <div class="meta">
     <span>📅 March 2026</span>
     <span>👤 Bosko Sretenovic</span>
-    <span>🔖 v2.0 — Raspberry Pi + Cloudflare Tunnel</span>
+    <span>🔖 v4.0 — Raspberry Pi + Cloudflare Tunnel</span>
   </div>
 </div>
 
@@ -365,30 +365,28 @@ pm2 save                     # save process list for auto-start</div>
 <!-- 7. DEPLOYMENT -->
 <div class="section">
   <div class="section-title">7. Deployment — Publishing a New Version</div>
-  <div class="section-title" style="font-size:12px; margin-top:0;">Step 1 — local machine (push code):</div>
-  <div class="code-block">cd ~/Desktop/testApp
+  <div class="section-title" style="font-size:12px; margin-top:0;">Automated deploy (recommended):</div>
+  <div class="code-block">./deploy.sh</div>
+
+  <div class="info" style="margin-top:8px; margin-bottom:12px; background: rgba(124,111,247,0.1); border-left: 3px solid #7c6ff7; padding: 8px 12px; border-radius: 4px; font-size:12px;">
+    Script automatically: runs unit tests → pushes to GitHub → SSH to Pi → git pull → npm install → frontend build → pm2 restart.<br>
+    <strong>SSH key:</strong> <code>~/.ssh/qa_deploy_key</code> — no password needed.
+  </div>
+
+  <div class="section-title" style="font-size:12px; margin-top:12px;">Manual deploy (fallback):</div>
+  <div class="code-block"># Step 1 — local machine:
+cd ~/Desktop/testApp
 git add .
 git commit -m "description of changes"
-git push origin main</div>
+git push origin main
 
-  <div class="section-title" style="font-size:12px; margin-top:12px;">Step 2 — Raspberry Pi (SSH):</div>
-  <div class="code-block"># Home network:
-ssh sretenovicue@nasty.local
-
-# From anywhere (internet):
-ssh-pi
-
+# Step 2 — Raspberry Pi (SSH):
+ssh -i ~/.ssh/qa_deploy_key sretenovicue@192.168.1.107
 cd ~/qa-daily-log
-
-git pull origin main                           # pull new changes
-
-# If there are new npm packages:
+git pull origin main
 cd backend  && npm install && cd ..
-cd frontend && npm install && cd ..
-
-cd frontend && npm run build && cd ..          # rebuild React app
-
-pm2 restart qa-backend                         # restart backend</div>
+cd frontend && npm install && npm run build && cd ..
+pm2 restart qa-backend --update-env</div>
 
   <div class="pipeline" style="margin-top:12px;">
     <div class="pipe-step">git push</div><div class="pipe-arrow">→</div>
@@ -434,9 +432,9 @@ pm2 restart qa-backend                         # restart backend</div>
       <td><code>WeeklyReport.jsx</code></td>
     </tr>
     <tr>
-      <td>Easter eggs — per user</td>
-      <td>Personalised animations and quotes for specific users: Sopranos quotes, Stranger Things quotes, Taxi Driver quotes, Đoković wink, fish animation (Stanko), skier animation (Jana).</td>
-      <td><code>QuoteToast.jsx</code>, <code>DjokovicWink.jsx</code>, <code>FishAnimation.jsx</code>, <code>SkierAnimation.jsx</code></td>
+      <td>QA Hub</td>
+      <td>Tab for tracking QA trends (RSS feeds), personal courses/resources, and AI recommendations (Gemini 2.0 Flash). Subtabs: Trends, My Courses, AI Recommendation.</td>
+      <td><code>QAHub/index.jsx</code>, <code>QAHub/Trendovi.jsx</code>, <code>QAHub/MojiKursevi.jsx</code>, <code>QAHub/AIPreporuka.jsx</code>, <code>routes/hub.js</code></td>
     </tr>
     <tr>
       <td>Pending approval badge</td>
@@ -447,6 +445,16 @@ pm2 restart qa-backend                         # restart backend</div>
       <td>Raspberry Pi deploy</td>
       <td>Migrated from Netlify+Render to self-hosted Pi. Express serves both frontend and backend. Cloudflare Tunnel for public access without open inbound ports.</td>
       <td><code>server.js</code>, <code>backend/.env</code></td>
+    </tr>
+    <tr>
+      <td>Registration fix — inactive by default</td>
+      <td>New users register with <code>active=false</code>. They become active only when a manager approves (<code>approved=true, active=true</code>). Prevents the "PENDING + ACTIVE" anomaly.</td>
+      <td><code>routes/auth.js</code>, <code>routes/users.js</code></td>
+    </tr>
+    <tr>
+      <td>deploy.sh — automated deploy</td>
+      <td>Script that runs unit tests, pushes to GitHub, and deploys to Pi (git pull + frontend build + pm2 restart). SSH key at <code>~/.ssh/qa_deploy_key</code>, no password needed.</td>
+      <td><code>deploy.sh</code></td>
     </tr>
   </table>
 </div>

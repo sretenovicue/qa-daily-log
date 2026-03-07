@@ -47,8 +47,6 @@ export function parseManualTime(str) {
 
 export const PROJECTS = [
   { value: 'MSP',           label: 'MSP' },
-  { value: 'HttpCustomer',  label: 'HttpCustomer' },
-  { value: 'HttpSupplier',  label: 'HttpSupplier' },
   { value: 'MSS',           label: 'MSS' },
   { value: 'URLShortener',  label: 'URLShortener' },
   { value: 'PHPTools',      label: 'PHP tools' },

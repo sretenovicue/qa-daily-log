@@ -37,7 +37,7 @@ router.post('/register', wrap(async (req, res) => {
   const password_hash = await bcrypt.hash(password, 10);
   const email_token = crypto.randomBytes(32).toString('hex');
   await pool.query(
-    'INSERT INTO users (email, username, password_hash, approved, email_token, email_confirmed) VALUES ($1, $2, $3, false, $4, false)',
+    'INSERT INTO users (email, username, password_hash, active, approved, email_token, email_confirmed) VALUES ($1, $2, $3, false, false, $4, false)',
     [email.toLowerCase(), username.trim(), password_hash, email_token]
   );
 

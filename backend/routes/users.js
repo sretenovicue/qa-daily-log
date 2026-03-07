@@ -74,7 +74,7 @@ router.post('/:id/approve', wrap(async (req, res) => {
   if (!rows[0]) return res.status(404).json({ error: 'Korisnik nije pronađen' });
 
   const updated = await pool.query(
-    'UPDATE users SET approved = true WHERE id = $1 RETURNING id, email, username, role, active, approved, created_at',
+    'UPDATE users SET approved = true, active = true WHERE id = $1 RETURNING id, email, username, role, active, approved, created_at',
     [id]
   );
   const user = updated.rows[0];

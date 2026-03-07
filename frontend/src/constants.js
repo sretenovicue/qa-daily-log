@@ -47,13 +47,13 @@ export function parseManualTime(str) {
 
 export const PROJECTS = [
   { value: 'MSP',           label: 'MSP' },
-  { value: 'MSS',           label: 'MSS' },
+  { value: 'MSCS',          label: 'MSCS' },
   { value: 'URLShortener',  label: 'URLShortener' },
   { value: 'PHPTools',      label: 'PHP tools' },
   { value: 'ChatApps',     label: 'ChatApps' },
   { value: 'MCP',          label: 'MCP' },
   { value: 'AdminConsole',     label: 'Admin Console' },
-  { value: 'MailsFromSupport', label: 'Mails from Support' },
+  { value: 'MailsFromSupport', label: 'Support' },
   { value: 'SAP',              label: 'SAP' },
 ];
 

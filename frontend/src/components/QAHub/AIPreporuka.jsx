@@ -36,7 +36,7 @@ export default function AIPreporuka() {
           pa daje personalnu preporuku za sledeći korak.
         </div>
         <div style={{ fontSize: 11, color: 'var(--text2)', marginTop: 8, opacity: 0.6 }}>
-          Powered by Gemini 1.5 Flash · Zahtijeva GEMINI_API_KEY u .env
+          Powered by Gemini 2.0 Flash · Zahteva GEMINI_API_KEY u .env
         </div>
       </div>
 

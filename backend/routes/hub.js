@@ -123,7 +123,7 @@ router.post('/recommend', wrap(async (req, res) => {
 
   const { rows: entries } = await pool.query(
     `SELECT category, project, status FROM entries
-     WHERE user_id = $1 AND date >= CURRENT_DATE - INTERVAL '30 days'
+     WHERE user_id = $1 AND date::date >= CURRENT_DATE - INTERVAL '30 days'
      ORDER BY date DESC LIMIT 60`,
     [req.userId]
   );
@@ -152,7 +152,7 @@ Napiši personalnu preporuku (3-4 kratke rečenice) na srpskom:
 Budi direktan, bez generalnih fraza.`;
 
   const geminiRes = await fetch(
-    `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
+    `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
     {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
